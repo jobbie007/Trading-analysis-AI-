@@ -1,0 +1,1530 @@
+2025-09-04 19:47:56,944 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=auto analyze=True
+2025-09-04 19:48:07,024 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 19:48:23,703 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-04 20:15:53,515 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=do analyze=True
+2025-09-04 20:15:58,935 [INFO] dash.ai: news.fetch: providers use_do=True use_hf=False have_keys do=True hf=True
+2025-09-04 20:16:00,441 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:16:02,506 [INFO] dash.ai: news.summary: asset=BTC model_pref=do items=1
+2025-09-04 20:16:06,556 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:31:18,249 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=auto analyze=True
+2025-09-04 20:31:23,480 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 20:31:28,627 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=1
+2025-09-04 20:34:46,975 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-04 20:34:52,324 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 20:34:58,502 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-04 20:35:23,506 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-04 20:35:28,688 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 20:35:28,725 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=15 model_pref=auto analyze=True
+2025-09-04 20:35:33,274 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-04 20:35:33,680 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=15 model_pref=do analyze=True
+2025-09-04 20:35:39,707 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=15 model_pref=do analyze=True
+2025-09-04 20:35:42,118 [INFO] dash.ai: news.fetch: providers use_do=True use_hf=False have_keys do=True hf=True
+2025-09-04 20:35:43,570 [INFO] dash.ai: news.fetch: providers use_do=True use_hf=False have_keys do=True hf=True
+2025-09-04 20:35:44,604 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:45,774 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:46,279 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:48,018 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:48,194 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:49,547 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:49,802 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:50,860 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:51,436 [INFO] dash.ai: news.fetch: providers use_do=True use_hf=False have_keys do=True hf=True
+2025-09-04 20:35:51,648 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:52,241 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:53,136 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:53,342 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:53,554 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:54,920 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:55,006 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:55,305 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:56,394 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:56,650 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:57,321 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:58,203 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:59,048 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:59,067 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:35:59,730 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:00,469 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:00,734 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:01,155 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:01,731 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:02,172 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:02,677 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:03,159 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:03,674 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:04,078 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:04,691 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:04,935 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:05,523 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:06,130 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:06,324 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:06,940 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:07,485 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:07,735 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:08,918 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:10,152 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:11,597 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:13,010 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:14,567 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:27,947 [INFO] dash.ai: news.summary: asset=BTC model_pref=do items=15
+2025-09-04 20:36:31,953 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=15
+2025-09-04 20:36:33,725 [INFO] dash.ai: news.summary: asset=BTC model_pref=do items=15
+2025-09-04 20:36:37,278 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:39,979 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:36:44,707 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:21,796 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=30 model_pref=do analyze=True
+2025-09-04 20:37:23,982 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=30 model_pref=auto analyze=True
+2025-09-04 20:37:25,927 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=30 model_pref=gemini analyze=True
+2025-09-04 20:37:29,610 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=30 model_pref=gemini analyze=True
+2025-09-04 20:37:31,661 [INFO] dash.ai: news.fetch: asset=BTC days=14 max=30 model_pref=gemini analyze=True
+2025-09-04 20:37:32,187 [INFO] dash.ai: news.fetch: asset=BTC days=14 max=30 model_pref=gemini analyze=True
+2025-09-04 20:37:34,079 [INFO] dash.ai: news.fetch: providers use_do=True use_hf=False have_keys do=True hf=True
+2025-09-04 20:37:35,917 [INFO] dash.ai: news.fetch: providers use_do=True use_hf=False have_keys do=True hf=True
+2025-09-04 20:37:36,015 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:37,727 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:37,765 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:39,161 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:39,462 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:41,036 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:41,108 [INFO] dash.ai: news.fetch: providers use_do=True use_hf=False have_keys do=True hf=True
+2025-09-04 20:37:41,108 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:41,788 [INFO] dash.ai: news.fetch: providers use_do=True use_hf=False have_keys do=True hf=True
+2025-09-04 20:37:42,546 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:42,772 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:43,104 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:43,944 [INFO] dash.ai: news.fetch: providers use_do=True use_hf=False have_keys do=True hf=True
+2025-09-04 20:37:44,141 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:44,242 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:44,245 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:44,775 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:45,377 [INFO] dash.ai: news.fetch: providers use_do=True use_hf=False have_keys do=True hf=True
+2025-09-04 20:37:45,593 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:45,729 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:46,045 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:46,070 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:46,203 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:47,302 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:47,307 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:47,362 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:47,565 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:47,611 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:47,643 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:48,831 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:49,103 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:49,152 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:49,184 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:49,273 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:49,669 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:50,298 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:50,588 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:50,603 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:50,911 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:51,016 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:51,120 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:51,577 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:52,109 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:52,215 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:52,541 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:52,563 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:52,678 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:52,831 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:53,386 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:53,661 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:53,933 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:54,115 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:54,249 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:54,259 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:55,007 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:55,259 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:55,553 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:55,734 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:55,752 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:56,464 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:56,972 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:57,005 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:57,024 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:57,227 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:57,548 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:58,411 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:58,527 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:58,552 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:58,647 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:58,836 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:59,149 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:37:59,919 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:00,102 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:00,177 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:00,223 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:00,224 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:00,671 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:01,419 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:01,533 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:01,717 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:01,788 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:01,825 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:02,116 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:02,705 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:02,901 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:03,140 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:03,294 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:03,380 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:03,458 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:04,186 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:04,287 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:04,840 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:04,891 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:05,012 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:05,694 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:05,766 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:05,766 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:06,575 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:06,575 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:06,602 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:07,189 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:07,215 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:07,234 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:08,013 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:08,193 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:08,196 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:08,564 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:08,634 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:08,773 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:09,508 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:09,511 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:09,574 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:10,042 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:10,114 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:10,232 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:10,804 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:10,989 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:11,163 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:11,720 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:11,810 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:11,863 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:12,427 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:12,501 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:12,659 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:13,027 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:13,102 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:13,160 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:13,807 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:13,821 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:13,910 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:14,635 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:14,753 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:14,811 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:15,173 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:15,240 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:15,285 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:15,868 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:16,070 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:16,148 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:16,543 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:16,648 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:16,789 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:17,341 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:17,596 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:17,661 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:17,948 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:18,072 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:18,568 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:18,580 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:18,927 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:18,979 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:19,293 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:19,544 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:19,772 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:20,091 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:20,275 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:20,652 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:20,750 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:20,872 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:21,150 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:21,581 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:21,765 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:21,937 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:22,015 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:22,294 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:22,958 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:23,301 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:23,448 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:23,836 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:24,203 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:24,596 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:24,748 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:25,279 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:25,783 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:26,006 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:26,124 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:26,491 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:26,910 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:27,372 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:27,593 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:27,593 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:29,047 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:30,303 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:31,719 [INFO] dash.ai: news.HF/DO: DO POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:38:58,867 [INFO] dash.ai: news.summary: asset=BTC model_pref=gemini items=30
+2025-09-04 20:39:00,545 [INFO] dash.ai: news.summary: asset=BTC model_pref=do items=30
+2025-09-04 20:39:01,629 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=30
+2025-09-04 20:39:07,624 [INFO] dash.ai: news.summary: asset=BTC model_pref=gemini items=30
+2025-09-04 20:39:08,069 [INFO] dash.ai: news.summary: asset=BTC model_pref=gemini items=30
+2025-09-04 20:39:08,240 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:39:08,950 [INFO] dash.ai: news.summary: asset=BTC model_pref=gemini items=30
+2025-09-04 20:39:16,696 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:45:43,535 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=10 model_pref=gemini analyze=True
+2025-09-04 20:45:53,331 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 20:46:19,067 [INFO] dash.ai: news.summary: asset=BTC model_pref=gemini items=10
+2025-09-04 20:47:02,649 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=10 model_pref=gemini analyze=True
+2025-09-04 20:47:09,668 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 20:47:20,934 [INFO] dash.ai: news.summary: asset=BTC model_pref=gemini items=10
+2025-09-04 20:47:44,603 [INFO] dash.ai: news.fetch: asset=NVDA days=1 max=10 model_pref=gemini analyze=True
+2025-09-04 20:47:52,942 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 20:48:09,342 [INFO] dash.ai: news.summary: asset=NVDA model_pref=gemini items=10
+2025-09-04 20:51:45,676 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=20 model_pref=auto analyze=True
+2025-09-04 20:51:53,663 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 20:52:29,799 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=15 model_pref=auto analyze=True
+2025-09-04 20:52:38,150 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 20:53:05,184 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=20
+2025-09-04 20:53:14,910 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 20:53:26,120 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=15
+2025-09-04 20:53:36,266 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 21:11:31,142 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:11:41,332 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:11:57,467 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=5
+2025-09-04 21:12:03,132 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 21:14:11,446 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:14:17,577 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:14:32,769 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=5
+2025-09-04 21:14:39,130 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 21:16:11,767 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:16:18,047 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:16:27,391 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:16:32,009 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:16:48,847 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=5
+2025-09-04 21:16:54,786 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 21:19:40,929 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:19:46,119 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:20:02,301 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=5
+2025-09-04 21:20:08,498 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 21:20:49,804 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:20:54,855 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:21:11,517 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=5
+2025-09-04 21:21:18,154 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 21:21:50,168 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:21:54,638 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:22:10,275 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=5
+2025-09-04 21:22:16,605 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 21:22:47,987 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:22:52,654 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:22:59,939 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:23:05,368 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:23:35,581 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=5
+2025-09-04 21:23:41,133 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 21:26:09,847 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:26:13,998 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:26:18,813 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:26:33,935 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=auto analyze=True
+2025-09-04 21:26:39,694 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:26:57,389 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=5
+2025-09-04 21:27:04,064 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-04 21:28:41,499 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=gemini analyze=True
+2025-09-04 21:28:43,444 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:28:44,536 [INFO] dash.ai: news.summary: asset=BTC model_pref=gemini items=1
+2025-09-04 21:28:49,886 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:28:51,672 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:28:57,223 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:29:56,934 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:29:58,801 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:30:04,206 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:30:32,044 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:30:33,631 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:30:37,427 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:31:35,613 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:31:37,410 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:31:41,430 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:31:51,313 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:31:53,084 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:31:57,049 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:34:27,106 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:34:28,794 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:34:32,972 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:36:15,357 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:36:16,952 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:36:20,936 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:36:46,835 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:36:48,748 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:36:52,729 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:39:47,957 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:39:49,834 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:39:53,586 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:43:08,339 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:43:10,210 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:43:14,162 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:50:37,942 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:50:40,579 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:50:44,657 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:53:48,187 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:53:50,148 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:53:54,395 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:54:48,023 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:54:51,366 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:54:55,525 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:54:55,564 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:54:59,431 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:55:00,924 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:55:02,697 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:55:09,280 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:55:12,377 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:58:47,989 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:58:50,031 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:58:54,492 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:58:58,151 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:59:00,034 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:59:04,081 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 21:59:18,383 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 21:59:20,278 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 21:59:24,735 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:01:54,574 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:01:56,366 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:02:00,444 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:02:08,472 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:02:11,753 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:02:16,208 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:02:47,972 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:02:50,256 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:02:54,371 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:06:21,459 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:06:25,154 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:06:29,307 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:06:46,808 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:06:48,741 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:06:52,942 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:07:11,398 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:07:13,223 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:07:17,485 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:11:48,000 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:11:51,143 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:11:55,430 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:13:48,007 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:13:50,337 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:13:54,463 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:14:45,663 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:14:47,515 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:14:51,905 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:16:47,356 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:16:49,099 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:16:55,007 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:16:57,757 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:17:01,596 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:17:07,772 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:17:09,639 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:17:15,485 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:17:34,194 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:17:37,293 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:17:41,515 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:18:50,885 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:18:54,308 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:18:59,832 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:19:39,280 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:19:41,633 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:19:46,991 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:23:47,976 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:23:51,364 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:23:57,143 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:30:46,962 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:30:49,433 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:30:53,367 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:42:59,690 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:43:02,228 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:43:06,704 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:45:47,966 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:45:49,754 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:45:54,689 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:47:06,217 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:47:09,548 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:47:13,950 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:49:12,150 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:49:13,954 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:49:18,790 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:51:34,216 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:51:36,070 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:51:40,627 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:52:18,347 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:52:20,351 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:52:25,529 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:53:11,909 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:53:17,512 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:53:21,081 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:53:21,886 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:53:21,947 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:53:22,108 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:53:22,803 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:53:23,560 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:53:23,767 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:53:33,091 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:53:36,154 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:53:39,372 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:55:23,417 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:55:25,088 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:55:28,680 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:56:47,853 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 22:56:56,597 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 22:57:02,979 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:57:08,866 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 22:57:12,682 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:57:14,099 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:57:14,651 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:57:20,874 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:57:24,083 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:57:25,828 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:57:29,083 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:57:48,013 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:57:50,192 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:57:53,991 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:57:57,974 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:57:59,943 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:58:03,679 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 22:58:12,041 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 22:58:14,000 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 22:58:14,580 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:01:47,994 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:01:52,055 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:01:56,832 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:02:49,218 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:02:52,825 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:02:56,793 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:03:38,703 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:03:42,559 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:03:46,998 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:03:52,481 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:04:01,327 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:04:18,364 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-04 23:04:33,828 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:04:42,075 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:04:58,174 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-04 23:05:08,087 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=10 model_pref=local analyze=True
+2025-09-04 23:05:15,716 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:05:48,089 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=10
+2025-09-04 23:07:01,400 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=10 model_pref=local analyze=True
+2025-09-04 23:07:10,556 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:07:43,928 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=10 model_pref=local analyze=True
+2025-09-04 23:07:52,488 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:08:21,639 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=10
+2025-09-04 23:08:22,099 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:08:23,844 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:08:26,160 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:08:26,315 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:08:27,734 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:08:30,219 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:08:38,878 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:08:40,395 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:08:43,132 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:08:46,755 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:08:53,895 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:09:09,328 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-04 23:09:36,129 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:09:42,504 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:09:57,694 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-04 23:10:32,397 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:10:39,533 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:10:55,483 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-04 23:11:03,163 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:11:13,796 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:11:29,468 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-04 23:13:02,324 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:13:07,697 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:13:11,844 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:13:14,094 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:13:26,980 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-04 23:13:29,118 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-04 23:13:55,039 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:13:58,049 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:14:00,437 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:14:05,385 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:14:07,362 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:14:09,917 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:18:21,828 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:18:29,111 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:18:44,250 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-04 23:18:47,615 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:18:53,943 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:18:54,453 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:18:55,258 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:18:56,563 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:18:56,568 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:18:59,059 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:18:59,074 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:19:04,559 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:19:06,653 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:19:09,545 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:19:13,133 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:19:13,581 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:19:15,365 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:19:15,894 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:19:17,805 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:19:19,365 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:29:36,896 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:29:39,168 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:29:41,639 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:29:52,057 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:30:00,587 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:30:15,781 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-04 23:30:31,904 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-04 23:30:41,067 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:30:57,632 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-04 23:32:55,870 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:32:58,409 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:33:00,495 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:33:01,065 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:33:13,500 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:33:15,546 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:33:23,478 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:33:26,611 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:33:29,052 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:34:35,990 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:34:38,143 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:34:40,530 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:34:48,611 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:34:50,771 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:34:53,255 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:35:55,493 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:35:58,803 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:36:01,231 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:36:05,608 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:36:26,236 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:36:28,446 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:36:30,899 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:36:41,739 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:36:43,859 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:36:46,267 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:38:22,623 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:38:26,571 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:38:29,009 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:38:47,937 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:38:50,081 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:38:52,558 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:40:14,828 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:40:17,829 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:40:20,291 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:40:27,520 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:40:29,573 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:40:32,181 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:40:34,507 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:40:35,044 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:40:37,370 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:40:39,797 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:40:40,322 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:40:42,733 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:40:47,227 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:40:49,485 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:40:51,884 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:41:57,379 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:41:59,763 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:42:02,194 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:42:35,808 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:42:38,952 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:42:39,277 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:42:41,443 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:42:41,844 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:42:43,869 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:42:47,508 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:42:52,878 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:42:55,317 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:43:19,581 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:43:21,709 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:43:24,132 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:43:48,485 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:43:54,508 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:43:57,095 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:44:09,648 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:44:09,772 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:44:12,375 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:44:12,789 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:44:14,822 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:44:15,160 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:44:23,729 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:44:26,592 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:44:29,020 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:45:12,295 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:45:14,739 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:45:17,138 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:46:03,111 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:46:05,484 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:46:05,956 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:46:07,798 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:46:08,501 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:46:10,221 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:46:17,427 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:46:20,596 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:46:23,267 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:46:34,236 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:46:36,587 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:46:39,024 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:46:46,040 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:46:48,353 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:46:50,970 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:47:28,786 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:47:31,161 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:47:33,590 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:47:48,851 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:47:51,567 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:47:54,127 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:47:58,073 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:48:01,148 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:48:03,668 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:51:16,088 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:51:18,758 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:51:21,153 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:51:21,328 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:51:23,294 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:51:25,930 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:52:26,097 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:52:28,327 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:52:30,798 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:52:55,606 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:53:01,464 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:53:03,939 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:53:51,690 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:53:55,885 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:53:58,481 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:54:14,094 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:54:20,057 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:54:22,487 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:54:47,366 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:54:49,829 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:54:52,315 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:54:59,005 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:55:02,175 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:55:04,606 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:55:11,004 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:55:13,520 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:55:16,004 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:55:31,970 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:55:34,587 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:55:37,166 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:56:03,384 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:56:06,034 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:56:08,902 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:56:16,237 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:56:19,569 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:56:22,075 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:56:26,901 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:56:29,222 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:56:31,646 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:57:58,456 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:58:00,946 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:58:03,436 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:58:07,733 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:58:11,696 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:58:14,188 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:58:46,606 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:58:49,001 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:58:51,613 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-04 23:59:22,943 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-04 23:59:25,177 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-04 23:59:27,604 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:00:11,777 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:00:14,048 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:00:16,511 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:00:19,533 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:00:21,814 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:00:24,260 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:00:41,939 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:00:44,382 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:00:45,700 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:00:46,848 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:00:48,780 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:00:51,299 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:00:56,871 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:00:59,378 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:01:06,924 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:01:08,970 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:01:11,481 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:01:59,953 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:02:02,278 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:02:04,724 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:02:09,939 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:02:12,118 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:02:16,244 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:02:18,492 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:02:20,950 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:02:23,926 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:02:26,500 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:02:28,905 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:02:46,047 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:02:48,337 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:02:50,751 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:03:13,703 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:03:16,999 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:03:19,619 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:03:26,733 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:03:29,199 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:03:31,634 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:03:41,282 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:03:43,523 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:03:45,939 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:05:47,323 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:05:49,786 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:05:52,235 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:05:56,695 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:06:02,267 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:06:04,796 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:06:47,958 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:06:51,035 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:06:53,510 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:07:48,054 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:07:53,474 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:07:55,902 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:07:56,531 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:07:59,100 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:08:01,522 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:08:05,828 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:08:08,761 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:08:09,909 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:08:11,270 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:08:14,163 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:08:15,073 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:08:16,990 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:08:17,840 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:08:20,442 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:08:27,024 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:08:29,567 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:08:31,979 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:08:47,725 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:08:50,147 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:08:52,518 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:08:52,612 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:08:54,642 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:08:57,262 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:08:58,424 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:08:58,461 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:08:59,482 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:08:59,773 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:09:01,802 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:09:01,818 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:09:02,223 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:09:02,699 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:09:03,114 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:09:03,296 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:09:04,367 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:09:04,371 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:09:05,381 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:09:05,992 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:09:06,856 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:09:07,936 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:09:08,447 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:09:09,333 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:09:13,569 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:09:15,916 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:09:18,312 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:09:24,377 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:09:26,406 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:09:28,834 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:09:51,448 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:09:53,648 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:09:56,070 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 00:10:00,119 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 00:10:02,228 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 00:10:04,776 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 09:06:55,711 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 09:06:59,736 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=20 model_pref=local analyze=True
+2025-09-05 09:07:00,431 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:07:01,593 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=20 model_pref=auto analyze=True
+2025-09-05 09:07:05,258 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 09:07:11,213 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:07:13,125 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:08:24,836 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=20
+2025-09-05 09:08:25,041 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=20
+2025-09-05 09:11:51,963 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=20 model_pref=auto analyze=True
+2025-09-05 09:12:02,000 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:12:34,264 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:12:39,080 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:12:46,550 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:22:29,228 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:22:32,886 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:22:37,636 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:44:25,431 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:44:27,696 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:44:30,492 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:45:08,560 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:45:10,906 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:45:13,783 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:46:52,595 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:46:54,520 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:46:57,320 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:47:42,835 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:47:44,479 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:47:46,259 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:47:47,673 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:47:47,841 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:47:47,978 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:47:49,549 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:47:50,593 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:47:51,759 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:48:53,565 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:48:55,188 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:48:57,652 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:52:19,272 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:52:20,864 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:52:23,272 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:53:57,682 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:54:01,306 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:54:02,839 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:54:05,358 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:56:00,346 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:56:01,953 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:56:02,713 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:56:04,213 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:56:04,647 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:56:06,511 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:58:24,530 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:58:26,308 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:58:28,643 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:58:29,499 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:58:31,145 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:58:31,778 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 09:58:33,485 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 09:58:33,565 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 09:58:35,684 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:00:15,569 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:00:17,284 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:00:20,731 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:00:29,287 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:00:30,934 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:00:32,159 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:00:33,956 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:00:34,175 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:00:36,070 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:00:36,347 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:00:37,792 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:00:40,069 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:00:40,169 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:00:41,989 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:00:44,585 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:02:59,160 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:03:00,856 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:03:04,156 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:03:04,282 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:03:05,976 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:03:08,322 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:06:32,562 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:06:34,997 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:06:38,145 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:07:50,122 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:07:55,551 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:07:55,591 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:08:01,392 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:08:01,491 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:08:07,142 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:12:43,558 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:12:45,943 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:12:49,714 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:13:36,746 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:13:39,674 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:13:41,925 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:13:45,947 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:15:39,260 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:15:41,647 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:15:44,477 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:16:52,295 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:16:54,599 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:16:57,122 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:17:14,252 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:17:16,467 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:17:23,301 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:17:25,494 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:17:28,463 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:18:25,376 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:18:27,620 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:18:34,362 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:18:36,614 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:18:39,649 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:18:50,138 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:18:50,798 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:18:52,443 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:18:53,070 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:18:55,342 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:18:56,496 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:18:58,533 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:19:00,946 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:19:02,575 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:19:03,784 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:19:04,919 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:19:07,732 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:20:03,390 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:20:05,822 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:20:08,743 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:20:31,029 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:20:33,355 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:20:36,152 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:21:37,264 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:21:39,376 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:21:41,596 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 10:22:06,723 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 10:22:08,366 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 10:22:11,028 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 11:03:07,098 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 11:03:10,571 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:03:14,568 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 11:06:52,156 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-05 11:06:58,708 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:07:17,613 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-05 11:09:56,175 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 11:09:59,682 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:10:04,842 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 11:10:10,449 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 11:10:14,069 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:10:18,569 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 11:11:25,326 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 11:11:26,918 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:11:29,315 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 11:12:25,323 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 11:12:26,910 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:12:29,412 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 11:13:09,591 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 11:13:11,253 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:13:13,782 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 11:13:55,530 [INFO] dash.ai: news.fetch: asset=AMZN days=7 max=6 model_pref=auto analyze=True
+2025-09-05 11:14:01,961 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:14:20,661 [INFO] dash.ai: news.summary: asset=AMZN model_pref=auto items=6
+2025-09-05 11:15:18,883 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-05 11:15:20,489 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:15:22,913 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-05 11:19:47,250 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-05 11:19:53,000 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:20:15,397 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-05 11:28:43,307 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-05 11:28:48,947 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:29:03,706 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-05 11:35:11,052 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-05 11:35:15,711 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:35:31,070 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-05 11:58:48,605 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-05 11:58:54,450 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 11:59:15,816 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-05 12:18:05,145 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-05 12:18:29,087 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 12:18:59,803 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-05 13:33:11,258 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-05 13:33:16,842 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 13:33:32,708 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-05 13:34:52,767 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-05 13:34:59,167 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 14:40:42,655 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=10 model_pref=auto analyze=True
+2025-09-05 14:41:03,781 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 14:42:05,202 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=10
+2025-09-05 14:42:09,739 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-05 14:43:14,880 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-05 14:43:34,187 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 14:44:12,561 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-05 14:45:26,517 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-05 14:45:39,715 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=local analyze=True
+2025-09-05 14:45:46,038 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 14:45:58,881 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 14:46:27,161 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-05 14:46:42,178 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=5
+2025-09-05 14:52:38,902 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 14:52:40,940 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 14:52:42,428 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 14:52:44,599 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 14:52:44,961 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 14:52:48,245 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 17:37:26,821 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 17:37:29,331 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 17:37:29,853 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 17:38:12,582 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 17:38:14,659 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 17:38:15,514 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 17:39:32,884 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-05 17:39:40,286 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 17:39:51,473 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-05 17:40:40,392 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-05 17:42:45,378 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 17:42:47,596 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 17:42:47,974 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 17:45:24,814 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 17:45:27,433 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 17:45:28,709 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 17:49:30,612 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 17:49:33,031 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 17:49:34,268 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 18:06:24,821 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 18:06:27,013 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 18:06:27,430 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 18:23:24,822 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 18:23:27,391 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 18:23:27,845 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 18:25:24,808 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 18:25:26,397 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 18:25:26,792 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 18:27:24,818 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 18:27:26,496 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 18:27:26,958 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 18:28:24,831 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 18:28:26,476 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 18:28:26,886 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 18:33:15,636 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-05 18:33:17,959 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 18:33:18,425 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-05 18:34:12,023 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-05 18:34:34,020 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 18:34:58,481 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-05 18:35:46,700 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-05 21:57:36,824 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-05 21:57:44,042 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-05 21:57:53,789 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-06 11:12:55,293 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:12:57,354 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:12:58,004 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:12:59,051 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:12:59,575 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:12:59,900 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:13:00,145 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:13:00,821 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:13:01,868 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:13:02,086 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:13:03,303 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:13:04,353 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:13:04,711 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:13:05,338 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:13:06,260 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:13:06,864 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:13:08,751 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:13:09,307 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:13:10,446 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:13:12,042 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:13:14,529 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:13:33,053 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:13:35,728 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:13:38,137 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:14:41,141 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:14:42,871 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:14:45,376 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:14:47,413 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:14:48,062 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:14:48,887 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:14:49,577 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:14:50,032 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:14:51,399 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:14:51,429 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:14:51,546 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:14:52,150 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:14:53,036 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:14:53,997 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:14:55,477 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:15:40,294 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:15:41,851 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:15:47,547 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:15:49,078 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:15:53,521 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:15:54,990 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:15:57,430 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:16:08,591 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:16:10,171 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:16:12,604 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:16:23,698 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:16:25,280 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:16:27,746 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:16:34,974 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:16:36,506 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:20:51,438 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:20:53,202 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:20:54,098 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:20:54,929 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:20:55,687 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:20:55,761 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:20:56,632 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:20:56,931 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:20:58,212 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:20:58,217 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:20:58,480 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:20:59,114 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:20:59,897 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:21:00,931 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:21:02,543 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:21:45,536 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:21:47,143 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:21:49,600 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:23:48,074 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:23:49,871 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:23:55,567 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:23:57,130 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:23:59,534 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:27:28,424 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:27:30,211 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:27:34,608 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:27:36,201 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:27:38,642 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:27:43,368 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:27:44,980 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:37:51,236 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:37:52,914 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:37:53,516 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:37:54,039 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:37:54,509 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:37:55,115 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:37:55,513 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:37:56,575 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:37:57,060 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:37:57,198 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:37:57,686 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:37:59,709 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:38:26,381 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:38:27,942 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:38:30,367 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:47:41,329 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:47:43,128 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:47:46,467 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:47:47,378 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:47:47,380 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:47:48,215 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:47:48,954 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:47:49,547 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:47:51,159 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:47:59,570 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:48:02,660 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:48:05,642 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:48:36,611 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:48:38,193 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:48:40,708 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:48:42,014 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:48:42,270 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:48:42,415 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:48:43,546 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:48:45,656 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:48:58,289 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:52:13,057 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:52:14,843 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:52:18,917 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:52:54,840 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:52:56,433 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:53:00,436 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:55:54,020 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:55:55,873 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:56:00,198 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 11:59:50,359 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 11:59:52,281 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 11:59:52,737 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:01:13,312 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:01:15,189 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:01:15,619 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:01:40,589 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:01:42,269 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:01:42,712 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:01:50,974 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:01:52,569 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:01:52,978 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:05:22,258 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:05:23,431 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:05:24,044 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:05:24,470 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:05:24,913 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:05:25,034 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:05:25,467 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:05:26,572 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:05:26,992 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:05:31,832 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:05:33,375 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:05:33,845 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:08:48,080 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:08:49,507 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:08:50,093 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:08:50,562 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:08:51,104 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:08:51,507 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:27:09,004 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:27:10,889 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:27:11,318 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:27:23,953 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:27:25,445 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:27:25,897 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:27:33,406 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 12:27:38,571 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:27:53,992 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-06 12:28:32,116 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:28:33,661 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:28:34,188 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:32:31,628 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:32:35,336 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:32:36,562 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:32:37,009 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:32:37,206 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:32:37,643 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:32:47,061 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 12:32:53,497 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:33:10,028 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-06 12:34:30,989 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:34:32,823 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:34:33,415 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:34:33,904 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:34:35,665 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:34:36,252 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:34:36,259 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 12:34:39,969 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 12:34:41,560 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:34:45,404 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:34:58,742 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-06 12:35:00,973 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-06 12:36:08,349 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:36:09,467 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:36:09,835 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:36:10,430 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:36:11,004 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:36:11,296 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:36:11,673 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:36:11,853 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:36:12,274 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:36:17,648 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 12:36:22,632 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:36:38,599 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-06 12:40:52,829 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:40:53,882 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:40:57,025 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:40:57,059 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:40:57,694 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:40:57,738 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:41:05,364 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 12:41:11,294 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:41:27,044 [INFO] dash.ai: news.summary: asset=AAPL model_pref=auto items=6
+2025-09-06 12:43:39,997 [INFO] dash.ai: news.fetch: asset=NVDA days=7 max=6 model_pref=auto analyze=True
+2025-09-06 12:43:44,698 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:43:53,811 [INFO] dash.ai: news.summary: asset=NVDA model_pref=auto items=4
+2025-09-06 12:46:08,377 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:46:10,357 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:46:10,824 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:46:11,281 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:46:11,871 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:46:12,273 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:48:44,566 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:48:47,972 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:48:50,489 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:48:53,580 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:48:55,056 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:49:00,428 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:49:03,008 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:49:04,481 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:53:15,500 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:53:18,695 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:53:20,734 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:53:40,683 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:53:43,227 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:53:45,228 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:54:25,647 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:54:28,218 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:54:29,783 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:54:50,172 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:54:52,729 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:54:54,150 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:55:29,900 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:55:32,588 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:55:34,535 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:55:47,822 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:55:53,213 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:55:56,352 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:55:57,828 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:56:29,200 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:56:32,302 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:56:33,818 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:57:45,430 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:57:48,156 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:57:50,224 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:58:20,187 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:58:22,860 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:58:24,926 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 12:58:39,359 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 12:58:42,019 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 12:58:43,531 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 13:00:32,339 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-06 13:00:35,574 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:00:40,201 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-06 13:01:47,413 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-06 13:01:51,305 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-06 13:01:54,570 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:01:57,519 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 13:01:58,887 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 13:01:59,229 [INFO] dash.ai: news.summary: asset=BTC model_pref=auto items=1
+2025-09-06 13:02:00,575 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:02:01,476 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:02:02,542 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 13:02:03,003 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 13:03:01,205 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 13:03:03,925 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:03:05,419 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 13:03:35,689 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 13:03:38,259 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:03:39,446 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 13:03:56,719 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 13:03:59,809 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:04:01,369 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 13:09:18,026 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-06 13:09:21,255 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:09:33,269 [INFO] dash.ai: news.summary: asset=BTC model_pref=local items=1
+2025-09-06 13:10:13,579 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 13:10:16,715 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:10:23,285 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 13:10:52,684 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:10:59,887 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:11:13,375 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 13:14:07,746 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:14:12,946 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:14:17,914 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:14:20,864 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:14:30,056 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 13:14:34,146 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 13:14:35,094 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 13:14:45,324 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:15:14,412 [INFO] dash.ai: news.summary: asset=CRCL model_pref=local items=6
+2025-09-06 13:18:31,250 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:18:39,562 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:18:54,897 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 13:21:30,392 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:21:39,214 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:21:48,002 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:21:54,194 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:22:02,745 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:22:17,992 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 13:23:34,224 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:23:41,840 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:23:57,798 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 13:32:34,204 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:32:43,468 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:32:59,664 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 13:48:34,224 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:48:42,644 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:48:58,944 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 13:50:34,193 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:50:43,304 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:50:58,890 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 13:56:20,651 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 13:56:29,441 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 13:56:44,417 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 14:00:51,491 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 14:01:05,904 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 14:01:32,222 [INFO] dash.ai: news.summary: asset=CRCL model_pref=local items=6
+2025-09-06 14:09:57,918 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 14:09:59,188 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 14:10:08,385 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 14:10:08,802 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 14:10:12,244 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 14:10:23,347 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 14:10:24,320 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 14:10:26,958 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 14:10:54,596 [INFO] dash.ai: news.summary: asset=CRCL model_pref=local items=6
+2025-09-06 14:23:13,001 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=gemini analyze=True
+2025-09-06 14:23:21,534 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 14:23:23,631 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=5 model_pref=auto analyze=True
+2025-09-06 14:23:31,249 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 14:23:37,745 [INFO] dash.ai: news.summary: asset=ETH model_pref=gemini items=5
+2025-09-06 14:23:46,032 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-06 14:37:35,985 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 14:37:48,740 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 14:38:11,387 [INFO] dash.ai: news.summary: asset=AAPL model_pref=local items=6
+2025-09-06 15:41:43,287 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 15:41:55,068 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 15:42:17,394 [INFO] dash.ai: news.summary: asset=AAPL model_pref=local items=6
+2025-09-06 16:28:01,811 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=auto analyze=True
+2025-09-06 16:28:04,191 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:28:05,221 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:28:06,680 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:28:07,431 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:28:09,390 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=1
+2025-09-06 16:28:11,576 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:28:13,941 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:28:14,884 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:28:46,280 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:28:50,054 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:28:51,032 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:29:42,519 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:29:45,023 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:29:55,519 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:31:50,924 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:31:54,804 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:31:57,427 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:32:03,817 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:32:06,900 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:32:11,185 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:32:18,791 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:32:21,366 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:32:25,887 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:34:04,888 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:34:08,363 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:34:12,774 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:34:43,008 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:34:45,630 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:34:46,324 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:35:29,482 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:35:32,178 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:35:33,155 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:36:11,690 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:36:14,345 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:36:15,075 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:36:50,620 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:36:53,195 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:36:54,144 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:37:52,738 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=local analyze=True
+2025-09-06 16:37:55,948 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:37:56,886 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=1
+2025-09-06 16:38:41,608 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=auto analyze=True
+2025-09-06 16:38:44,981 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:38:48,393 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=1
+2025-09-06 16:42:03,465 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=auto analyze=True
+2025-09-06 16:42:04,512 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=auto analyze=True
+2025-09-06 16:42:05,940 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:42:07,654 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:42:09,386 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=1
+2025-09-06 16:42:10,125 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=1
+2025-09-06 16:42:25,425 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 16:42:37,438 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:42:55,142 [INFO] dash.ai: news.summary: asset=AAPL model_pref=local items=6
+2025-09-06 16:55:05,365 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=auto analyze=True
+2025-09-06 16:55:06,493 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=auto analyze=True
+2025-09-06 16:55:08,111 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:55:08,925 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:55:10,475 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=1
+2025-09-06 16:55:10,518 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=1
+2025-09-06 16:55:12,595 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 16:55:13,979 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-06 16:55:14,955 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-06 16:55:26,312 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:55:36,983 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=auto analyze=True
+2025-09-06 16:55:37,760 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=auto analyze=True
+2025-09-06 16:55:39,971 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:55:40,409 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:55:40,968 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=1
+2025-09-06 16:55:41,205 [INFO] dash.ai: news.fetch: asset=ETH days=7 max=1 model_pref=auto analyze=True
+2025-09-06 16:55:42,538 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=1
+2025-09-06 16:55:42,953 [INFO] dash.ai: news.summary: asset=CRCL model_pref=local items=6
+2025-09-06 16:55:43,891 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:55:45,056 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=1
+2025-09-06 16:55:55,053 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 16:55:57,712 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 16:56:08,286 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:56:11,103 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 16:56:20,754 [INFO] dash.ai: news.summary: asset=AAPL model_pref=local items=6
+2025-09-06 16:56:22,256 [INFO] dash.ai: news.summary: asset=CRCL model_pref=local items=6
+2025-09-06 16:56:29,190 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-06 16:56:30,736 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-06 16:56:31,511 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-06 17:58:22,781 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 17:58:37,638 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 17:58:48,367 [INFO] dash.ai: news.summary: asset=CRCL model_pref=local items=6
+2025-09-06 18:07:28,852 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 18:07:43,525 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 18:07:59,875 [INFO] dash.ai: news.summary: asset=CRCL model_pref=local items=6
+2025-09-06 18:14:48,163 [INFO] dash.ai: news.fetch: asset=GOOGL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 18:14:58,556 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 18:15:13,859 [INFO] dash.ai: news.summary: asset=GOOGL model_pref=local items=6
+2025-09-06 18:25:55,971 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 18:26:08,268 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 18:26:22,623 [INFO] dash.ai: news.summary: asset=CRCL model_pref=local items=6
+2025-09-06 21:09:52,722 [INFO] dash.ai: news.fetch: asset=META days=7 max=6 model_pref=auto analyze=True
+2025-09-06 21:09:59,730 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 21:12:28,777 [INFO] dash.ai: news.summary: asset=META model_pref=local items=6
+2025-09-06 21:19:44,368 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 21:19:57,168 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-06 21:20:35,941 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 21:21:18,191 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 21:22:02,463 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 21:23:56,625 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-06 21:24:24,440 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True

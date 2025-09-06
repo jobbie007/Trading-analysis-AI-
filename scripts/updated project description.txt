@@ -1,0 +1,170 @@
+🚀 Financial Intelligence Dashboard
+An AI-powered dashboard for advanced financial research and analysis, featuring a hybrid architecture that combines deterministic data pipelines with collaborative multi-agent AI systems.
+🎯 Core Features
+Interactive Dashboard: A rich, multi-tab user interface built with Dash and Plotly for intuitive data exploration and visualization.
+AI-Powered News Analysis: Aggregates and analyzes financial news in real-time, complete with AI-generated summaries and sentiment scores. Supports multiple LLM backends, including local models, Gemini, DigitalOcean, and Hugging Face.
+On-Chain Wallet Intelligence: Provides strategic insights by analyzing Bitcoin and Ethereum wallet addresses for balance, token holdings, and transaction history.
+Multi-Engine Research Platform: The core of the system, offering three distinct AI engines for deep-dive analysis:
+Deterministic Pipeline: A fast, reliable workflow for technical and fundamental analysis.
+Multi-Agent System (AutoGen): A collaborative team of specialized AI agents that perform research based on natural language objectives.
+Tool-Using Agent (LangChain): A lightweight, agentic workflow for LLM-driven analysis.
+Versatile Data Integration: Utilizes a wide range of data sources, including yfinance for market data, Blockchair for on-chain data, and various news APIs, with robust fallbacks to free services like DuckDuckGo search.
+🏗️ System Architecture
+The application is a multi-tab Dash dashboard where each tab serves a distinct purpose. The "Research" tab is the most advanced, allowing the user to configure and launch different AI-driven analysis workflows.
+code
+Code
+┌─────────────────────────────────────────────────────────────┐
+│                 USER INTERFACE (DASH)                       │
+│       [News Tab] [Strategy Tab] [Research Tab]              │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────────────────┐
+│               APPLICATION & SERVICE LAYER                   │
+│      (NewsBridge, ResearchOrchestrator)                     │
+└──────┬──────────────────────────┬───────────────────────────┘
+       │                          │
+┌──────▼───────────────┐  ┌───────▼──────────────────────────────────┐
+│   DETERMINISTIC      │  │             AI-DRIVEN ENGINES              │
+│      SERVICES        │  │           (User Selectable)                │
+│ ┌──────────────────┐ │  │ ┌───────────┐ ┌──────────┐ ┌───────────┐ │
+│ │   News Fetcher   │ │  │ │ LangChain │ │ AutoGen  │ │Exploratory│ │
+│ │  Wallet Analyzer │ │  │ │  Workflow │ │  Team    │ │ Web Agent │ │
+│ └──────────────────┘ │  │ └───────────┘ └──────────┘ └───────────┘ │
+└──────────────────────┘  └──────────────────────────────────────────┘
+🚀 Quick Start
+1. Environment Setup
+code
+Bash
+# Clone or navigate to the project directory
+cd financial-intelligence-dashboard
+
+# Create a virtual environment
+python -m venv venv
+
+# Activate the environment
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+2. Configuration
+Copy the environment template. The system is designed to run with zero configuration using free data sources, but adding API keys will enhance its capabilities.
+code
+Bash
+cp .env.example .env
+Edit .env and add any of the following optional keys:
+code
+Code
+# For Local LLM (e.g., LM Studio, Ollama)
+LOCAL_LLM_BASE_URL=http://127.0.0.1:1234/v1
+LOCAL_LLM_MODEL=llama-3.1-8b-instruct
+
+# Optional API keys for enhanced data
+NEWSAPI_KEY=your_newsapi_key
+GNEWS_API_KEY=your_gnews_key
+BLOCKCHAIR_API_KEY=your_blockchair_key_for_wallet_analysis
+DO_AI_API_KEY=your_digitalocean_key
+HF_TOKEN=your_huggingface_key
+SERPER_API_KEY=your_google_search_api_key
+3. Launch the Dashboard
+code
+Bash
+python app.py
+🎮 Using the System
+Navigate to http://127.0.0.1:8050 in your web browser to access the dashboard.
+📊 News & Analysis Tab
+Enter a stock or crypto ticker (e.g., AAPL, BTC).
+Select your preferred AI provider for analysis.
+Click "Refresh" to fetch the latest news.
+View an overall AI-generated summary and individual article analyses.
+Click on any article to expand its AI summary.
+💼 Strategy (Wallet) Tab
+Select a blockchain (Bitcoin or Ethereum).
+Enter a public wallet address.
+Click "Analyze" to view on-chain stats and a suggested strategic posture.
+🔬 Research Tab
+This is where the multi-agent systems come to life.
+Configure the analysis parameters in the left-hand sidebar (ticker, timeframe, indicators, etc.).
+Choose your Execution Engine:
+Multi-Agent (AutoGen) for a collaborative agent workflow.
+LangChain (beta) for a streamlined, tool-based agent workflow.
+Configure LLM settings or leave them as default.
+Click "🚀 Run Analysis" and observe the results and agent conversations.
+🎨 Vibe-Coding Philosophy
+This project showcases a hybrid development approach. While foundational services like data fetching are traditionally coded for reliability, the Research Tab demonstrates "vibe coding"—directing AI agents with structured natural language rather than explicit programming.
+Traditional Approach (in services.py):
+code
+Python
+def synthesis_agent_for_technicals(hist, indicators, ...):
+    # 50+ lines of pandas and plotly code...
+    sma = close.rolling(window=w).mean()
+    fig.add_trace(go.Scatter(x=df.index, y=sma, name=f"SMA({length})"))
+    return fig, summary
+Vibe-Coded Approach (used by agents_team.py):
+code
+Python
+user_request = """
+Analyze stock ticker: AAPL
+Timeframe: 1d, from 2023-01-01 to 2023-12-31
+Technical indicators: SMA, EMA, RSI
+"""
+# AutoGen team dynamically calls tools and synthesizes a report
+# based on this high-level directive.
+run_autogen_workflow(user_request)
+📊 Project Status & Roadmap
+✅ Phase 1: Foundation (Complete)
+
+Core project architecture with Dash
+
+NewsBridge for fetching and analyzing news
+
+ResearchOrchestrator for deterministic analysis pipelines
+
+On-chain wallet analysis feature
+🚧 Phase 2: AI Agent Integration (Complete)
+
+AutoGen Team Workflow: Implemented agents_team.py for collaborative research.
+
+LangChain Workflow: Implemented lc_agents.py for an alternative agentic engine.
+
+Advanced UI: Full-featured Research Tab with engine selection and deep configuration.
+
+Multi-backend LLM support (Local, DO, HF, Gemini).
+📋 Phase 3: Analysis & Optimization (Planned)
+
+Add more sophisticated fundamental analysis tools.
+
+Implement self-correction loops for agents.
+
+Create a "results comparison" view to contrast outputs from different engines.
+
+Enhance visualizations with more interactive elements.
+🛠️ Project Structure
+code
+Code
+financial-intelligence-dashboard/
+├── app.py                     # Main Dash application entry point
+├── services.py                # Core deterministic logic (NewsBridge, ResearchOrchestrator)
+├── agents_team.py             # AutoGen multi-agent team implementation
+├── lc_agents.py               # LangChain agent workflow
+├── web_agents.py              # Exploratory web-first research agent
+├── requirements.txt           # Project dependencies
+├── .env.example               # Environment configuration template
+└── layouts/
+    ├── news.py                # Layout for the News Tab
+    └── strategy.py            # Layout for the Strategy/Wallet Tab
+📚 Key Dependencies
+Core Framework
+dash & plotly: For the interactive web dashboard.
+pandas: For all data manipulation and analysis.
+AI & Agent Frameworks
+autogen: For the multi-agent collaborative workflows.
+langchain: For the tool-using agent workflows.
+openai: Client for interacting with OpenAI-compatible APIs (including local LLMs).
+Data & Tools
+yfinance: For fetching stock market data.
+duckduckgo-search: As a free, no-key-required web search tool.
+beautifulsoup4: For parsing HTML content from web articles.
+pypdf: For extracting text from PDF documents.
