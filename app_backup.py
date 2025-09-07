@@ -4,7 +4,7 @@ import requests
 from urllib.parse import urlparse
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
-load_dotenv() # Ensures environment variables are loaded at the very start
+load_dotenv()
 import dash
 from dash import Dash, dcc, html, Input, Output, State, ALL
 from services import NewsBridge, ResearchOrchestrator
@@ -17,6 +17,9 @@ except Exception:
     # When running as a script (python dash/app.py), use local package import
     from layouts.news import layout as news_tab_layout  # type: ignore
     from layouts.strategy import layout as strategy_tab_layout  # type: ignore
+
+# Ensure dash/.env overrides any pre-set environment variables (so API-backed news providers are enabled)
+#load_dotenv(override=True)
 
 app = Dash(__name__, suppress_callback_exceptions=True, title="Financial Intelligence Dashboard")
 server = app.server
@@ -67,8 +70,7 @@ app.layout = html.Div(className="container", children=[
     dcc.Tabs(id="tabs", value="tab-news", className="tab-parent", children=[
         dcc.Tab(label="📊 News & Analysis", value="tab-news", className="tab"),
         dcc.Tab(label="💼 Strategy (Wallet)", value="tab-strategy", className="tab"),
-        dcc.Tab(label="🔬 Research", value="tab-research", className="tab"),
-        # You can add the Market Vitals tab back here when you're ready
+    dcc.Tab(label="🔬 Research", value="tab-research", className="tab"),
     ]),
     
     # Data stores
@@ -807,7 +809,6 @@ def render_overall(overall, asset, tab_value, meta, news_data):
         html.Div(overall.get("summary"), style={"lineHeight": "1.6", "color": "var(--text-secondary)"}),
         footer,
     ])
-
 @app.callback(
     Output("selected-idx", "data"),
     Input({"type": "news-card", "index": ALL}, "n_clicks"),
@@ -847,61 +848,8 @@ def _toggle_provider_controls(model_pref):
     hide = {"display": "none"}
     return (show if mp == "do" else hide, show if mp == "hf" else hide)
 
-# --- START: WALLET STRATEGY SECTION (ALL FIXES APPLIED) ---
-
-def generate_llm_strategy(chain, balance, token_count, tokens_list):
-    """
-    Uses the local LLM to generate a more dynamic wallet strategy.
-    """
-    base_url = os.getenv("LOCAL_LLM_BASE_URL", "").strip()
-    if not base_url:
-        return ["LLM not configured. Set LOCAL_LLM_BASE_URL to enable AI strategy."]
-
-    prompt = f"""
-    You are an expert crypto portfolio analyst. A user has provided a snapshot of their wallet.
-    Based on the data below, provide a concise, actionable analysis and strategy in 3-4 bullet points.
-
-    Wallet Data:
-    - Blockchain: {chain}
-    - Native Coin Balance ({'BTC' if chain == 'bitcoin' else 'ETH'}): {balance:.6f}
-    - Number of Different Tokens: {token_count}
-    - Notable Tokens: {', '.join(tokens_list[:5]) if tokens_list else 'N/A'}
-
-    Your analysis should consider the wallet's posture (e.g., concentrated, diversified, passive holding)
-    and suggest potential next steps or areas to research. Be encouraging and insightful.
-    Example:
-    - Your portfolio appears to be a passive holding with a focus on the native asset. This is a solid, lower-risk strategy.
-    - With {token_count} different assets, you have a good level of diversification. Consider reviewing underperforming assets quarterly.
-    - To increase potential upside, you could explore adding a small position in a trending narrative like AI or DePIN.
-    """
-    
-    system_message = "You are a helpful crypto analyst that provides brief, actionable advice."
-    
-    try:
-        payload = {
-            "model": os.getenv("LOCAL_LLM_MODEL", "llama-3.1-8b-instruct"),
-            "messages": [
-                {"role": "system", "content": system_message},
-                {"role": "user", "content": prompt}
-            ],
-            "temperature": 0.4,
-            "max_tokens": 300,
-        }
-        headers = {"Content-Type": "application/json"}
-        api_key = os.getenv("LOCAL_LLM_API_KEY", "lm-studio")
-        if api_key and api_key != "not-needed":
-            headers["Authorization"] = f"Bearer {api_key}"
-            
-        response = requests.post(f"{base_url.rstrip('/')}/chat/completions", headers=headers, json=payload, timeout=25)
-        response.raise_for_status()
-        
-        content = response.json()['choices'][0]['message']['content']
-        strategy_points = [p.strip().lstrip('-* ').capitalize() for p in content.split('\n') if p.strip()]
-        return strategy_points
-
-    except Exception as e:
-        print(f"LLM strategy generation failed: {e}")
-        return ["AI strategy could not be generated at this time."]
+# Strategy maker: Blockchair
+#BLOCKCHAIR_API_KEY = os.getenv("BLOCKCHAIR_API_KEY", "")
 
 @app.callback(
     Output("strategy-output", "children"),
@@ -911,12 +859,22 @@ def generate_llm_strategy(chain, balance, token_count, tokens_list):
     prevent_initial_call=True
 )
 def analyze_wallet(n_clicks, chain, addr):
+     # --- ADD THIS DEBUGGING BLOCK ---
+    blockchair_key = os.getenv("BLOCKCHAIR_API_KEY", "") # Get the key
+    print("--- DEBUGGING WALLET ANALYSIS ---")
+    if blockchair_key:
+        print(f"✅ Found BLOCKCHAIR_API_KEY ending in: ...{blockchair_key[-4:]}")
+    else:
+        print("❌ CRITICAL: BLOCKCHAIR_API_KEY was NOT found in the environment.")
+    print("---------------------------------")
+    # --- END OF DEBUGGING BLOCK ---
     if not addr:
         return html.Div("Enter an address.")
     
-    blockchair_api_key = os.getenv("BLOCKCHAIR_API_KEY", "")
+    BLOCKCHAIR_API_KEY = os.getenv("BLOCKCHAIR_API_KEY", "")
 
     try:
+        # Helper: friendly message if Blockchair not available
         def _api_error_msg(resp, provider_name: str):
             try:
                 body = resp.json()
@@ -926,132 +884,55 @@ def analyze_wallet(n_clicks, chain, addr):
                 detail = (resp.text or "").strip()[:200]
             hint = []
             if resp.status_code in (402, 403, 429):
-                if not blockchair_api_key:
-                    hint.append("No BLOCKCHAIR_API_KEY set. You may be rate limited.")
+                if not BLOCKCHAIR_API_KEY:
+                    hint.append("No BLOCKCHAIR_API_KEY set. You may be rate limited. Add it to .env and restart.")
                 else:
                     hint.append("Your API key may be invalid or out of quota.")
             return f"{provider_name} error {resp.status_code}: {detail}" + (" — " + "; ".join(hint) if hint else "")
 
+        # Try Blockchair first
         if chain == "bitcoin":
             url = f"https://api.blockchair.com/bitcoin/dashboards/address/{addr}"
         elif chain == "ethereum":
-            url = f"https://api.blockchair.com/ethereum/dashboards/address/{addr}?erc_20=true" # Add parameter to ensure tokens are included
+            url = f"https://api.blockchair.com/ethereum/dashboards/address/{addr}"
         else:
             return html.Div("Unsupported chain.")
-        
+        params = {"key": BLOCKCHAIR_API_KEY} if BLOCKCHAIR_API_KEY else {}
         data = None
         r = None
-        blockchair_status_note = None
+        try:
+            r = requests.get(url, params=params, timeout=15)
+            if r.status_code == 200:
+                data = r.json()
+        except Exception:
+            r = None
 
-        if blockchair_api_key:
-            try:
-                params = {"key": blockchair_api_key}
-                r = requests.get(url, params=params, timeout=15)
-                if r.status_code == 200:
-                    data = r.json()
-                elif r.status_code >= 500:
-                    blockchair_status_note = "Blockchair is temporarily unavailable (Server Error). Using fallback data source."
-                    print(f"Blockchair API Error: Status {r.status_code} - {r.text[:200]}")
-            except Exception as e:
-                print(f"Blockchair request failed: {e}")
-                r = None
-
+        # Fallbacks if Blockchair failed
         used_fallback = False
         fallback_note = None
         if data is None:
-            used_fallback = True
-            fallback_note = blockchair_status_note or "Used fallback data source. For more detailed analysis, please add a Blockchair API key."
-            
-          
-        # --- DATA PARSING AND STRATEGY GENERATION (ALL FIXES APPLIED HERE) ---
-        idea = []
-        if chain == "bitcoin":
-            # Bitcoin parsing logic
-            bal_sats = 0
-            if data:
-                if data.get('_fallback'):
-                    bal_sats = data.get('btc_balance_sats', 0)
-                else:
-                    data_data = data.get('data')
-                    if data_data and addr in data_data:
-                        address_info = data_data[addr].get('address') if data_data[addr] else None
-                        if address_info:
-                            bal_sats = address_info.get('balance', 0)
-            bal_btc = bal_sats / 1e8
-            idea.append(f"BTC balance: {bal_btc:.8f} BTC")
-            token_count = 0
-            tokens_list = []
-        else: # Ethereum parsing logic
-            eth_bal = 0
-            token_count = 0
-            tokens_list = []
-            if data:
-                if data.get("_fallback"):
-                    eth_bal = data.get("eth_balance", 0)
-                    token_count = data.get("erc20_count", 0)
-                else:
-                    data_data = data.get('data')
-                    if data_data and addr in data_data:
-                        address_info = data_data[addr].get('address') if data_data[addr] else None
-                        if address_info:
-                            balance_in_wei = address_info.get('balance', 0)
-                            eth_bal = int(balance_in_wei) / 1e18
-                        erc20_tokens = data_data[addr].get('tokens', []) if data_data[addr] else []
-                        if erc20_tokens:
-                            token_count = len(erc20_tokens)
-                            tokens_list = [t.get('token_symbol', 'Unknown') for t in erc20_tokens]
-            idea.append(f"ETH balance: {eth_bal:.6f} ETH")
-            idea.append(f"ERC-20 tokens: {token_count}")
-        
-        # AI-Powered Strategy Generation
-        ai_strategy_points = generate_llm_strategy(
-            chain=chain,
-            balance=eth_bal if chain == "ethereum" else bal_btc,
-            token_count=token_count,
-            tokens_list=tokens_list
-        )
-        strategy = [f"🚀 {point}" for point in ai_strategy_points]
-
-        # Assemble the final output display
-        nodes = [
-            html.Div(style={"display": "grid", "gridTemplateColumns": "1fr 1fr", "gap": "20px"}, children=[
-                html.Div(children=[
-                    html.Div("💰 Wallet Insights", style={"fontWeight": "bold", "fontSize": "16px", "marginBottom": "12px", "color": "var(--accent-primary)"}),
-                    html.Ul([html.Li(x, style={"marginBottom": "8px", "lineHeight": "1.5"}) for x in idea], style={"paddingLeft": "20px"})
-                ]),
-                html.Div(children=[
-                    html.Div("🤖 AI Strategy Recommendations", style={"fontWeight": "bold", "fontSize": "16px", "marginBottom": "12px", "color": "var(--accent-primary)"}),
-                    html.Ul([html.Li(x, style={"marginBottom": "8px", "lineHeight": "1.5"}) for x in strategy], style={"paddingLeft": "20px"})
-                ])
-            ])
-        ]
-        if used_fallback and fallback_note:
-            nodes.append(html.Div(["ℹ️ ", fallback_note], style={
-                "color": "var(--text-muted)", "fontSize": "13px", "marginTop": "16px",
-                "padding": "12px", "background": "var(--warning-bg)", "border": "1px solid var(--warning-border)", "borderRadius": "8px"
-            }))
-        
-        return html.Div(nodes)
-        
-    except Exception as e:
-        return html.Div(f"An unexpected error occurred: {e}")
-        fallback_note = None
-        if data is None:
-            used_fallback = True # Mark that we are now using a fallback
             if chain == "bitcoin":
+                # Blockstream public API
                 try:
                     br = requests.get(f"https://blockstream.info/api/address/{addr}", timeout=15)
                     if br.status_code == 200:
                         bdata = br.json()
+                        # Approx balance = funded - spent
                         cs = bdata.get("chain_stats", {})
                         funded = int(cs.get("funded_txo_sum", 0))
                         spent = int(cs.get("spent_txo_sum", 0))
                         bal_sats = max(funded - spent, 0)
                         data = {"_fallback": True, "btc_balance_sats": bal_sats}
-                        fallback_note = "Used Blockstream fallback. For more detailed analysis, please add a Blockchair API key."
-                    else: return html.Div(_api_error_msg(br, "Blockstream"))
-                except Exception as e2: return html.Div(f"Network error (Blockstream): {e2}")
+                        used_fallback = True
+                        fallback_note = "Used Blockstream fallback (no API key)."
+                    else:
+                        err = _api_error_msg(br, "Blockstream")
+                        return html.Div(err)
+                except Exception as e2:
+                    err = _api_error_msg(r, "Blockchair") if r is not None else f"Network error: {e2}"
+                    return html.Div(err)
             elif chain == "ethereum":
+                # Ethplorer free endpoint
                 try:
                     er = requests.get(f"https://api.ethplorer.io/getAddressInfo/{addr}", params={"apiKey": "freekey"}, timeout=15)
                     if er.status_code == 200:
@@ -1059,42 +940,43 @@ def analyze_wallet(n_clicks, chain, addr):
                         eth_bal = edata.get("ETH", {}).get("balance", 0)
                         tokens = edata.get("tokens", []) or []
                         data = {"_fallback": True, "eth_balance": eth_bal, "erc20_count": len(tokens)}
-                        fallback_note = "Used Ethplorer fallback. For more detailed analysis, please add a Blockchair API key."
-                    else: return html.Div(_api_error_msg(er, "Ethplorer"))
-                except Exception as e2: return html.Div(f"Network error (Ethplorer): {e2}")
+                        used_fallback = True
+                        fallback_note = "Used Ethplorer fallback (no API key)."
+                    else:
+                        err = _api_error_msg(er, "Ethplorer")
+                        return html.Div(err)
+                except Exception as e2:
+                    err = _api_error_msg(r, "Blockchair") if r is not None else f"Network error: {e2}"
+                    return html.Div(err)
             else:
                 return html.Div("Unsupported chain.")
 
-        # Parse data and generate insights
+        # Simple inference: detect if balance or tokens exist and propose posture
         idea = []
         if chain == "bitcoin":
-            bal_sats = data.get('btc_balance_sats', 0) if data.get('_fallback') else data.get('data', {}).get(addr, {}).get('address', {}).get('balance', 0)
-            bal_btc = bal_sats / 1e8
-            idea.append(f"BTC balance: {bal_btc:.8f} BTC")
-            token_count = 0
-            tokens_list = []
-        else: # ethereum
-            eth_bal = data.get('eth_balance', 0) if data.get('_fallback') else data.get('data', {}).get(addr, {}).get('address', {}).get('balance_wei', 0) / 1e18
-            token_count = data.get('erc20_count', 0) if data.get('_fallback') else len(data.get('data', {}).get(addr, {}).get('layer_2', {}).get('erc_20', []) or [])
-            
-            tokens_list = []
-            if not data.get("_fallback"):
-                erc20_tokens = data.get('data', {}).get(addr, {}).get('layer_2', {}).get('erc_20', []) or []
-                tokens_list = [t.get('token_symbol', 'Unknown') for t in erc20_tokens]
-
-            idea.append(f"ETH balance: {eth_bal:.6f} ETH")
+            if data.get("_fallback"):
+                bal = int(data.get("btc_balance_sats", 0))
+            else:
+                bal = data.get('data', {}).get(addr, {}).get('address', {}).get('balance', 0)
+            idea.append(f"BTC balance: {bal} sats")
+            posture = "HOLD" if int(bal) > 0 else "NO POSITION"
+        else:
+            if data.get("_fallback"):
+                eth_bal = data.get("eth_balance", 0)
+                token_count = int(data.get("erc20_count", 0))
+            else:
+                eth_bal = data.get('data', {}).get(addr, {}).get('address', {}).get('balance', 0)
+                token_count = len(data.get('data', {}).get(addr, {}).get('layer_2', {}).get('erc_20', []) or [])
+            idea.append(f"ETH balance: {eth_bal}")
             idea.append(f"ERC-20 tokens: {token_count}")
-        
-        # --- NEW: AI-Powered Strategy Generation ---
-        ai_strategy_points = generate_llm_strategy(
-            chain=chain,
-            balance=eth_bal if chain == "ethereum" else bal_btc,
-            token_count=token_count,
-            tokens_list=tokens_list
-        )
-        strategy = [f"🚀 {point}" for point in ai_strategy_points]
+            posture = "DIVERSIFY" if token_count and token_count > 3 else ("HOLD" if float(eth_bal) > 0 else "NO POSITION")
 
-        # Assemble the final output
+        # Very lightweight strategy suggestion
+        strategy = [
+            f"🎯 Suggested posture: {posture}",
+            "⚖️ Rebalance monthly if allocation drifts >10%",
+            "📊 Consider DCA for top holdings if conviction is high",
+        ]
         nodes = [
             html.Div(style={"display": "grid", "gridTemplateColumns": "1fr 1fr", "gap": "20px"}, children=[
                 html.Div(children=[
@@ -1102,7 +984,7 @@ def analyze_wallet(n_clicks, chain, addr):
                     html.Ul([html.Li(x, style={"marginBottom": "8px", "lineHeight": "1.5"}) for x in idea], style={"paddingLeft": "20px"})
                 ]),
                 html.Div(children=[
-                    html.Div("🤖 AI Strategy Recommendations", style={"fontWeight": "bold", "fontSize": "16px", "marginBottom": "12px", "color": "var(--accent-primary)"}),
+                    html.Div("🚀 Strategy Recommendations", style={"fontWeight": "bold", "fontSize": "16px", "marginBottom": "12px", "color": "var(--accent-primary)"}),
                     html.Ul([html.Li(x, style={"marginBottom": "8px", "lineHeight": "1.5"}) for x in strategy], style={"paddingLeft": "20px"})
                 ])
             ])
@@ -1111,15 +993,29 @@ def analyze_wallet(n_clicks, chain, addr):
             nodes.append(html.Div([
                 "ℹ️ ", fallback_note
             ], style={
-                "color": "var(--text-muted)", "fontSize": "13px", "marginTop": "16px",
-                "padding": "12px", "background": "var(--warning-bg)", "border": "1px solid var(--warning-border)", "borderRadius": "8px"
+                "color": "var(--text-muted)", 
+                "fontSize": "13px", 
+                "marginTop": "16px",
+                "padding": "12px",
+                "background": "var(--warning-bg)",
+                "border": "1px solid var(--warning-border)",
+                "borderRadius": "8px"
             }))
-        
+        if not used_fallback and not BLOCKCHAIR_API_KEY:
+            nodes.append(html.Div([
+                "💡 ", html.Strong("Pro tip: "), "Add BLOCKCHAIR_API_KEY to .env for higher API limits and more detailed analytics."
+            ], style={
+                "color": "var(--text-muted)", 
+                "fontSize": "13px", 
+                "marginTop": "16px",
+                "padding": "12px",
+                "background": "var(--bg-secondary)",
+                "border": "1px solid var(--border-secondary)",
+                "borderRadius": "8px"
+            }))
         return html.Div(nodes)
     except Exception as e:
-        return html.Div(f"An unexpected error occurred: {e}")
-
-# --- END: WALLET STRATEGY SECTION ---
+        return html.Div(f"Error: {e}")
 
 # --- UX: Refresh status & button state (server-side, simple) ---
 @app.callback(

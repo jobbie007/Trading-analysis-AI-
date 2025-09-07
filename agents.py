@@ -1,7 +1,7 @@
 from typing import Dict, Any, List
 import json
 import re
-from dash.services import ResearchOrchestrator
+from services import ResearchOrchestrator  # Use relative import since services.py is in the same directory
 
 
 _orchestrator = ResearchOrchestrator()
