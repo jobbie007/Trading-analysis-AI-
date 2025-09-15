@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import requests
 from urllib.parse import urlparse
@@ -60,6 +61,16 @@ def tv_symbol(asset: str) -> str:
             return a[:-len(suf)]
     # Otherwise leave as provided (lets TV try to resolve), but avoid forcing CRYPTO mapping
     return a
+
+def strip_markdown_fences(text: str) -> str:
+    """Removes markdown code fences from the start and end of a string."""
+    if not isinstance(text, str):
+        return ""
+    match = re.search(r"^```(?:\w+)?\n(.*)\n```$", text, re.DOTALL | re.MULTILINE)
+    if match:
+        return match.group(1).strip()
+    
+    return text.strip().strip('`').strip()
 
 # Layout with enhanced visual design
 app.layout = html.Div(className="container", children=[
@@ -582,7 +593,10 @@ def fetch_news(asset, refresh_clicks, model_pref, count, days_back, do_model_cho
         fetch_summary = bridge.get_fetch_summary()
     except Exception:
         fetch_summary = ""
-    meta = {"asset": asset, "ts": datetime.now().isoformat() + "Z", "fetch_summary": fetch_summary}
+    # Use South Africa local time for refresh timestamp
+    from datetime import timedelta, timezone
+    sast = timezone(timedelta(hours=2))
+    meta = {"asset": asset, "ts": datetime.now(sast).isoformat(), "fetch_summary": fetch_summary}
     # Probe content changes every call -> triggers loading overlay reliably
     probe = meta["ts"]
     return data, overall, meta, probe
@@ -1035,89 +1049,6 @@ def analyze_wallet(n_clicks, chain, addr):
         
     except Exception as e:
         return html.Div(f"An unexpected error occurred: {e}")
-        fallback_note = None
-        if data is None:
-            used_fallback = True # Mark that we are now using a fallback
-            if chain == "bitcoin":
-                try:
-                    br = requests.get(f"https://blockstream.info/api/address/{addr}", timeout=15)
-                    if br.status_code == 200:
-                        bdata = br.json()
-                        cs = bdata.get("chain_stats", {})
-                        funded = int(cs.get("funded_txo_sum", 0))
-                        spent = int(cs.get("spent_txo_sum", 0))
-                        bal_sats = max(funded - spent, 0)
-                        data = {"_fallback": True, "btc_balance_sats": bal_sats}
-                        fallback_note = "Used Blockstream fallback. For more detailed analysis, please add a Blockchair API key."
-                    else: return html.Div(_api_error_msg(br, "Blockstream"))
-                except Exception as e2: return html.Div(f"Network error (Blockstream): {e2}")
-            elif chain == "ethereum":
-                try:
-                    er = requests.get(f"https://api.ethplorer.io/getAddressInfo/{addr}", params={"apiKey": "freekey"}, timeout=15)
-                    if er.status_code == 200:
-                        edata = er.json()
-                        eth_bal = edata.get("ETH", {}).get("balance", 0)
-                        tokens = edata.get("tokens", []) or []
-                        data = {"_fallback": True, "eth_balance": eth_bal, "erc20_count": len(tokens)}
-                        fallback_note = "Used Ethplorer fallback. For more detailed analysis, please add a Blockchair API key."
-                    else: return html.Div(_api_error_msg(er, "Ethplorer"))
-                except Exception as e2: return html.Div(f"Network error (Ethplorer): {e2}")
-            else:
-                return html.Div("Unsupported chain.")
-
-        # Parse data and generate insights
-        idea = []
-        if chain == "bitcoin":
-            bal_sats = data.get('btc_balance_sats', 0) if data.get('_fallback') else data.get('data', {}).get(addr, {}).get('address', {}).get('balance', 0)
-            bal_btc = bal_sats / 1e8
-            idea.append(f"BTC balance: {bal_btc:.8f} BTC")
-            token_count = 0
-            tokens_list = []
-        else: # ethereum
-            eth_bal = data.get('eth_balance', 0) if data.get('_fallback') else data.get('data', {}).get(addr, {}).get('address', {}).get('balance_wei', 0) / 1e18
-            token_count = data.get('erc20_count', 0) if data.get('_fallback') else len(data.get('data', {}).get(addr, {}).get('layer_2', {}).get('erc_20', []) or [])
-            
-            tokens_list = []
-            if not data.get("_fallback"):
-                erc20_tokens = data.get('data', {}).get(addr, {}).get('layer_2', {}).get('erc_20', []) or []
-                tokens_list = [t.get('token_symbol', 'Unknown') for t in erc20_tokens]
-
-            idea.append(f"ETH balance: {eth_bal:.6f} ETH")
-            idea.append(f"ERC-20 tokens: {token_count}")
-        
-        # --- NEW: AI-Powered Strategy Generation ---
-        ai_strategy_points = generate_llm_strategy(
-            chain=chain,
-            balance=eth_bal if chain == "ethereum" else bal_btc,
-            token_count=token_count,
-            tokens_list=tokens_list
-        )
-        strategy = [f"🚀 {point}" for point in ai_strategy_points]
-
-        # Assemble the final output
-        nodes = [
-            html.Div(style={"display": "grid", "gridTemplateColumns": "1fr 1fr", "gap": "20px"}, children=[
-                html.Div(children=[
-                    html.Div("💰 Wallet Insights", style={"fontWeight": "bold", "fontSize": "16px", "marginBottom": "12px", "color": "var(--accent-primary)"}),
-                    html.Ul([html.Li(x, style={"marginBottom": "8px", "lineHeight": "1.5"}) for x in idea], style={"paddingLeft": "20px"})
-                ]),
-                html.Div(children=[
-                    html.Div("🤖 AI Strategy Recommendations", style={"fontWeight": "bold", "fontSize": "16px", "marginBottom": "12px", "color": "var(--accent-primary)"}),
-                    html.Ul([html.Li(x, style={"marginBottom": "8px", "lineHeight": "1.5"}) for x in strategy], style={"paddingLeft": "20px"})
-                ])
-            ])
-        ]
-        if used_fallback and fallback_note:
-            nodes.append(html.Div([
-                "ℹ️ ", fallback_note
-            ], style={
-                "color": "var(--text-muted)", "fontSize": "13px", "marginTop": "16px",
-                "padding": "12px", "background": "var(--warning-bg)", "border": "1px solid var(--warning-border)", "borderRadius": "8px"
-            }))
-        
-        return html.Div(nodes)
-    except Exception as e:
-        return html.Div(f"An unexpected error occurred: {e}")
 
 # --- END: WALLET STRATEGY SECTION ---
 
@@ -1139,13 +1070,7 @@ def show_refresh_status(meta, tab):
         if ts:
             try:
                 t = datetime.fromisoformat(ts.replace('Z', '+00:00'))
-                # Apply timezone offset (default +2 hours) from env TIMEZONE_OFFSET_HOURS
-                try:
-                    tz_off = float(os.getenv("TIMEZONE_OFFSET_HOURS", "2"))
-                except Exception:
-                    tz_off = 2.0
-                t = t + timedelta(hours=tz_off)
-                label = f"Updated {t.strftime('%H:%M:%S')} (UTC{('+' if tz_off>=0 else '')}{int(tz_off)})"
+                label = f"Updated {t.strftime('%H:%M:%S')} (UTC+2)"
             except Exception:
                 label = "Updated"
             return label, False
@@ -1279,101 +1204,45 @@ def list_hf_models_research(_primer):
     prevent_initial_call=True,
 )
 def run_research(
-    n,
-    analysis_type,
-    engine,
-    symbol_dd,
-    symbol_input,
-    timeframe,
-    lookback_value,
-    lookback_unit,
-    indicators,
-    length,
-    rsi_length,
-    macd_fast,
-    macd_slow,
-    macd_signal,
-    speed_mode,
-    autogen_max_turns,
-    allow_web_search,
-    web_max_results,
-    ai_provider,
-    llm_base_url,
-    llm_model,
-    llm_max_tokens,
-    llm_temp,
-    agent_rounds,
-    do_base_url,
-    do_model_text,
-    do_model_choice,
-    hf_base_url,
-    hf_model_text,
-    hf_model_choice,
+    n, analysis_type, engine, symbol_dd, symbol_input, timeframe, lookback_value,
+    lookback_unit, indicators, length, rsi_length, macd_fast, macd_slow, macd_signal,
+    speed_mode, autogen_max_turns, allow_web_search, web_max_results, ai_provider,
+    llm_base_url, llm_model, llm_max_tokens, llm_temp, agent_rounds, do_base_url,
+    do_model_text, do_model_choice, hf_base_url, hf_model_text, hf_model_choice
 ):
-    # Prefer custom input if provided, else dropdown
     symbol = (symbol_input or "").strip() if symbol_input else (symbol_dd or "").strip()
     if not symbol:
         return html.Div("Enter a ticker."), "Idle"
 
-    # Apply optional LLM overrides (for summarizers and agent engines)
     try:
-        overrides = {}
-        if ai_provider:
-            os.environ["AI_PROVIDER"] = str(ai_provider)
-            overrides["provider"] = str(ai_provider)
-        if llm_base_url:
-            os.environ["LOCAL_LLM_BASE_URL"] = str(llm_base_url)
-            overrides["base_url"] = str(llm_base_url)
-        if llm_model:
-            os.environ["LOCAL_LLM_MODEL"] = str(llm_model)
-            overrides["model"] = str(llm_model)
-        if llm_max_tokens not in (None, ""):
-            os.environ["LOCAL_LLM_MAX_TOKENS"] = str(int(llm_max_tokens))
-            overrides["max_tokens"] = int(llm_max_tokens)
-        if llm_temp not in (None, ""):
-            os.environ["LOCAL_LLM_TEMPERATURE"] = str(float(llm_temp))
-            overrides["temperature"] = float(llm_temp)
-        if do_base_url:
-            os.environ["DO_AI_BASE_URL"] = str(do_base_url)
-        if (do_model_choice or do_model_text):
-            os.environ["DO_AI_MODEL"] = str(do_model_choice or do_model_text)
-        if hf_base_url:
-            os.environ["HF_BASE_URL"] = str(hf_base_url)
-        if (hf_model_choice or hf_model_text):
-            os.environ["HF_MODEL"] = str(hf_model_choice or hf_model_text)
-        if overrides:
-            log_event("llm_config", overrides)
-    except Exception:
+        if ai_provider: os.environ["AI_PROVIDER"] = str(ai_provider)
+        if llm_base_url: os.environ["LOCAL_LLM_BASE_URL"] = str(llm_base_url)
+        if llm_model: os.environ["LOCAL_LLM_MODEL"] = str(llm_model)
+        if llm_max_tokens: os.environ["LOCAL_LLM_MAX_TOKENS"] = str(int(llm_max_tokens))
+        if llm_temp: os.environ["LOCAL_LLM_TEMPERATURE"] = str(float(llm_temp))
+        if do_base_url: os.environ["DO_AI_BASE_URL"] = str(do_base_url)
+        if (do_model_choice or do_model_text): os.environ["DO_AI_MODEL"] = str(do_model_choice or do_model_text)
+        if hf_base_url: os.environ["HF_BASE_URL"] = str(hf_base_url)
+        if (hf_model_choice or hf_model_text): os.environ["HF_MODEL"] = str(hf_model_choice or hf_model_text)
+    except Exception as e:
+        print(f"Error setting env vars: {e}")
         pass
 
-    # UI Agent output (structured request)
-    # Compute date window from lookback selector
     try:
         from datetime import datetime, timedelta
         lb = int(lookback_value or 180)
-        # Speed mode clamps lookback to reduce data volume
-        if speed_mode == "fast":
-            lb = min(lb, 60)
-        elif speed_mode == "normal":
-            lb = min(lb, 120)
+        if speed_mode == "fast": lb = min(lb, 60)
+        elif speed_mode == "normal": lb = min(lb, 120)
         unit = (lookback_unit or "days").lower()
         now = datetime.now()
-        if unit == "days":
-            delta = timedelta(days=lb)
-        elif unit == "weeks":
-            delta = timedelta(weeks=lb)
-        elif unit == "months":
-            # approximate months
-            delta = timedelta(days=lb * 30)
-        else:
-            delta = timedelta(days=lb * 365)
+        delta = timedelta(days=lb * {'days': 1, 'weeks': 7, 'months': 30}.get(unit, 1))
         start_date = (now - delta).date().isoformat()
         end_date = now.date().isoformat()
     except Exception:
-        start_date = None
-        end_date = None
+        start_date, end_date = None, None
 
-    ui_request = {
+    # 1. Build a single configuration dictionary
+    config = {
         "symbol": symbol,
         "analysis_type": analysis_type,
         "start_date": start_date,
@@ -1383,301 +1252,151 @@ def run_research(
         "length": int(length or 20),
         "rsi_length": int(rsi_length or 14),
         "macd_fast": int(macd_fast or 12),
-    "macd_slow": int(macd_slow or 26),
-    "macd_signal": int(macd_signal or 9),
-    "speed_mode": speed_mode,
-    "autogen_max_turns": int(autogen_max_turns or 5),
-    "allow_web_search": (allow_web_search or "off") == "on",
-    "web_max_results": int(web_max_results or 5),
+        "macd_slow": int(macd_slow or 26),
+        "macd_signal_len": int(macd_signal or 9),
+        "ai_provider": ai_provider,
+        # Add any other parameters the agents might need
     }
-    log_event("research_ui_request", ui_request)
-    try:
-        # Also log compact request signature for quick scans
-        sig = {"symbol": symbol, "engine": (engine or "lang"), "type": analysis_type, "interval": timeframe}
-        log_event("research_ui_signature", sig)
-    except Exception:
-        pass
 
-    # Branch: Multi-agent vs local
-    out = {}
-    conversations = []
     try:
         with Timer() as t:
-            if (engine or "lang") == "multi":
-                # Compose a natural language task for the team
-                req_lines = [
-                    f"stock tickers: {symbol}",
-                    f"timeframe of {timeframe}",
-                    f"from {start_date} to {end_date}",
-                    f"technical indicators: {', '.join(indicators or [])}",
-                    f"General length: {int(length or 20)}",
-                    f"RSI length: {int(rsi_length or 14)}",
-                    f"MACD settings: fast={int(macd_fast or 12)}, slow={int(macd_slow or 26)}, signal={int(macd_signal or 9)}",
-                    f"speed mode: {speed_mode}",
-                    f"max turns: {int(autogen_max_turns or 5)}",
-                    f"allow web search: {((allow_web_search or 'off') == 'on')}",
-                    f"max web results: {int(web_max_results or 5)}",
-                ]
-                user_request = "\n".join(req_lines)
-                # Also set env for agents_team to read
-                try:
-                    os.environ["AUTOGEN_MAX_TURNS"] = str(int(autogen_max_turns or 5))
-                    os.environ["ALLOW_WEB_SEARCH"] = "1" if (allow_web_search or "off") == "on" else "0"
-                    os.environ["WEB_MAX_RESULTS"] = str(int(web_max_results or 5))
-                except Exception:
-                    pass
-                try:
-                    res = run_autogen_workflow(user_request)  # returns {"result": json_str, optional "messages": [...]}
-                except Exception as e2:
-                    res = {"result": json.dumps({"error": f"agent framework failed: {e2}"})}
-                raw = res.get("result") or "{}"
-                try:
-                    j = json.loads(raw)
-                except Exception:
-                    j = {}
-                # Expect a single ticker result
-                r = j.get(symbol) if isinstance(j, dict) else None
-                if not r and isinstance(j, dict) and len(j) == 1:
-                    r = list(j.values())[0]
-                # Normalize possible string payloads into dicts
-                r_dict = {}
-                if isinstance(r, dict):
-                    r_dict = r
-                elif isinstance(r, str):
-                    try:
-                        parsed = json.loads(r)
-                        if isinstance(parsed, dict):
-                            r_dict = parsed
-                    except Exception:
-                        r_dict = {}
-                # Build a minimal out compatible with our renderer
-                fig = r_dict.get("figure") if isinstance(r_dict, dict) else None
-                tech_fig = go.Figure(fig) if isinstance(fig, dict) else None
-                out = {
-                    "plan": {"analysis_type": analysis_type, "steps": ["Planner", "DataAgent", "TechnicalAnalyst"]},
-                    "technical": {
-                        "recommendation": r_dict.get("recommendation", "N/A"),
-                        "confidence": r_dict.get("confidence", "N/A"),
-                        "summary": r_dict.get("justification", ""),
-                    },
-                    "figures": {"technical": tech_fig} if tech_fig else {},
-                }
-                conversations = res.get("messages") or []
-            elif (engine or "lang") == "lang":
-                # Minimal LC flow: call lc_agents workflow
-                req_lines = [
-                    f"stock tickers: {symbol}",
-                    f"timeframe of {timeframe}",
-                    f"from {start_date} to {end_date}",
-                    f"technical indicators: {', '.join(indicators or [])}",
-                ]
-                user_request = "\n".join(req_lines)
-                try:
-                    from lc_agents import run_langchain_workflow
-                    res = run_langchain_workflow(user_request, model_name=llm_model)
-                except Exception as e2:
-                    res = {"result": json.dumps({"error": f"langchain workflow failed: {e2}"})}
-                raw = res.get("result") or "{}"
-                try:
-                    j = json.loads(raw)
-                except Exception:
-                    j = {}
-                r = j.get(symbol) if isinstance(j, dict) else None
-                if not r and isinstance(j, dict) and len(j) == 1:
-                    r = list(j.values())[0]
-                # Normalize possible string payloads into dicts
-                r_dict = {}
-                if isinstance(r, dict):
-                    r_dict = r
-                elif isinstance(r, str):
-                    try:
-                        parsed = json.loads(r)
-                        if isinstance(parsed, dict):
-                            r_dict = parsed
-                    except Exception:
-                        r_dict = {}
-                fig = r_dict.get("figure") if isinstance(r_dict, dict) else None
-                tech_fig = None
-                if isinstance(fig, dict):
-                    try:
-                        tech_fig = go.Figure(fig)
-                    except Exception as fig_error:
-                        print(f"Error reconstructing LangChain figure: {fig_error}")
-                        tech_fig = None
-                # Get full deterministic pipeline so Overview/Fundamentals/News are populated
-                full = research.run_full_analysis(
-                    symbol=symbol,
-                    analysis_type=analysis_type,
-                    start_date=start_date,
-                    end_date=end_date,
-                    interval=timeframe,
-                    indicators=indicators,
-                    length=int(length or 20),
-                    rsi_length=int(rsi_length or 14),
-                    macd_fast=int(macd_fast or 12),
-                    macd_slow=int(macd_slow or 26),
-                    macd_signal_len=int(macd_signal or 9),
-                )
-                # Override technical summary with LC justification and carry figure if present
-                full.setdefault("plan", {})
-                full["plan"]["steps"] = ["Planner(LC)", "Data(LC)", "Analyst(LC)"]
-                full.setdefault("technical", {})
-                full["technical"].update({
-                    "recommendation": r_dict.get("recommendation", full["technical"].get("recommendation", "N/A")),
-                    "confidence": r_dict.get("confidence", full["technical"].get("confidence", "N/A")),
-                    "summary": r_dict.get("justification", full["technical"].get("summary", "")),
-                })
-                if tech_fig:
-                    full.setdefault("figures", {})
-                    full["figures"]["technical"] = tech_fig
-                out = full
-                # Optionally add a few visible rounds to make the dialogue feel more agentic
-                convs = res.get("messages") or []
-                rounds = int(agent_rounds or 2)
-                if rounds > 1:
-                    for i in range(1, rounds):
-                        convs.append({"agent": "Planner(LC)", "message": f"Round {i+1}: refine analysis focus and confirm signals."})
-                        convs.append({"agent": "Validator(LC)", "message": "VALIDATED"})
-                conversations = convs + (full.get("conversations") or [])
-            # Removed exploratory web engine and local deterministic fallback
+            # 2. Call the single, clean orchestrator method
+            # Note we are now calling `execute_workflow`
+            out = research.execute_workflow(config)
     except Exception as e:
         log_event("research_error", {"error": str(e)})
-        return html.Div(f"Analysis failed: {e}"), "Failed"
+        return html.Div(f"Analysis failed unexpectedly: {e}"), "Failed"
 
-    # Planner/Plan view
+    # --- UI Rendering Section ---
     plan = out.get("plan", {})
     plan_badge = html.Div([
-        html.Div("Plan of Agents", style={"fontWeight":600, "marginBottom":"6px"}),
-        html.Ul([html.Li(s) for s in (plan.get("steps") or [])], style={"paddingLeft":"20px", "margin":"0"})
+        html.H4("Plan of Agents"),
+        html.Ul([html.Li(s) for s in (plan.get("steps") or [])])
     ], className="card", style={"padding":"12px", "marginBottom":"12px"})
 
-    # Profile card
     profile = out.get("company_profile") or {}
     profile_card = None
-    if profile:
+    if profile and profile.get("name") and profile.get("name") != symbol:
         profile_card = html.Div([
-            html.Div(profile.get("name") or symbol, style={"fontWeight":"bold", "fontSize":"18px"}),
-            html.Div(f"Sector: {profile.get('sector','')} | Industry: {profile.get('industry','')}", style={"color":"var(--text-secondary)", "marginTop":"4px"}),
-            html.Div(profile.get("description",""), style={"fontSize":"13px", "color":"var(--text-muted)", "marginTop":"8px"}),
+            html.H3(profile.get("name", symbol)),
+            html.P(f"Sector: {profile.get('sector','N/A')} | Industry: {profile.get('industry','N/A')}", style={"margin":"0"}),
+            html.P(profile.get("description",""), style={"fontSize":"14px", "color":"var(--text-muted)", "marginTop":"10px"}),
         ], className="card", style={"padding":"12px"})
 
-    # Technical section
     tech = out.get("technical") or {}
     tech_fig = out.get("figures", {}).get("technical")
-    tech_section = html.Div([
-        html.H4("Technical Analysis"),
-        dcc.Graph(figure=tech_fig) if tech_fig else html.Div("No chart."),
-        html.Div([
-            html.Div(f"Recommendation: {tech.get('recommendation','N/A')} | Confidence: {tech.get('confidence','N/A')}", style={"marginTop":"8px"}),
-            html.Details(open=False, children=[html.Summary("Technical Summary"), html.Pre(tech.get('summary',''))])
-        ])
-    ], className="card", style={"padding":"12px"}) if analysis_type in ("technical","combined") else None
+    tech_section = None
+    if analysis_type in ("technical", "combined"):
+        
+        # Clean the justification text from the agent's output
+        justification_text = tech.get('justification', 'No strategic summary was generated.')
+        cleaned_justification = strip_markdown_fences(justification_text) # <-- APPLY THE FIX HERE
 
-    # Fundamentals section
-    ratios = out.get("ratios") or {}
-    earnings = out.get("earnings") or {}
-    figs = out.get("figures") or {}
-    fund_children = []
-    if ratios:
-        kv = [
-            ("P/E (TTM)", ratios.get("pe_ttm")),
-            ("P/S (TTM)", ratios.get("ps_ttm")),
-            ("Debt/Equity", ratios.get("debt_to_equity")),
-            ("ROE", ratios.get("roe")),
-            ("ROA", ratios.get("roa")),
-            ("Gross Margin", ratios.get("gross_margin")),
-            ("Net Margin", ratios.get("net_margin")),
-            ("Current Ratio", ratios.get("current_ratio")),
-            ("Quick Ratio", ratios.get("quick_ratio")),
-        ]
-        rows = []
-        for k,v in kv:
-            if v is None: continue
-            rows.append(html.Div([html.Span(k), html.Span(f"{v:.2f}" if isinstance(v,(int,float)) else str(v))], style={"display":"flex","justifyContent":"space-between","gap":"12px","padding":"4px 0"}))
-        fund_children.append(html.Div([html.H4("Key Ratios"), html.Div(rows)], className="card", style={"padding":"12px"}))
-    if figs.get("revenue"):
-        fund_children.append(html.Div([html.H4("Revenue (Quarterly)"), dcc.Graph(figure=figs["revenue"])], className="card", style={"padding":"12px"}))
-    if figs.get("pe_trend"):
-        fund_children.append(html.Div([html.H4("P/E Trend (approx)"), dcc.Graph(figure=figs["pe_trend"])], className="card", style={"padding":"12px"}))
-    fundamentals_section = html.Div(fund_children) if fund_children and analysis_type in ("fundamental","combined") else None
-
-    # News & Sentiment
-    news_items = out.get("news") or []
-    news_summary = out.get("news_summary") or {}
-    web_results = out.get("web_search") or []
-    news_section = None
-    if analysis_type in ("web","combined"):
-        cards = []
-        for it in news_items[:6]:
-            cards.append(html.Div([
-                html.A(it.get("title") or "(no title)", href=it.get("url"), target="_blank"),
-                html.Div(it.get("source",""), style={"fontSize":"12px","color":"var(--text-secondary)"}),
-                html.Div(it.get("ai_summary") or it.get("description") or "", style={"fontSize":"13px","color":"var(--text-muted)", "marginTop":"6px"})
-            ], className="card", style={"padding":"10px"}))
-        news_cards = html.Div(cards, style={"display":"grid","gridTemplateColumns":"1fr","gap":"8px"})
-        web_nodes = []
-        if web_results:
-            for r in web_results[:6]:
-                t = r.get("title") or "(no title)"
-                u = r.get("url") or r.get("href") or "#"
-                s = r.get("snippet") or ""
-                web_nodes.append(html.Div([
-                    html.A(t, href=u, target="_blank"),
-                    html.Div(s, style={"fontSize":"12px","color":"var(--text-secondary)"})
-                ], style={"marginBottom":"8px"}))
-        news_section = html.Div([
-            html.H4("News & Sentiment"),
-            news_cards,
-            html.Div(news_summary.get("summary",""), style={"marginTop":"10px", "fontSize":"13px"})
-        ] + ([html.Hr(), html.H4("Web Search"), html.Div(web_nodes)] if web_nodes else []))
-
-    # Holistic narrative
-    hol = out.get("holistic")
-    hol_section = html.Div([html.H4("Holistic Analysis"), dcc.Markdown(hol or "")], className="card", style={"padding":"12px"}) if hol and analysis_type in ("combined","fundamental","web") else None
-
-    # Recommendation
-    rec = out.get("recommendation") or {}
-    rec_section = None
-    if rec:
-        rec_section = html.Div([
-            html.H4("Final Recommendation"),
-            html.Div(f"{rec.get('recommendation','Hold')} (Confidence: {rec.get('confidence','N/A')})", style={"fontWeight":600}),
-            dcc.Markdown(rec.get("justification",""), style={'white-space': 'pre-wrap'})
+        tech_section = html.Div([
+            html.H4("Technical Analysis"),
+            dcc.Graph(figure=tech_fig) if tech_fig else html.Div("No technical chart generated."),
+            html.Div([
+                html.P(f"Recommendation: {tech.get('recommendation','N/A')} | Confidence: {tech.get('confidence','N/A')}"),
+                html.H5("Technical Strategy & Key Levels"),
+                dcc.Markdown( # Your component is correct!
+                    cleaned_justification # <-- USE THE CLEANED TEXT
+                )
+            ])
         ], className="card", style={"padding":"12px"})
 
-    # Assemble tabs
-    tabs = []
-    overview_children = [c for c in [plan_badge, profile_card, hol_section, rec_section] if c]
-    tabs.append(dcc.Tab(label="Overview", value="overview", children=html.Div(overview_children)))
+    ratios = out.get("ratios") or {}
+    figs = out.get("figures") or {}
+    # --- GET THE NEW AI-GENERATED SUMMARY ---
+    fundamental_summary_text = out.get("fundamental_summary")
+    
+    fundamentals_section = None
+    if analysis_type in ("fundamental", "combined") and ratios:
+        kv_pairs = [("P/E (TTM)", ratios.get("pe_ttm")), ("P/S (TTM)", ratios.get("ps_ttm")), ("Debt/Equity", ratios.get("debt_to_equity")),
+                    ("ROE", ratios.get("roe")), ("ROA", ratios.get("roa")), ("Gross Margin", ratios.get("gross_margin")),
+                    ("Net Margin", ratios.get("net_margin"))]
+        # THIS IS THE CORRECTED STYLING FOR KEY RATIOS
+        ratio_rows = [html.Div([
+            html.Span(k), html.Span(f"{v:.2f}" if isinstance(v, (int, float)) else str(v))
+        ], style={"display":"flex", "justifyContent":"space-between", "gap":"12px", "padding":"4px 0"}) for k,v in kv_pairs if v is not None]
+        
+        fund_children = []
+
+        # --- NEW: Add the AI-powered summary card at the top ---
+        if fundamental_summary_text:
+            fund_children.append(
+                html.Div([
+                    html.H4("AI-Powered Fundamental Analysis"),
+                    # Use dcc.Markdown to render the formatted text from the LLM
+                    dcc.Markdown(fundamental_summary_text, className="markdown-content")
+                ], className="card", style={"padding": "12px"})
+            )
+
+        # Append the original cards for ratios and charts
+        if ratio_rows:
+            fund_children.append(html.Div([html.H4("Key Ratios"), html.Div(ratio_rows)], className="card", style={"padding":"12px"}))
+        if figs.get("revenue"): fund_children.append(html.Div([html.H4("Revenue (Quarterly)"), dcc.Graph(figure=figs["revenue"])], className="card", style={"padding":"12px"}))
+        if figs.get("pe_trend"): fund_children.append(html.Div([html.H4("P/E Trend (approx)"), dcc.Graph(figure=figs["pe_trend"])], className="card", style={"padding":"12px"}))
+        fundamentals_section = html.Div(fund_children)
+
+    news_items = out.get("news", [])
+    news_summary = out.get("news_summary", {})
+    news_section = None
+    if analysis_type in ("web", "combined") and news_items:
+        cards = [html.Div([
+            html.A(it.get("title", "(no title)"), href=it.get("url"), target="_blank", className="news-title-link"),
+            html.P(it.get("source",""), style={"fontSize":"12px", "color":"var(--text-muted)", "margin":"4px 0"}),
+            html.P(it.get("ai_summary") or it.get("description") or "", style={"fontSize":"13px"})
+        ], className="card", style={"padding":"10px"}) for it in news_items[:6]]
+        news_section = html.Div([
+            html.H4("News & Sentiment"),
+            html.Div(cards, style={"display":"grid", "gap":"10px"}),
+            dcc.Markdown(news_summary.get("summary",""), className="markdown-content", style={"marginTop":"15px"})
+        ])
+
+    holistic_text = out.get("holistic")
+    hol_section = None
+    if holistic_text:
+        hol_section = html.Div([html.H4("Holistic Analysis"), dcc.Markdown(holistic_text, className="markdown-content")], className="card", style={"padding":"12px"})
+
+    rec = out.get("recommendation") or {}
+    rec_section = None
+    if rec.get("justification"):
+        rec_section = html.Div([
+            html.H4("Final Recommendation"),
+            html.P(f"{rec.get('recommendation','Hold')} (Confidence: {rec.get('confidence','N/A')})", style={"fontWeight":"bold"}),
+            dcc.Markdown(rec.get("justification",""), className="markdown-content")
+        ], className="card", style={"padding":"12px"})
+
+    # --- Assemble Tabs (WITH CONVERSATIONS RESTORED) ---
+    tabs, overview_children = [], []
+    overview_children.extend([c for c in [plan_badge, profile_card, hol_section, rec_section] if c is not None])
+    tabs.append(dcc.Tab(label="Overview", value="overview", children=html.Div(overview_children, style={"display":"grid", "gap":"15px"})))
     if tech_section: tabs.append(dcc.Tab(label="Technical", value="tech", children=tech_section))
     if fundamentals_section: tabs.append(dcc.Tab(label="Fundamentals", value="fund", children=fundamentals_section))
     if news_section: tabs.append(dcc.Tab(label="News", value="news", children=news_section))
-
-    # Conversations tab
-    conv = conversations or out.get("conversations") or []
-    if conv:
+    
+    # --- ADD THIS ENTIRE BLOCK BACK IN ---
+    conversations = out.get("conversations") or []
+    if conversations:
         conv_nodes = []
-        for item in conv:
+        for item in conversations:
             a = item.get("agent") or "Agent"
             m = item.get("message") or ""
             conv_nodes.append(html.Div([
                 html.Div(a, style={"fontWeight":600, "color":"var(--accent-primary)"}),
-                html.Pre(m, style={"whiteSpace":"pre-wrap", "margin":"4px 0 12px 0"})
+                html.Pre(m, style={"whiteSpace":"pre-wrap", "margin":"4px 0 12px 0", "fontSize": "13px", "fontFamily": "var(--font-mono)"})
             ], className="card", style={"padding":"10px"}))
-        tabs.append(dcc.Tab(label="Conversations", value="conv", children=html.Div(conv_nodes)))
-
+        tabs.append(dcc.Tab(label="Conversations", value="conv", children=html.Div(conv_nodes, style={"display":"grid", "gap":"10px"})))
+    
+    current_utc_time = datetime.now(timezone.utc)
+    print(f"[DEBUG] UTC time for status banner: {current_utc_time}")
     main = html.Div([
-        html.Div(
-            f"Completed at {datetime.now(timezone.utc).strftime('%H:%M:%S')} UTC",
-            style={"backgroundColor":"var(--success-bg)","color":"var(--success-text)","padding":"10px","borderRadius":"8px","marginBottom":"12px"}
-        ),
+        html.Div(f"Completed at {current_utc_time.strftime('%H:%M:%S')} UTC", className="status-banner"),
         dcc.Tabs(id="research-results-tabs", value="overview", children=tabs)
     ])
-
-    # Log success
+    
     log_event("research_success", {"symbol": symbol, "duration_sec": getattr(t, 'elapsed', None)})
     return main, "Done"
-
 
 # (Removed unused Testmail and Quick Research callbacks)
 

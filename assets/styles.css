@@ -814,4 +814,34 @@ html.Details summary {
 	white-space: normal !important; /* allow wrapping when needed */
 	flex-wrap: wrap !important;
 	row-gap: 6px;
+
+ /* Technical summary */
+.markdown-content {
+    background-color: transparent !important;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4 {
+    color: var(--text-primary);
+    margin-top: 1.2em;
+    margin-bottom: 0.6em;
+}
+
+.markdown-content p {
+    margin-bottom: 1em;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: 25px;
+}
+
+.markdown-content li {
+    margin-bottom: 0.5em;
+}
+
 }

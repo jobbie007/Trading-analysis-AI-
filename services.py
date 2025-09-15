@@ -5,7 +5,7 @@ import requests
 import json
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any, Tuple
 import textwrap
 import io
@@ -23,6 +23,13 @@ try:
     from dotenv import load_dotenv as _load_dotenv
 except Exception:
     _load_dotenv = None
+
+# Task dataclass for workflow management
+@dataclass
+class Task:
+    agent_name: str  # The name of the agent method to call
+    output_key: str  # Where to store the result in the final output dictionary
+    params: Dict[str, Any] = field(default_factory=dict)
 
 # ---- Serper.dev Google Search (key-rotation) ----
 class _SerperClient:
@@ -681,9 +688,7 @@ class NewsBridge:
             return ''
 
     def summarize_overall(self, asset: str, items: List[NewsItem], *, model_preference: str = "auto", max_chars: int = 20000) -> Dict[str, str]:
-        """Create a single overall AI summary from many items.
-        Returns a dict with keys: summary, provider.
-        """
+        """Create a single overall AI summary from many items, respecting the chosen AI provider."""
         # Build a rich context from all items
         def _clip(txt: str, n: int) -> str:
             if not txt:
@@ -691,7 +696,6 @@ class NewsBridge:
             t = str(txt)
             return t if len(t) <= n else (t[: n - 3] + "...")
 
-        # Helper to read from dicts or objects
         def gv(obj, key, default=""):
             try:
                 if isinstance(obj, dict):
@@ -700,7 +704,6 @@ class NewsBridge:
             except Exception:
                 return default
 
-        # Optionally enrich missing content for more breadth
         if self.fetcher:
             try:
                 for a in items:
@@ -709,25 +712,17 @@ class NewsBridge:
                     if url and not content:
                         content = self.fetcher.scrape_article_content(url)
                         if content:
-                            try:
-                                if isinstance(a, dict):
-                                    a['content'] = content
-                                else:
-                                    setattr(a, 'content', content)
-                            except Exception:
-                                pass
+                            if isinstance(a, dict):
+                                a['content'] = content
+                            else:
+                                setattr(a, 'content', content)
             except Exception:
                 pass
 
         lines: List[str] = []
         for i, it in enumerate(items, 1):
-            src = gv(it, 'source', '') or ''
-            dt = gv(it, 'published_at', '') or ''
-            title = gv(it, 'title', '') or ''
-            desc = gv(it, 'description', '') or ''
-            per_summary = gv(it, 'ai_summary', '') or ''
-            content = gv(it, 'content', '')
-            sent = gv(it, 'sentiment_label', '') or ''
+            src, dt, title, desc = gv(it, 'source'), gv(it, 'published_at'), gv(it, 'title'), gv(it, 'description')
+            per_summary, content, sent = gv(it, 'ai_summary'), gv(it, 'content'), gv(it, 'sentiment_label')
             sscore = gv(it, 'sentiment_score', None)
             sscore_s = (f" {float(sscore):+.2f}" if sscore is not None else "")
             lines.append(textwrap.dedent(f"""
@@ -738,14 +733,10 @@ class NewsBridge:
             Summary: {_clip(per_summary, 2000)}
             Description: {_clip(desc, 1000)}
             Content: {_clip(content, 4000)}
-            URL: {gv(it, 'url', '')}
+            URL: {gv(it, 'url')}
             """))
         context = "\n".join(lines)
-        # Hard cap to avoid local LLM crashes on very large prompts
-        try:
-            effective_max = min(int(max_chars or 20000), 12000)
-        except Exception:
-            effective_max = 12000
+        effective_max = min(int(max_chars or 20000), 12000)
         if len(context) > effective_max:
             context = context[: effective_max] + "\n...[truncated]"
 
@@ -753,33 +744,20 @@ class NewsBridge:
             "You are a seasoned financial markets analyst. Given multiple news items about a symbol, "
             "produce a concise executive summary. Reply as strict JSON only, no prose, using this schema: "
             "{\n"
-            "  \"executive_summary\": string  # 200-300 words, 6-10 bullets or short paragraphs, no fluff, no chain-of-thought,\n"
-            "  \"overall_sentiment\": string  # one of: bullish | bearish | neutral,\n"
-            "  \"confidence\": number        # 0.0-1.0, confidence in sentiment,\n"
-            "  \"key_points\": [string]      # 4-8 terse bullets, optional\n"
+            "  \"executive_summary\": string,\n"
+            "  \"overall_sentiment\": string,  # one of: bullish | bearish | neutral,\n"
+            "  \"confidence\": number,        # 0.0-1.0,\n"
+            "  \"key_points\": [string]      # optional\n"
             "}\n"
             "Keep the summary tight and non-repetitive."
         )
         user_msg = f"Symbol: {asset}\n\nCorpus:\n{context}"
-        result_obj = None
-        summary_text = None
-        provider = ""
-        try:
-            self.logger.info("news.summary: asset=%s model_pref=%s items=%s", asset, model_preference, len(items or []))
-        except Exception:
-            pass
 
-        # Query preference
         def _try_gem():
             try:
                 if self.analyst and hasattr(self.analyst, "_query_gemini"):
                     self._last_provider = None
-                    res = self.analyst._query_gemini([
-                        {"role": "system", "content": system_msg},
-                        {"role": "user", "content": user_msg}
-                    ])
-                    if res is not None:
-                        return res
+                    return self.analyst._query_gemini([{"role": "system", "content": system_msg}, {"role": "user", "content": user_msg}])
             except Exception:
                 return None
             return None
@@ -788,209 +766,79 @@ class NewsBridge:
             try:
                 if self.analyst and hasattr(self.analyst, "_query_local_llm"):
                     self._last_provider = None
-                    res = self.analyst._query_local_llm([
-                        {"role": "system", "content": system_msg},
-                        {"role": "user", "content": user_msg}
-                    ])
-                    if res is not None:
-                        return res
+                    return self.analyst._query_local_llm([{"role": "system", "content": system_msg}, {"role": "user", "content": user_msg}])
             except Exception:
                 return None
             return None
 
         def _try_local_openai():
-            """Direct call to LOCAL_LLM_BASE_URL /chat/completions (OpenAI-compatible)."""
             try:
                 base_url = (os.getenv("LOCAL_LLM_BASE_URL", "") or getattr(self, "local_llm_base_url", "")).strip().rstrip("/")
+                if not base_url: return None
                 model_name = (os.getenv("LOCAL_LLM_MODEL", "") or getattr(self, "local_llm_model", "")).strip() or "auto"
                 api_key = (os.getenv("LOCAL_LLM_API_KEY", "") or getattr(self, "local_llm_api_key", "not-needed")).strip()
-                if not base_url:
-                    return None
                 headers = {"Content-Type": "application/json"}
-                if api_key and api_key != "not-needed":
-                    headers["Authorization"] = f"Bearer {api_key}"
-                payload = {
-                    "model": model_name,
-                    "messages": [
-                        {"role": "system", "content": system_msg},
-                        {"role": "user", "content": user_msg},
-                    ],
-                    "temperature": float(os.getenv("LOCAL_LLM_TEMPERATURE", "0.1") or 0.1),
-                    "max_tokens": int(os.getenv("LOCAL_LLM_MAX_TOKENS", "4096") or 4096),
-                    "stream": False,
-                }
+                if api_key and api_key != "not-needed": headers["Authorization"] = f"Bearer {api_key}"
+                payload = {"model": model_name, "messages": [{"role": "system", "content": system_msg}, {"role": "user", "content": user_msg}], "temperature": 0.1, "max_tokens": 4096, "stream": False}
                 r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
-                if r.status_code != 200:
-                    try:
-                        self._get_app_logger().warning("news.summary.local: HTTP %s: %s", r.status_code, (r.text or "")[:200])
-                    except Exception:
-                        pass
-                    return None
-                data = r.json() or {}
-                raw = (
-                    data.get("choices", [{}])[0].get("message", {}).get("content")
-                ) or data.get("choices", [{}])[0].get("text", "")
-                return raw
+                if r.status_code == 200:
+                    data = r.json() or {}
+                    return (data.get("choices", [{}])[0].get("message", {}).get("content")) or (data.get("choices", [{}])[0].get("text", ""))
             except Exception:
                 return None
 
         def _try_do():
-            try:
-                base_url = (os.getenv("DO_AI_BASE_URL", "https://inference.do-ai.run/v1") or "").strip().rstrip("/")
-                api_key = (os.getenv("DO_AI_API_KEY") or os.getenv("DIGITALOCEAN_AI_API_KEY") or "").strip()
-                model_name = (os.getenv("DO_AI_MODEL") or "").strip() or "llama3-8b-instruct"
-                if not (base_url and api_key):
-                    return None
-                headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
-                payload = {
-                    "model": model_name,
-                    "messages": [
-                        {"role": "system", "content": system_msg},
-                        {"role": "user", "content": user_msg},
-                    ],
-                    "temperature": float(os.getenv("LOCAL_LLM_TEMPERATURE", "0.1") or 0.1),
-                    "max_tokens": int(os.getenv("LOCAL_LLM_MAX_TOKENS", "4096") or 4096),
-                    "stream": False,
-                }
-                r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
-                try:
-                    self.logger.info("news.summary.DO: POST /chat/completions model=%s status=%s", model_name, r.status_code)
-                except Exception:
-                    pass
-                if r.status_code != 200:
-                    try:
-                        self.logger.warning("news.summary.DO error: %s", (r.text or "")[:200])
-                    except Exception:
-                        pass
-                    return None
-                data = r.json()
-                raw = (
-                    data.get("choices", [{}])[0].get("message", {}).get("content")
-                ) or data.get("choices", [{}])[0].get("text", "")
-                return raw
-            except Exception:
-                return None
+            return None # Implement if needed
 
         def _try_hf():
-            try:
-                base_url = (os.getenv("HF_BASE_URL", "https://router.huggingface.co/v1") or "").strip().rstrip("/")
-                api_key = (os.getenv("HF_TOKEN") or os.getenv("HF_TOKEN2") or os.getenv("HUGGINGFACEHUB_API_TOKEN") or "").strip()
-                model_name = (os.getenv("HF_MODEL") or "OpenAI/gpt-oss-20B").strip()
-                if not (base_url and api_key):
-                    return None
-                headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
-                payload = {
-                    "model": model_name,
-                    "messages": [
-                        {"role": "system", "content": system_msg},
-                        {"role": "user", "content": user_msg},
-                    ],
-                    "temperature": float(os.getenv("LOCAL_LLM_TEMPERATURE", "0.1") or 0.1),
-                    "max_tokens": int(os.getenv("LOCAL_LLM_MAX_TOKENS", "4096") or 4096),
-                    "stream": False,
-                }
-                r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
-                try:
-                    self.logger.info("news.summary.HF: POST /chat/completions model=%s status=%s", model_name, r.status_code)
-                except Exception:
-                    pass
-                if r.status_code != 200:
-                    try:
-                        self.logger.warning("news.summary.HF error: %s", (r.text or "")[:200])
-                    except Exception:
-                        pass
-                    return None
-                data = r.json()
-                raw = (
-                    data.get("choices", [{}])[0].get("message", {}).get("content")
-                ) or data.get("choices", [{}])[0].get("text", "")
-                return raw
-            except Exception:
-                return None
+            return None # Implement if needed
 
-        if model_preference == "local":
-            result_obj = _try_local() or _try_local_openai()
-            provider = "local" if result_obj is not None else ""
-        elif model_preference == "gemini":
-            result_obj = _try_gem()
-            provider = "gemini" if result_obj is not None else ""
-        elif model_preference == "do":
-            result_obj = _try_do()
-            provider = "do" if result_obj is not None else ""
-        elif model_preference == "hf":
-            result_obj = _try_hf()
-            provider = "hf" if result_obj is not None else ""
-        else:  # auto
-            result_obj = _try_gem()
-            provider = "gemini" if result_obj is not None else provider
-            if result_obj is None:
-                result_obj = _try_local()
-                provider = "local" if result_obj is not None else provider
-            if result_obj is None:
-                result_obj = _try_local_openai()
-                provider = "local" if result_obj is not None else provider
-            if result_obj is None:
-                result_obj = _try_do()
-                provider = "do" if result_obj is not None else provider
-            if result_obj is None:
-                result_obj = _try_hf()
-                provider = "hf" if result_obj is not None else provider
+        provider_map = {"local": _try_local_openai, "do": _try_do, "hf": _try_hf, "gemini": _try_gem}
+        provider_order = []
+        if model_preference in provider_map:
+            provider_order.append(model_preference)
+        for p in ["local", "do", "hf", "gemini"]:
+            if p not in provider_order:
+                provider_order.append(p)
+        
+        print(f"DEBUG (NewsBridge): Provider order: {provider_order}")
 
-        payload: Optional[Dict[str, Any]] = None
-        # Normalize result into text and optional payload
+        result_obj, provider = None, ""
+        for provider_name in provider_order:
+            call_func = provider_map.get(provider_name)
+            if call_func:
+                result_obj = call_func()
+                if result_obj is not None:
+                    provider = provider_name
+                    print(f"DEBUG (NewsBridge): Succeeded with {provider_name}")
+                    break
+        
+        payload, summary_text = None, None
+        
         def _strip_code_fences(s: str) -> str:
-            if not s:
-                return s
-            try:
-                st = s.strip()
-                # Remove leading ```json or ``` and trailing ```
-                if st.startswith("```"):
-                    # drop first fence line
-                    st = st.split("\n", 1)[1] if "\n" in st else st.replace("```", "")
-                if st.endswith("```"):
-                    st = st[::-1].replace("```"[::-1], "", 1)[::-1]
-                # Also remove a leading 'json' label if present
-                if st.lower().startswith("json\n"):
-                    st = st[5:]
-                return st.strip()
-            except Exception:
-                return s
+            if not s: return s
+            st = s.strip()
+            if st.startswith("```"): st = st.split("\n", 1) if "\n" in st else st.replace("```", "")
+            if st.endswith("```"): st = st[::-1].replace("```"[::-1], "", 1)[::-1]
+            if st.lower().startswith("json\n"): st = st[5:]
+            return st.strip()
+
         if isinstance(result_obj, dict):
             payload = result_obj
         elif isinstance(result_obj, str):
             try:
                 parsed = json.loads(_strip_code_fences(result_obj))
-                if isinstance(parsed, dict):
-                    payload = parsed
-                else:
-                    summary_text = result_obj
+                if isinstance(parsed, dict): payload = parsed
+                else: summary_text = result_obj
             except Exception:
-                # Try to extract a JSON object if present within text
-                try:
-                    cleaned = _strip_code_fences(result_obj)
-                    start = cleaned.find('{')
-                    end = cleaned.rfind('}')
-                    if start != -1 and end != -1 and end > start:
-                        maybe = cleaned[start:end+1]
-                        parsed = json.loads(maybe)
-                        if isinstance(parsed, dict):
-                            payload = parsed
-                        else:
-                            summary_text = cleaned
-                    else:
-                        summary_text = cleaned
-                except Exception:
-                    summary_text = result_obj
+                summary_text = result_obj
         elif result_obj is not None:
-            # Unknown type, stringify
             summary_text = str(result_obj)
 
         if payload and not summary_text:
-            # Prefer executive_summary if available
             summary_text = payload.get('executive_summary') or payload.get('summary') or ''
 
-        # If summary_text still looks like JSON, attempt a last parse
-        if (summary_text or '').strip().startswith('{') and ('"executive_summary"' in summary_text or '"overall_sentiment"' in summary_text):
+        if (summary_text or '').strip().startswith('{'):
             try:
                 pj = json.loads(_strip_code_fences(summary_text))
                 if isinstance(pj, dict):
@@ -999,109 +847,60 @@ class NewsBridge:
             except Exception:
                 pass
 
-        # Enforce concise length (trim to ~300 words)
         def _trim_words(txt: str, max_words: int = 300) -> str:
-            try:
-                words = (txt or '').split()
-                if len(words) <= max_words:
-                    return txt or ''
-                return ' '.join(words[:max_words]) + ' …'
-            except Exception:
-                return (txt or '')
+            words = (txt or '').split()
+            return ' '.join(words[:max_words]) + (' …' if len(words) > max_words else '')
 
         if not summary_text:
-            # Very simple fallback: synthesize from titles and per-article summaries
-            bullets = []
-            for it in items[:8]:
-                title = (gv(it, 'title', '') or '')
-                per = (gv(it, 'ai_summary', '') or gv(it, 'description', '') or '')
-                bullets.append(f"- {title}: {_clip(per, 180)}")
+            bullets = [f"- {gv(it, 'title')}: {_clip(gv(it, 'ai_summary') or gv(it, 'description'), 180)}" for it in items[:8]]
             summary_text = "Overall summary (fallback):\n" + "\n".join(bullets)
             provider = provider or "fallback"
 
         summary_text = _trim_words(summary_text, 300)
 
-        # Surface sentiment if provided, else derive from article sentiments
         def _normalize_sent_label(s: Optional[str]) -> Optional[str]:
-            if not s:
-                return None
+            if not s: return None
             s = str(s).strip().lower()
-            if s in ("bullish","bearish","neutral"):
-                return s
-            # common variants
-            if s in ("pos","positive","up"): return "bullish"
-            if s in ("neg","negative","down"): return "bearish"
-            if s in ("flat","mixed"): return "neutral"
-            return None
+            if s in ("bullish", "bearish", "neutral"): return s
+            if s in ("pos", "positive", "up"): return "bullish"
+            if s in ("neg", "negative", "down"): return "bearish"
+            return "neutral"
 
-        # Try to read from payload with several key variants
-        overall_sent = None
-        conf = None
+        overall_sent, conf = None, None
         if payload:
-            for k in ("overall_sentiment","overallSentiment","sentiment","sentiment_label","label"):
-                v = payload.get(k)
-                lab = _normalize_sent_label(v)
-                if lab:
-                    overall_sent = lab
-                    break
-            for k in ("confidence","sentiment_confidence","score"):
-                v = payload.get(k)
-                try:
-                    conf = float(v) if v is not None else None
-                except Exception:
-                    conf = None
+            for k in ("overall_sentiment", "sentiment", "sentiment_label"):
+                lab = _normalize_sent_label(payload.get(k))
+                if lab: overall_sent = lab; break
+            for k in ("confidence", "score"):
+                try: conf = float(payload.get(k)) if payload.get(k) is not None else None
+                except Exception: conf = None
 
-        # Fallback aggregation across items if missing
         if not overall_sent:
-            # Map labels to numeric for averaging
-            def _val(lbl: Optional[str]) -> Optional[float]:
+            def _val(lbl: Optional[str]) -> float:
                 lbl = (lbl or "").lower()
                 if lbl == "bullish": return 1.0
                 if lbl == "bearish": return -1.0
-                if lbl == "neutral": return 0.0
-                return None
-            vs: List[float] = []
-            ws: List[float] = []
+                return 0.0
+            
+            vs, ws = [], []
             for it in items:
-                try:
-                    lbl = gv(it, 'sentiment_label', '')
-                    v = _val(lbl)
-                    if v is None:
-                        continue
-                    score = gv(it, 'sentiment_score', None)
-                    try:
-                        w = float(score) if score is not None else 1.0
-                    except Exception:
-                        w = 1.0
-                    # clamp weight 0..1
-                    if not (0.0 <= w <= 1.0):
-                        w = 1.0
-                    vs.append(v * w)
-                    ws.append(w)
-                except Exception:
-                    continue
-            if ws:
-                try:
-                    avg = sum(vs) / max(1e-9, sum(ws))
-                    if avg > 0.2:
-                        overall_sent = "bullish"
-                    elif avg < -0.2:
-                        overall_sent = "bearish"
-                    else:
-                        overall_sent = "neutral"
-                    conf = max(0.0, min(1.0, abs(avg)))
-                except Exception:
-                    pass
+                v, w = _val(gv(it, 'sentiment_label')), 1.0
+                try: w = float(gv(it, 'sentiment_score', 1.0))
+                except Exception: pass
+                vs.append(v * w); ws.append(w)
+            
+            if ws and sum(ws) > 0:
+                avg = sum(vs) / sum(ws)
+                if avg > 0.2: overall_sent = "bullish"
+                elif avg < -0.2: overall_sent = "bearish"
+                else: overall_sent = "neutral"
+                conf = abs(avg)
 
         out = {"summary": summary_text, "provider": provider}
-        if overall_sent:
-            out["overall_sentiment"] = overall_sent
-        if isinstance(conf, (int, float)):
-            out["confidence"] = float(conf)
-        if payload:
-            out["payload"] = payload
+        if overall_sent: out["overall_sentiment"] = overall_sent
+        if isinstance(conf, (int, float)): out["confidence"] = float(conf)
+        if payload: out["payload"] = payload
         return out
-
 
 # ---------------- Multi‑Agent Research (free-data) ----------------
 class ResearchOrchestrator:
@@ -1212,6 +1011,99 @@ class ResearchOrchestrator:
                 pass
             msg = f"DataAgent error: {e}"
             return msg, payload
+
+    def technical_strategist_agent(self, symbol: str, price_hist: Optional[pd.DataFrame], tech_summary: str, ai_provider: str = "auto") -> Tuple[str, str]:
+        """
+        A more advanced agent that calculates key levels and asks the LLM to generate
+        a strategic analysis instead of a simple justification.
+        """
+        if price_hist is None or price_hist.empty or len(price_hist) < 2:
+            return "StrategistAgent: Not enough data.", ""
+
+        try:
+            # --- 1. Calculate Enriched Data ---
+            current_price = price_hist["Close"].iloc[-1]
+            recent_high = price_hist["High"].max()
+            recent_low = price_hist["Low"].min()
+
+            # Calculate Pivot Points from the previous period's data
+            prev_h = price_hist["High"].iloc[-2]
+            prev_l = price_hist["Low"].iloc[-2]
+            prev_c = price_hist["Close"].iloc[-2]
+            
+            p = (prev_h + prev_l + prev_c) / 3
+            r1 = (2 * p) - prev_l
+            s1 = (2 * p) - prev_h
+            r2 = p + (prev_h - prev_l)
+            s2 = p - (prev_h - prev_l)
+            
+            pivots = {
+                "r2": f"{r2:.2f}", "r1": f"{r1:.2f}", "p": f"{p:.2f}",
+                "s1": f"{s1:.2f}", "s2": f"{s2:.2f}"
+            }
+
+            # Calculate Fibonacci Retracement Levels for the period
+            diff = recent_high - recent_low
+            fib_levels = {
+                "0.236": f"{recent_high - 0.236 * diff:.2f}",
+                "0.382": f"{recent_high - 0.382 * diff:.2f}",
+                "0.500": f"{recent_high - 0.500 * diff:.2f}",
+                "0.618": f"{recent_high - 0.618 * diff:.2f}",
+            }
+            
+        except Exception as e:
+            return f"StrategistAgent: Failed to calculate levels - {e}", ""
+
+        # --- 2. Construct the Advanced Prompt ---
+        system_msg = (
+            "You are an expert technical trading strategist. Your analysis is concise, data-driven, and actionable. "
+            "You will be given a snapshot of technical indicators along with calculated support and resistance levels. "
+            "Your task is to synthesize this information into a clear, strategic trading plan."
+        )
+
+        user_msg = textwrap.dedent(f"""
+        Analyze the technical data for the ticker **{symbol}** and provide a strategic plan.
+
+        **Current Indicator Snapshot:**
+        {tech_summary}
+
+        **Key Price Levels:**
+        - Current Price: {current_price:.2f}
+        - Period High: {recent_high:.2f}
+        - Period Low: {recent_low:.2f}
+
+        **Calculated Pivot Points (for current period):**
+        - Resistance 2 (R2): {pivots['r2']}
+        - Resistance 1 (R1): {pivots['r1']}
+        - Pivot Point (P): {pivots['p']}
+        - Support 1 (S1): {s1:.2f}
+        - Support 2 (S2): {s2:.2f}
+
+        **Fibonacci Retracement Levels (based on period high/low):**
+        - 0.236 Level: {fib_levels['0.236']}
+        - 0.382 Level: {fib_levels['0.382']}
+        - 0.500 Level: {fib_levels['0.500']}
+        - 0.618 Level: {fib_levels['0.618']}
+
+        ---
+        **Instructions:**
+
+        Based on all the data above, provide a concise, actionable trading plan. Structure your response in markdown with the following sections:
+
+        1.  **Overall Assessment:** A brief 2-3 sentence summary of the current technical picture (e.g., "The stock is in a strong uptrend but appears overbought, approaching a key resistance level...").
+        2.  **Key Levels to Watch:** Clearly list the most important support and resistance levels to monitor, referencing the pivot points, Fibonacci levels, and recent highs/lows.
+        3.  **Potential Trade Scenarios:**
+            -   **Bullish Scenario (Potential Buy):** Describe what price action or indicator signal would confirm a bullish outlook (e.g., "A breakout and hold above R1 at {pivots['r1']} could signal a continuation...").
+            -   **Bearish Scenario (Potential Sell/Caution):** Describe what would signal a reversal or breakdown (e.g., "A break below the key support at the 0.382 Fibonacci level of {fib_levels['0.382']} could indicate a deeper pullback...").
+        """)
+        
+        # --- 3. Call the LLM and Return ---
+        strategy_text = self._llm_generate(system_msg, user_msg, ai_provider=ai_provider)
+        
+        if not strategy_text:
+            return "StrategistAgent: LLM call failed.", "Failed to generate strategic analysis."
+            
+        return "StrategistAgent: Generated strategic analysis.", strategy_text
 
     def data_agent_with_dates(self, symbol: str, start: str, end: str, interval: str = "1d") -> Tuple[str, Dict[str, Any]]:
         """Fetch price data for an explicit date range using yfinance.
@@ -1627,7 +1519,7 @@ class ResearchOrchestrator:
         """
         results = {}
         for ticker in tickers:
-            try:
+            
                 # --- Data Agent ---
                 if start_date and end_date:
                     msg, payload = self.data_agent_with_dates(
@@ -1662,48 +1554,188 @@ class ResearchOrchestrator:
                     results[ticker] = {"error": "No data found."}
                     continue
 
-                # --- Synthesis Agent (Indicator Calculation) ---
-                fig, tech_summary = self.synthesis_agent_for_technicals(
-                    hist,
-                    indicators,
-                    length,
-                    rsi_length,
-                    macd_fast,
-                    macd_slow,
-                    macd_signal_len,
-                )
+    def _get_technical_ai_summary(
+        self, symbol: str, tech_summary: str, model_preference: str = "auto"
+    ) -> Dict[str, Any]:
+        """Calls an LLM to get a technical analysis recommendation.
+        Honors AI provider selection via env var AI_PROVIDER in {auto|local|gemini|do}.
+        """
+        system_msg = textwrap.dedent(
+            """
+            You are an expert technical analyst. Based on the provided technical indicators for a stock, you will:
+            1. Provide a recommendation: "Buy", "Sell", or "Hold".
+            2. Provide a confidence score for your recommendation on a scale of 1 to 10.
+            3. Provide a detailed justification for your recommendation, referencing the specific indicator values provided. Explain how the indicators support your conclusion. Structure this as markdown text.
 
-                # --- AI Analyst Agent ---
-                ai_analysis = self._get_technical_ai_summary(ticker, tech_summary)
+            Respond in a JSON format with three keys: "recommendation", "confidence", "justification".
+            Example:
+            {
+                "recommendation": "Hold",
+                "confidence": 6,
+                "justification": "The stock is currently in a consolidation phase. The price is trading between the SMA(20) and EMA(50), indicating a lack of clear trend. The RSI is near 50, further supporting a neutral stance. MACD is close to the signal line, suggesting no immediate momentum."
+            }
+            """
+        )
+        user_msg = f"Symbol: {symbol}\n\nTechnical Summary:\n{tech_summary}"
+
+        # Read provider choice and common params
+        bridge = getattr(self, "bridge", None)
+        ai_provider = (os.getenv("AI_PROVIDER", model_preference) or "auto").strip().lower()
+        try:
+            max_tokens = int(os.getenv("LOCAL_LLM_MAX_TOKENS", str(getattr(bridge, "local_llm_max_tokens", 4096))))
+        except Exception:
+            max_tokens = 4096
+        try:
+            temperature = float(os.getenv("LOCAL_LLM_TEMPERATURE", str(getattr(bridge, "local_llm_temperature", 0.1))))
+        except Exception:
+            temperature = 0.1
+
+        def _extract_json(raw_text: str) -> Optional[Dict[str, Any]]:
+            try:
+                return json.loads(raw_text)
+            except Exception:
                 try:
-                    from telemetry import log_event
-                    log_event("technical.figure", {
-                        "ticker": ticker,
-                        "interval": timeframe,
-                        "indicators": indicators,
-                        "has_figure": True,
-                    })
+                    import re as _re
+                    m = _re.search(r"\{[\s\S]*\}", raw_text)
+                    if m:
+                        return json.loads(m.group(0))
                 except Exception:
-                    pass
-                results[ticker] = {
-                    "figure": fig,
-                    "recommendation": ai_analysis.get("recommendation", "N/A"),
-                    "confidence": ai_analysis.get("confidence", "N/A"),
-                    "justification": ai_analysis.get(
-                        "justification", "No justification provided."
-                    ),
+                    return None
+            return None
+
+        def _try_local_openai() -> Optional[Dict[str, Any]]:
+            base_url = os.getenv("LOCAL_LLM_BASE_URL", getattr(bridge, "local_llm_base_url", "")).strip()
+            model_name = os.getenv("LOCAL_LLM_MODEL", getattr(bridge, "local_llm_model", "")).strip()
+            api_key = os.getenv("LOCAL_LLM_API_KEY", getattr(bridge, "local_llm_api_key", "not-needed"))
+            if not base_url:
+                return None
+            try:
+                base = base_url.rstrip("/")
+                headers = {"Content-Type": "application/json"}
+                if api_key and api_key != "not-needed":
+                    headers["Authorization"] = f"Bearer {api_key}"
+                messages = [
+                    {"role": "system", "content": system_msg},
+                    {"role": "user", "content": user_msg},
+                ]
+                payload = {
+                    "model": model_name or "auto",
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": max_tokens,
+                    "stream": False,
                 }
+                resp = _requests.post(f"{base}/chat/completions", headers=headers, json=payload, timeout=45)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    raw_text = (
+                        data.get("choices", [{}])[0].get("message", {}).get("content")
+                    ) or data.get("choices", [{}])[0].get("text", "")
+                    if raw_text:
+                        parsed = _extract_json(raw_text)
+                        if parsed:
+                            return parsed
             except Exception as e:
-                try:
-                    from telemetry import log_event
-                    log_event("technical.error", {"ticker": ticker, "error": str(e)})
-                except Exception:
-                    pass
-                results[ticker] = {"error": f"An error occurred: {str(e)}"}
+                logging.warning(f"Local LLM (OpenAI-compatible) failed: {e}")
+            return None
 
-        return results
+        def _try_do() -> Optional[Dict[str, Any]]:
+            base_url = (os.getenv("DO_AI_BASE_URL", "https://inference.do-ai.run/v1") or "").strip()
+            api_key = (os.getenv("DO_AI_API_KEY") or os.getenv("DIGITALOCEAN_AI_API_KEY") or "").strip()
+            model_name = (os.getenv("DO_AI_MODEL") or "").strip() or "llama3-8b-instruct"
+            if not base_url or not api_key:
+                return None
+            try:
+                base = base_url.rstrip("/")
+                headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
+                messages = [
+                    {"role": "system", "content": system_msg},
+                    {"role": "user", "content": user_msg},
+                ]
+                payload = {
+                    "model": model_name,
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": max_tokens,
+                    "stream": False,
+                }
+                resp = _requests.post(f"{base}/chat/completions", headers=headers, json=payload, timeout=45)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    raw_text = (
+                        data.get("choices", [{}])[0].get("message", {}).get("content")
+                    ) or data.get("choices", [{}])[0].get("text", "")
+                    if raw_text:
+                        parsed = _extract_json(raw_text)
+                        if parsed:
+                            return parsed
+            except Exception as e:
+                logging.warning(f"DigitalOcean Inference failed: {e}")
+            return None
 
-    
+        def _try_bridge_local() -> Optional[Dict[str, Any]]:
+            try:
+                if self.bridge.analyst and hasattr(self.bridge.analyst, "_query_local_llm"):
+                    msgs = [
+                        {"role": "system", "content": system_msg},
+                        {"role": "user", "content": user_msg},
+                    ]
+                    res = self.bridge.analyst._query_local_llm(msgs)
+                    if isinstance(res, dict):
+                        return res
+            except Exception as e:
+                logging.warning(f"Bridge local LLM failed: {e}")
+            return None
+
+        def _try_bridge_gemini() -> Optional[Dict[str, Any]]:
+            try:
+                if self.bridge.analyst and hasattr(self.bridge.analyst, "_query_gemini"):
+                    msgs = [
+                        {"role": "system", "content": system_msg},
+                        {"role": "user", "content": user_msg},
+                    ]
+                    res = self.bridge.analyst._query_gemini(msgs)
+                    if isinstance(res, dict):
+                        return res
+            except Exception as e:
+                logging.warning(f"Bridge Gemini failed: {e}")
+            return None
+
+        # Decide provider order
+        order: List[str] = []
+        if ai_provider in {"local", "do", "gemini"}:
+            order = [ai_provider]
+        else:  # auto
+            # Prefer configured local, then DO, then Gemini, then bridge local
+            if os.getenv("LOCAL_LLM_BASE_URL"):
+                order.append("local")
+            if os.getenv("DO_AI_API_KEY") or os.getenv("DIGITALOCEAN_AI_API_KEY"):
+                order.append("do")
+            order.extend(["gemini", "bridgelocal"])  # fallbacks
+
+        for prov in order:
+            if prov == "local":
+                out = _try_local_openai()
+                if out:
+                    return out
+            elif prov == "do":
+                out = _try_do()
+                if out:
+                    return out
+            elif prov == "gemini":
+                out = _try_bridge_gemini()
+                if out:
+                    return out
+            elif prov == "bridgelocal":
+                out = _try_bridge_local()
+                if out:
+                    return out
+
+        # As a final fallback try any remaining bridges
+        out = _try_bridge_local() or _try_bridge_gemini()
+        if out:
+            return out
+        return {}
 
     # ---------------- Fundamentals & Holistic Agents ----------------
     def company_profile_agent(self, symbol: str) -> Tuple[str, Dict[str, Any]]:
@@ -1910,41 +1942,54 @@ class ResearchOrchestrator:
             return f"FundamentalRatiosAgent error: {e}", {}
 
     def earnings_agent(self, symbol: str) -> Tuple[str, Dict[str, Any]]:
-        """Collect EPS and Revenue history where available and compute growth rates."""
+        """Collect EPS and Revenue history using modern methods and compute growth rates."""
         try:
             t_yf = _get_yf()
             t = t_yf.Ticker(symbol)
             out: Dict[str, Any] = {}
-            # Quarterly earnings (yfinance provides 'Earnings' and 'Revenue')
-            q_e = None
+            
+            # --- Quarterly Earnings and Revenue (Modern Method) ---
+            q_fin = None
             try:
-                q_e = t.quarterly_earnings.copy()
+                # Use .quarterly_financials, which is the income statement
+                q_fin = t.quarterly_financials
             except Exception:
-                q_e = None
-            if isinstance(q_e, pd.DataFrame) and not q_e.empty:
-                out["quarterly_earnings"] = q_e.tail(8)  # keep last 8 quarters
-                try:
-                    rev = q_e["Revenue"].astype(float)
-                    earn = q_e["Earnings"].astype(float)
-                    rev_growth = (rev.pct_change() * 100.0).round(2).tolist()
-                    earn_growth = (earn.pct_change() * 100.0).round(2).tolist()
+                q_fin = None
+
+            if isinstance(q_fin, pd.DataFrame) and not q_fin.empty:
+                # Return the DataFrame slice itself, as the caller expects it.
+                out["quarterly_earnings"] = q_fin.tail(8)
+                
+                rev_row = self._safe_get_row(q_fin, ["Total Revenue", "Revenue"])
+                earn_row = self._safe_get_row(q_fin, ["Net Income"])
+                
+                if rev_row is not None:
+                    rev = rev_row.astype(float)
+                    rev_growth = (rev.pct_change(fill_method=None) * 100.0).round(2).tolist()
                     out["revenue_growth_pct"] = rev_growth
+                
+                if earn_row is not None:
+                    earn = earn_row.astype(float)
+                    earn_growth = (earn.pct_change(fill_method=None) * 100.0).round(2).tolist()
                     out["earnings_growth_pct"] = earn_growth
-                except Exception:
-                    pass
-            # Annual EPS from financials if available
+            
+            # --- Annual EPS (Modern Method) ---
             try:
-                fin = t.financials
+                fin = t.financials # Use the annual income statement
                 eps_row = None
+                # Basic EPS is usually the most reliable figure
                 for key in ["Basic EPS", "BasicEPS", "Diluted EPS", "DilutedEPS"]:
                     if key in (fin.index if isinstance(fin, pd.DataFrame) else []):
                         eps_row = fin.loc[key]
                         break
                 if eps_row is not None:
+                    # Drop any missing values and convert to a simple list of floats
                     out["annual_eps"] = pd.Series(eps_row).dropna().astype(float).tolist()
             except Exception:
                 pass
+                
             return "EarningsAgent: collected earnings data.", out
+            
         except Exception as e:
             return f"EarningsAgent error: {e}", {}
 
@@ -1976,8 +2021,13 @@ class ResearchOrchestrator:
         except Exception:
             return None
 
-    def _llm_generate(self, system_msg: str, user_msg: str) -> Optional[str]:
-        """Generic LLM text generation using available providers (Gemini, Local, DO, HF). Returns text or None."""
+    def _llm_generate(self, system_msg: str, user_msg: str, ai_provider: str = "auto") -> Optional[str]:
+        """
+        Generic LLM text generation that RESPECTS the user's selected provider.
+        Provider priority:
+        1. The one explicitly passed in `ai_provider`.
+        2. If `ai_provider` is 'auto', it tries Local, DO, HF, then Gemini as a last resort.
+        """
         def _log_llm(event: str, payload: Dict[str, Any]) -> None:
             try:
                 from telemetry import log_event
@@ -1988,101 +2038,134 @@ class ResearchOrchestrator:
                 log_event(event, pl)
             except Exception:
                 pass
-        # Try Gemini via bridge
-        try:
-            if self.bridge and getattr(self.bridge, "analyst", None) and hasattr(self.bridge.analyst, "_query_gemini"):
-                _log_llm("llm.request", {"provider": "gemini", "system_msg": system_msg, "user_msg": user_msg})
-                out = self.bridge.analyst._query_gemini([
-                    {"role": "system", "content": system_msg},
-                    {"role": "user", "content": user_msg},
-                ])
-                if isinstance(out, str) and out.strip():
-                    _log_llm("llm.response", {"provider": "gemini", "response": out})
-                    return out
-        except Exception:
-            _log_llm("llm.error", {"provider": "gemini", "error": "exception"})
-            pass
-        # Try Local via bridge
-        try:
-            if self.bridge and getattr(self.bridge, "analyst", None) and hasattr(self.bridge.analyst, "_query_local_llm"):
-                _log_llm("llm.request", {"provider": "local", "system_msg": system_msg, "user_msg": user_msg})
-                out = self.bridge.analyst._query_local_llm([
-                    {"role": "system", "content": system_msg},
-                    {"role": "user", "content": user_msg},
-                ])
-                if isinstance(out, str) and out.strip():
-                    _log_llm("llm.response", {"provider": "local", "response": out})
-                    return out
-        except Exception:
-            _log_llm("llm.error", {"provider": "local", "error": "exception"})
-            pass
-        # Try DO
-        try:
-            base_url = (os.getenv("DO_AI_BASE_URL", "https://inference.do-ai.run/v1") or "").strip().rstrip("/")
-            api_key = (os.getenv("DO_AI_API_KEY") or os.getenv("DIGITALOCEAN_AI_API_KEY") or "").strip()
-            model_name = (os.getenv("DO_AI_MODEL") or "").strip() or "llama3-8b-instruct"
-            if base_url and api_key:
+
+        # --- Define all possible provider calls as separate functions ---
+        def _try_local_openai() -> Optional[str]:
+            try:
+                base_url = (os.getenv("LOCAL_LLM_BASE_URL", "") or getattr(self.bridge, "local_llm_base_url", "")).strip().rstrip("/")
+                model_name = (os.getenv("LOCAL_LLM_MODEL", "") or getattr(self.bridge, "local_llm_model", "")).strip() or "auto"
+                api_key = (os.getenv("LOCAL_LLM_API_KEY", "") or getattr(self.bridge, "local_llm_api_key", "not-needed")).strip()
+                if not base_url:
+                    return None
+                
+                _log_llm("llm.request", {"provider": "local", "model": model_name, "system_msg": system_msg, "user_msg": user_msg})
+                headers = {"Content-Type": "application/json"}
+                if api_key and api_key != "not-needed":
+                    headers["Authorization"] = f"Bearer {api_key}"
+                payload = {
+                    "model": model_name, "messages": [{"role": "system", "content": system_msg}, {"role": "user", "content": user_msg}],
+                    "temperature": float(os.getenv("LOCAL_LLM_TEMPERATURE", "0.2") or 0.2),
+                    "max_tokens": int(os.getenv("LOCAL_LLM_MAX_TOKENS", "4096") or 4096), "stream": False,
+                }
+                r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+                if r.status_code == 200:
+                    data = r.json()
+                    raw = (data.get("choices", [{}])[0].get("message", {}).get("content")) or (data.get("choices", [{}])[0].get("text", ""))
+                    if raw:
+                        _log_llm("llm.response", {"provider": "local", "response": raw, "usage": data.get("usage")})
+                        return raw
+            except Exception as e:
+                _log_llm("llm.error", {"provider": "local", "error": str(e)})
+            return None
+
+        def _try_do() -> Optional[str]:
+            try:
+                base_url = (os.getenv("DO_AI_BASE_URL", "https://inference.do-ai.run/v1") or "").strip().rstrip("/")
+                api_key = (os.getenv("DO_AI_API_KEY") or os.getenv("DIGITALOCEAN_AI_API_KEY") or "").strip()
+                model_name = (os.getenv("DO_AI_MODEL") or "").strip() or "llama3-8b-instruct"
+                if not (base_url and api_key):
+                    return None
+                
                 _log_llm("llm.request", {"provider": "do", "model": model_name, "system_msg": system_msg, "user_msg": user_msg})
                 headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
                 payload = {
-                    "model": model_name,
-                    "messages": [
-                        {"role": "system", "content": system_msg},
-                        {"role": "user", "content": user_msg},
-                    ],
+                    "model": model_name, "messages": [{"role": "system", "content": system_msg}, {"role": "user", "content": user_msg}],
                     "temperature": float(os.getenv("LOCAL_LLM_TEMPERATURE", "0.2") or 0.2),
-                    "max_tokens": int(os.getenv("LOCAL_LLM_MAX_TOKENS", "4096") or 4096),
-                    "stream": False,
+                    "max_tokens": int(os.getenv("LOCAL_LLM_MAX_TOKENS", "4096") or 4096), "stream": False,
                 }
                 r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
                 if r.status_code == 200:
                     data = r.json()
-                    raw = (
-                        data.get("choices", [{}])[0].get("message", {}).get("content")
-                    ) or data.get("choices", [{}])[0].get("text", "")
+                    raw = (data.get("choices", [{}])[0].get("message", {}).get("content")) or (data.get("choices", [{}])[0].get("text", ""))
                     if raw:
                         _log_llm("llm.response", {"provider": "do", "response": raw, "usage": data.get("usage")})
                         return raw
-        except Exception as e:
-            _log_llm("llm.error", {"provider": "do", "error": str(e)})
-            pass
-        # Try HF
-        try:
-            base_url = (os.getenv("HF_BASE_URL", "https://router.huggingface.co/v1") or "").strip().rstrip("/")
-            api_key = (os.getenv("HF_TOKEN") or os.getenv("HF_TOKEN2") or os.getenv("HUGGINGFACEHUB_API_TOKEN") or "").strip()
-            model_name = (os.getenv("HF_MODEL") or "OpenAI/gpt-oss-20B").strip()
-            if base_url and api_key:
+            except Exception as e:
+                _log_llm("llm.error", {"provider": "do", "error": str(e)})
+            return None
+
+        def _try_hf() -> Optional[str]:
+            try:
+                base_url = (os.getenv("HF_BASE_URL", "https://router.huggingface.co/v1") or "").strip().rstrip("/")
+                api_key = (os.getenv("HF_TOKEN") or os.getenv("HF_TOKEN2") or os.getenv("HUGGINGFACEHUB_API_TOKEN") or "").strip()
+                model_name = (os.getenv("HF_MODEL") or "OpenAI/gpt-oss-20B").strip()
+                if not (base_url and api_key):
+                    return None
+                
                 _log_llm("llm.request", {"provider": "hf", "model": model_name, "system_msg": system_msg, "user_msg": user_msg})
                 headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
                 payload = {
-                    "model": model_name,
-                    "messages": [
-                        {"role": "system", "content": system_msg},
-                        {"role": "user", "content": user_msg},
-                    ],
+                    "model": model_name, "messages": [{"role": "system", "content": system_msg}, {"role": "user", "content": user_msg}],
                     "temperature": float(os.getenv("LOCAL_LLM_TEMPERATURE", "0.2") or 0.2),
-                    "max_tokens": int(os.getenv("LOCAL_LLM_MAX_TOKENS", "4096") or 4096),
-                    "stream": False,
+                    "max_tokens": int(os.getenv("LOCAL_LLM_MAX_TOKENS", "4096") or 4096), "stream": False,
                 }
                 r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
                 if r.status_code == 200:
                     data = r.json()
-                    raw = (
-                        data.get("choices", [{}])[0].get("message", {}).get("content")
-                    ) or data.get("choices", [{}])[0].get("text", "")
+                    raw = (data.get("choices", [{}])[0].get("message", {}).get("content")) or (data.get("choices", [{}])[0].get("text", ""))
                     if raw:
                         _log_llm("llm.response", {"provider": "hf", "response": raw, "usage": data.get("usage")})
                         return raw
-        except Exception as e:
-            _log_llm("llm.error", {"provider": "hf", "error": str(e)})
-            pass
+            except Exception as e:
+                _log_llm("llm.error", {"provider": "hf", "error": str(e)})
+            return None
+        
+        def _try_gemini() -> Optional[str]:
+            try:
+                if self.bridge and hasattr(self.bridge, "analyst") and hasattr(self.bridge.analyst, "_query_gemini"):
+                    _log_llm("llm.request", {"provider": "gemini", "system_msg": system_msg, "user_msg": user_msg})
+                    out = self.bridge.analyst._query_gemini([{"role": "system", "content": system_msg}, {"role": "user", "content": user_msg}])
+                    if isinstance(out, str) and out.strip():
+                        _log_llm("llm.response", {"provider": "gemini", "response": out})
+                        return out
+            except Exception as e:
+                _log_llm("llm.error", {"provider": "gemini", "error": str(e)})
+            return None
+        
+        # --- NEW, SMARTER PROVIDER SELECTION LOGIC ---
+        provider_map = {
+            "local": _try_local_openai,
+            "do": _try_do,
+            "hf": _try_hf,
+            "gemini": _try_gemini
+        }
+
+        provider_order = []
+        
+        # If a specific provider is chosen, try it first.
+        if ai_provider in provider_map:
+            provider_order.append(ai_provider)
+        
+        # For 'auto' or as a fallback, add the rest in a sensible order (Gemini LAST)
+        for p in ["local", "do", "hf", "gemini"]:
+            if p not in provider_order:
+                provider_order.append(p)
+                
+        print(f"DEBUG: LLM provider order: {provider_order}")
+
+        # --- Execute the calls in the determined order ---
+        for provider_name in provider_order:
+            call_func = provider_map.get(provider_name)
+            if call_func:
+                result = call_func()
+                if isinstance(result, str) and result.strip():
+                    print(f"DEBUG: LLM call successful with provider: {provider_name}")
+                    return result
+        
+        print("DEBUG: All LLM providers failed.")
         return None
 
-    def holistic_analysis_agent(
-        self,
-        symbol: str,
-        notebook: Dict[str, Any],
-    ) -> Tuple[str, str]:
+    def holistic_analysis_agent(self, symbol: str, notebook: Dict[str, Any], ai_provider: str = "auto") -> Tuple[str, str]:
         """Create a holistic narrative from the Analyst's Notebook. Uses LLM if available; else a clear heuristic synthesis with anomaly flags."""
         # Build structured context
         prof = notebook.get("profile") or {}
@@ -2111,7 +2194,7 @@ class ResearchOrchestrator:
         )
         user_msg = json.dumps(snapshot, default=str)
 
-        llm_text = self._llm_generate(system_msg, user_msg)
+        llm_text = self._llm_generate(system_msg, user_msg, ai_provider=ai_provider)
         if isinstance(llm_text, str) and llm_text.strip():
             return "HolisticAnalysisAgent: LLM", llm_text.strip()
 
@@ -2146,7 +2229,7 @@ class ResearchOrchestrator:
             lines.append("Warning: Core valuation metrics (P/E or P/S) missing; valuation conclusions may be unreliable.")
         return "HolisticAnalysisAgent: heuristic", "\n".join([l for l in lines if l])
 
-    def recommendation_agent(self, symbol: str, notebook: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
+    def recommendation_agent(self, symbol: str, notebook: Dict[str, Any], ai_provider: str = "auto") -> Tuple[str, Dict[str, Any]]:
         """Provide Buy/Hold/Sell with confidence and detailed justification using a summarized notebook."""
         # --- 1. Create a CONCISE summary of the notebook for the LLM ---
         # This is more reliable than sending the entire raw JSON object.
@@ -2179,7 +2262,7 @@ class ResearchOrchestrator:
 
         # --- 3. Attempt LLM call ---
 
-        llm_text = self._llm_generate(system_msg, user_msg)
+        llm_text = self._llm_generate(system_msg, user_msg, ai_provider=ai_provider)
         if llm_text:
             try:
                 # Use the robust JSON extractor
@@ -2233,287 +2316,185 @@ class ResearchOrchestrator:
             "justification": " ".join(just_lines) or "A recommendation was determined by heuristic analysis of available data.",
         }
 
-    def run_full_analysis(
-        self,
-        *,
-        symbol: str,
-        analysis_type: str,
-        start_date: Optional[str],
-        end_date: Optional[str],
-        interval: str = "1d",
-        indicators: Optional[List[str]] = None,
-        length: int = 20,
-        rsi_length: int = 14,
-        macd_fast: int = 12,
-        macd_slow: int = 26,
-        macd_signal_len: int = 9,
-    ) -> Dict[str, Any]:
-        """Enhanced orchestrator covering technical, fundamental, combined, and web-search modes.
-        Returns a dict with keys: plan, profile, fundamentals, ratios, earnings, technical, news, holistic, recommendation, figures
+    def fundamental_synthesis_agent(self, symbol: str, notebook: Dict[str, Any], ai_provider: str = "auto") -> Tuple[str, str]:
         """
-        sym = (symbol or "").strip().upper()
-        a_type = (analysis_type or "combined").lower()
-        indicators = indicators or ["SMA", "EMA", "Bollinger Bands", "VWAP", "RSI", "MACD", "ATR"]
+        Uses an LLM to create a narrative, easy-to-understand summary of the company's fundamental health.
+        """
+        profile = notebook.get("profile", {})
+        ratios = notebook.get("financials", {}).get("ratios", {})
+        
+        # Filter out empty values for a cleaner prompt
+        ratios_for_prompt = {k: v for k, v in ratios.items() if v is not None}
+        
+        if not ratios_for_prompt:
+            return "FundamentalSynthesisAgent: No ratio data to analyze.", "Fundamental data was incomplete, so a summary could not be generated."
 
-        plan_steps = []
-        if a_type == "technical":
-            plan_steps = ["Technical Data Agent", "Technical Analysis Agent", "Recommendation Agent", "Visualization Agent"]
-        elif a_type == "fundamental":
-            plan_steps = ["Company Profile Agent", "Financial Data Agent", "Fundamental Ratios Agent", "Earnings Analysis Agent", "Holistic Analysis Agent", "Recommendation Agent", "Visualization Agent"]
-        elif a_type == "web":
-            plan_steps = ["General Web Search Agent", "News & Sentiment Agent", "Holistic Analysis Agent"]
-        else:
-            plan_steps = [
-                "UI Agent",
-                "Planner",
-                "Company Profile Agent",
-                "Financial Data Agent",
-                "Fundamental Ratios Agent",
-                "Earnings Analysis Agent",
-                "Technical Data Agent",
-                "Technical Analysis Agent",
-                "News & Sentiment Agent",
-                "Holistic Analysis Agent",
-                "Recommendation Agent",
-                "Visualization Agent",
-            ]
+        system_msg = textwrap.dedent("""
+            You are a skilled financial analyst who excels at explaining complex financial data to non-expert investors.
+            Your tone is clear, educational, and objective. You avoid jargon where possible.
+        """)
+        
+        user_msg = textwrap.dedent(f"""
+            Please analyze the following financial data for the company: **{profile.get('name', symbol)}**.
+            Provide a narrative summary in markdown format that explains what these numbers mean.
 
-        outputs: Dict[str, Any] = {"plan": {"analysis_type": a_type, "steps": plan_steps}}
-        # Initialize Analyst's Notebook (shared context)
-        notebook: Dict[str, Any] = {
-            "symbol": sym,
-            "profile": {},
-            "financials": {"ratios": {}, "earnings": {}},
-            "technical": {},
-            "news_sentiment": {},
-            "web": [],
-            "errors": [],
-        }
+            **Financial Data Snapshot:**
+            ```json
+            {json.dumps(ratios_for_prompt, indent=2, default=str)}
+            ```
+
+            **Instructions:**
+            1.  **Start with a brief overview** of the company's fundamental picture based on the data.
+            2.  Create sections using markdown headings (e.g., `### Valuation`, `### Profitability`, `### Financial Health`).
+            3.  In each section, explain the key ratios. For example, when discussing the P/E ratio, briefly state what it measures (e.g., "The P/E ratio of {ratios.get('pe_ttm', 'N/A'):.2f} suggests investors are willing to pay...").
+            4.  Connect the numbers to potential insights (e.g., "A high Debt-to-Equity ratio might indicate risk, while a strong ROE shows efficient use of shareholder money.").
+            5.  Conclude with a summary of the fundamental strengths and potential weaknesses you've identified.
+        """)
+        
+        summary_text = self._llm_generate(system_msg, user_msg, ai_provider=ai_provider)
+        
+        if not summary_text:
+            return "FundamentalSynthesisAgent: LLM call failed.", "AI-powered summary could not be generated."
+            
+        return "FundamentalSynthesisAgent: Generated narrative summary.", summary_text
+
+    def execute_workflow(self, config: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Executes a research workflow based on a configuration dictionary.
+        This is the single entry point for all research tasks.
+        """
+        symbol = config.get("symbol")
+        analysis_type = config.get("analysis_type", "combined")
+        ai_provider = config.get("ai_provider", "auto")
+
+        print(f"\nDEBUG: Executing workflow '{analysis_type}' for {symbol}...")
+
+        # Initialize the outputs and the shared "notebook"
+        outputs: Dict[str, Any] = {"plan": {"analysis_type": analysis_type, "symbol": symbol}}
+        notebook: Dict[str, Any] = {"symbol": symbol, "profile": {}, "financials": {"ratios": {}, "earnings": {}}, "technical": {}, "news_sentiment": {}, "web": [], "errors": []}
         conversations: List[Dict[str, str]] = []
-        # UI Agent structured request (logged)
-        try:
-            conversations.append({
-                "agent": "UI Agent",
-                "message": json.dumps({
-                    "symbol": sym,
-                    "analysis_type": a_type,
-                    "interval": interval,
-                    "start_date": start_date,
-                    "end_date": end_date,
-                    "indicators": indicators,
-                    "params": {"length": length, "rsi": rsi_length, "macd": [macd_fast, macd_slow, macd_signal_len]},
-                })
-            })
-            conversations.append({
-                "agent": "Planner",
-                "message": " -> ".join(plan_steps)
-            })
-        except Exception:
-            pass
 
-        # Optional News & Web
-        news_summary = None
-        try:
-            if a_type in ("web", "combined"):
-                news_items = self.bridge.fetch(sym, days_back=7, max_articles=6, model_preference="auto", analyze=True)
+        # --- Agent Execution Logic ---
+        
+        # News & Web (Run first for context)
+        if analysis_type in ("web", "combined"):
+            try:
+                news_items = self.bridge.fetch(symbol, days_back=7, max_articles=6, model_preference=ai_provider, analyze=True)
                 outputs["news"] = [i.__dict__ for i in news_items]
-                conversations.append({"agent": "News & Sentiment Agent", "message": f"Analyzed {len(news_items)} articles."})
-                # Prefer local model if available
-                local_llm_base = os.getenv("LOCAL_LLM_BASE_URL", "").strip()
-                model_pref = "local" if local_llm_base else "auto"
-                news_summary = self.bridge.summarize_overall(sym, news_items, model_preference=model_pref, max_chars=2500)
+                news_summary = self.bridge.summarize_overall(symbol, news_items, model_preference=ai_provider, max_chars=2500)
                 outputs["news_summary"] = news_summary
                 if isinstance(news_summary, dict) and news_summary.get("summary"):
-                    conversations.append({"agent": "News & Sentiment Agent", "message": news_summary.get("summary", "")[:500] + ("..." if len(news_summary.get("summary",""))>500 else "")})
                     notebook["news_sentiment"] = {"summary": news_summary.get("summary"), "provider": news_summary.get("provider")}
-        except Exception:
-            outputs["news"] = []
-        # General web search (qualitative context)
-        try:
-            if a_type in ("web", "combined"):
-                q = f"{sym} company analysis fundamentals news"
-                _m, web_res = self.web_search_agent(q, max_results=20)
-                outputs["web_search"] = web_res
-                notebook["web"] = web_res
-                conversations.append({"agent": "Web Search Agent", "message": f"Query: {q} -> {len(web_res)} results"})
-                if len(web_res) == 0:
-                    notebook["errors"].append("CRITICAL: General web search returned 0 results; check search tool/network.")
-        except Exception:
-            outputs["web_search"] = []
+                conversations.append({"agent": "NewsAgent", "message": f"Fetched {len(news_items)} news items and generated summary for {symbol}"})
+            except Exception as e:
+                notebook["errors"].append(f"News analysis failed: {e}")
+                conversations.append({"agent": "NewsAgent", "message": f"Failed to fetch news: {str(e)}"})
 
-        # Company profile and fundamentals
-        profile = {}
-        fundamentals = {}
-        ratios = {}
-        earnings = {}
-        try:
-            if a_type in ("fundamental", "combined"):
-                _m, profile = self.company_profile_agent(sym)
-                outputs["company_profile"] = profile
-                notebook["profile"] = profile
-                conversations.append({"agent": "Company Profile Agent", "message": f"Loaded profile for {profile.get('name', sym)}"})
-                _m, fundamentals = self.financial_data_agent_full(sym)
+        # Profile & Fundamentals
+        fundamentals, price_df = {}, None
+        if analysis_type in ("fundamental", "combined"):
+            try:
+                _m, profile = self.company_profile_agent(symbol)
+                outputs["company_profile"] = notebook["profile"] = profile
+                _m, fundamentals = self.financial_data_agent_full(symbol)
                 outputs["fundamentals"] = {k: (v.to_dict() if isinstance(v, pd.DataFrame) else None) for k, v in fundamentals.items()}
-                conversations.append({"agent": "Financial Data Agent", "message": "Loaded financial statements (annual/quarterly)."})
-        except Exception:
-            pass
+                conversations.append({"agent": "ProfileAgent", "message": f"Retrieved company profile and financial data for {symbol}"})
+            except Exception as e:
+                notebook["errors"].append(f"Fundamental data fetching failed: {e}")
+                conversations.append({"agent": "ProfileAgent", "message": f"Failed to fetch fundamental data: {str(e)}"})
 
         # Technicals
-        technical = {}
-        tech_fig = None
-        price_df = None
-        tech_summary = ""
-        try:
-            if a_type in ("technical", "combined"):
-                # Fetch with explicit dates if given, else 1y
-                if start_date and end_date:
-                    _m, payload = self.data_agent_with_dates(sym, start_date, end_date, interval)
-                else:
-                    _m, payload = self.data_agent(sym, period="1y", interval=interval)
+        if analysis_type in ("technical", "combined"):
+            try:
+                start_date = config.get("start_date")
+                end_date = config.get("end_date")
+                interval = config.get("interval", "1d")
+                indicators = config.get("indicators", ["SMA", "EMA", "Bollinger Bands", "VWAP", "RSI", "MACD", "ATR"])
+                length = config.get("length", 20)
+                rsi_length = config.get("rsi_length", 14)
+                macd_fast = config.get("macd_fast", 12)
+                macd_slow = config.get("macd_slow", 26)
+                macd_signal_len = config.get("macd_signal_len", 9)
+                
+                if start_date and end_date: _m, payload = self.data_agent_with_dates(symbol, start_date, end_date, interval)
+                else: _m, payload = self.data_agent(symbol, period="1y", interval=interval)
                 price_df = payload.get("hist")
-                tech_fig, tech_summary = self.synthesis_agent_for_technicals(
-                    price_df,
-                    indicators,
-                    length,
-                    rsi_length,
-                    macd_fast,
-                    macd_slow,
-                    macd_signal_len,
-                )
-                ai = self._get_technical_ai_summary(sym, tech_summary) or {}
-                technical = {"summary": tech_summary, **ai}
-                outputs["technical"] = technical
-                notebook["technical"] = technical
-                conversations.append({"agent": "Technical Data Agent", "message": f"Fetched {0 if price_df is None else len(price_df)} rows; interval={interval}"})
-                conversations.append({"agent": "Technical Analysis Agent", "message": (ai.get('justification') or tech_summary or '')[:600] + ('...' if len((ai.get('justification') or tech_summary or ''))>600 else '')})
-                try:
-                    from telemetry import log_event
-                    log_event("technical.figure_full", {
-                        "symbol": sym,
-                        "interval": interval,
-                        "rows": (0 if price_df is None else int(getattr(price_df, 'shape', [0])[0])),
-                        "has_figure": bool(tech_fig is not None),
-                    })
-                except Exception:
-                    pass
-        except Exception:
-            outputs["technical"] = {"error": "Technical analysis failed."}
+                
+                tech_fig, tech_summary = self.synthesis_agent_for_technicals(price_df, indicators, length, rsi_length, macd_fast, macd_slow, macd_signal_len)
+                ai_rec = self._get_technical_ai_summary(symbol, tech_summary, model_preference=ai_provider) or {}
+                _m, strategy_text = self.technical_strategist_agent(symbol, price_df, tech_summary, ai_provider=ai_provider)
+                
+                outputs["technical"] = notebook["technical"] = {
+                    "summary": tech_summary,
+                    "recommendation": ai_rec.get("recommendation", "N/A"),
+                    "confidence": ai_rec.get("confidence", "N/A"),
+                    "justification": strategy_text or ai_rec.get("justification", "No analysis available.")
+                }
+                if tech_fig: outputs.setdefault("figures", {})["technical"] = tech_fig
+                conversations.append({"agent": "TechnicalAgent", "message": f"Completed technical analysis for {symbol} with recommendation: {ai_rec.get('recommendation', 'N/A')}"})
+            except Exception as e:
+                notebook["errors"].append(f"Technical analysis failed: {e}")
+                conversations.append({"agent": "TechnicalAgent", "message": f"Technical analysis failed: {str(e)}"})
 
-        # Ratios/Earnings
-        try:
-            if a_type in ("fundamental", "combined"):
-                _m, ratios = self.fundamental_ratios_agent(sym, fundamentals, price_df)
-                conversations.append({"agent": "Fundamental Ratios Agent", "message": json.dumps({k: ratios.get(k) for k in ['pe_ttm','ps_ttm','debt_to_equity','gross_margin','net_margin']}, default=str)})
-                _m, earnings = self.earnings_agent(sym)
-                outputs["ratios"] = ratios
+        # Ratios & Earnings (Depends on Fundamentals and sometimes Price)
+        if analysis_type in ("fundamental", "combined"):
+            try:
+                _m, ratios = self.fundamental_ratios_agent(symbol, fundamentals, price_df)
+                outputs["ratios"] = notebook["financials"]["ratios"] = ratios
+                _m, earnings = self.earnings_agent(symbol)
                 outputs["earnings"] = {k: (v.to_dict() if isinstance(v, pd.DataFrame) else v) for k, v in earnings.items()}
-                notebook["financials"]["ratios"] = ratios
-                notebook["financials"]["earnings"] = outputs["earnings"]
-                conversations.append({"agent": "Earnings Analysis Agent", "message": "Collected earnings and growth metrics."})
-                # Validate critical metrics; if missing, try targeted web queries to recover
-                def _extract_first_number(snippet: str) -> Optional[float]:
-                    if not snippet:
-                        return None
-                    m = re.search(r"(\d{1,3}(?:\.\d+)?)(?:\s*[xX])?", snippet)
-                    try:
-                        return float(m.group(1)) if m else None
-                    except Exception:
-                        return None
-                if ratios.get("pe_ttm") in (None, 0):
-                    queries = [
-                        f"{sym} current P/E ratio",
-                        f"{profile.get('name', sym)} P/E ratio",
-                        f"{sym} trailing P/E",
-                    ]
-                    for q in queries:
-                        _wm, res = self.web_search_agent(q, max_results=5)
-                        for r in res:
-                            cand = _extract_first_number((r.get("snippet") or "") + " " + (r.get("title") or ""))
-                            if cand and cand > 1 and cand < 200:
-                                ratios["pe_ttm"] = cand
-                                ratios.setdefault("notes", "")
-                                ratios["notes"] = (ratios["notes"] + "; " if ratios["notes"] else "") + f"PE recovered from web: {r.get('url','')}"
-                                break
-                        if ratios.get("pe_ttm") not in (None, 0):
-                            break
-                    if ratios.get("pe_ttm") in (None, 0):
-                        notebook["errors"].append("CRITICAL: Could not retrieve P/E (TTM).")
-                if ratios.get("ps_ttm") in (None, 0):
-                    queries = [
-                        f"{sym} price to sales ratio",
-                        f"{profile.get('name', sym)} P/S ratio",
-                    ]
-                    for q in queries:
-                        _wm, res = self.web_search_agent(q, max_results=5)
-                        for r in res:
-                            cand = _extract_first_number((r.get("snippet") or "") + " " + (r.get("title") or ""))
-                            if cand and cand > 0 and cand < 100:
-                                ratios["ps_ttm"] = cand
-                                ratios.setdefault("notes", "")
-                                ratios["notes"] = (ratios["notes"] + "; " if ratios["notes"] else "") + f"PS recovered from web: {r.get('url','')}"
-                                break
-                        if ratios.get("ps_ttm") not in (None, 0):
-                            break
-                    if ratios.get("ps_ttm") in (None, 0):
-                        notebook["errors"].append("CRITICAL: Could not retrieve P/S (TTM).")
-        except Exception:
-            pass
+                notebook["financials"]["earnings"] = earnings
+                conversations.append({"agent": "RatiosAgent", "message": f"Calculated financial ratios and earnings data for {symbol}"})
+            except Exception as e:
+                notebook["errors"].append(f"Ratios/Earnings calculation failed: {e}")
+                conversations.append({"agent": "RatiosAgent", "message": f"Failed to calculate ratios/earnings: {str(e)}"})
 
-        # Holistic + Recommendation
-        try:
-            if a_type in ("fundamental", "combined", "web"):
-                _m, hol = self.holistic_analysis_agent(sym, notebook)
+        # Fundamental Synthesis
+        if analysis_type in ("fundamental", "combined"):
+            try:
+                _m, fund_summary = self.fundamental_synthesis_agent(symbol, notebook, ai_provider=ai_provider)
+                outputs["fundamental_summary"] = fund_summary
+                conversations.append({"agent": "FundamentalSynthesisAgent", "message": f"Generated narrative fundamental summary for {symbol}"})
+            except Exception as e:
+                notebook["errors"].append(f"Fundamental Synthesis failed: {e}")
+
+        # Holistic Analysis (Depends on all previous steps)
+        if analysis_type in ("fundamental", "combined", "web"):
+            try:
+                _m, hol = self.holistic_analysis_agent(symbol, notebook, ai_provider=ai_provider)
                 outputs["holistic"] = hol
-                conversations.append({"agent": "Holistic Analysis Agent", "message": (hol or '')[:600] + ('...' if hol and len(hol)>600 else '')})
-        except Exception:
-            outputs["holistic"] = ""
-        try:
-            if a_type in ("technical", "combined", "fundamental"):
-                _m, rec = self.recommendation_agent(sym, notebook)
+                conversations.append({"agent": "HolisticAgent", "message": f"Generated holistic analysis for {symbol}"})
+            except Exception as e:
+                notebook["errors"].append(f"Holistic analysis failed: {e}")
+                outputs["holistic"] = "Holistic analysis could not be generated due to an earlier error."
+                conversations.append({"agent": "HolisticAgent", "message": f"Holistic analysis failed: {str(e)}"})
+
+        # Recommendation (Depends on all previous steps)
+        if analysis_type in ("technical", "combined", "fundamental"):
+            try:
+                _m, rec = self.recommendation_agent(symbol, notebook, ai_provider=ai_provider)
                 outputs["recommendation"] = rec
-                conversations.append({"agent": "Recommendation Agent", "message": json.dumps(rec)})
-        except Exception:
-            outputs["recommendation"] = {"recommendation": "Hold", "confidence": 5, "justification": "n/a"}
-
+                conversations.append({"agent": "RecommendationAgent", "message": f"Generated final recommendation for {symbol}: {rec.get('recommendation', 'N/A')}"})
+            except Exception as e:
+                notebook["errors"].append(f"Recommendation generation failed: {e}")
+                outputs["recommendation"] = {"recommendation": "Hold", "confidence": "N/A", "justification": "Could not be generated."}
+                conversations.append({"agent": "RecommendationAgent", "message": f"Recommendation generation failed: {str(e)}"})
+        
         # Visualizations
-        figs: Dict[str, Any] = {}
         try:
-            if tech_fig is not None:
-                figs["technical"] = tech_fig
-        except Exception:
-            pass
-        try:
-            q_fin = fundamentals.get("q_financials") if fundamentals else None
-            rev_fig = self._figure_revenue_growth(sym, q_fin)
-            if rev_fig is not None:
-                figs["revenue"] = rev_fig
-        except Exception:
-            pass
-        try:
-            pe_fig = self._figure_pe_trend(sym, price_df, (ratios or {}).get("eps_ttm"))
-            if pe_fig is not None:
-                figs["pe_trend"] = pe_fig
-        except Exception:
-            pass
-        outputs["figures"] = figs
-        outputs["conversations"] = conversations
-        outputs["notebook"] = notebook
-        try:
-            from telemetry import log_event
-            log_event("analysis.completed", {
-                "symbol": sym,
-                "type": a_type,
-                "steps": plan_steps,
-                "news_count": len(outputs.get("news", [])) if isinstance(outputs.get("news"), list) else 0,
-                "web_results": len(outputs.get("web_search", [])) if isinstance(outputs.get("web_search"), list) else 0,
-                "has_tech": bool(outputs.get("technical")),
-                "figures": list((outputs.get("figures") or {}).keys()),
-                "errors": notebook.get("errors", []),
-            })
-        except Exception:
-            pass
-        return outputs
+            q_fin = fundamentals.get("q_financials")
+            rev_fig = self._figure_revenue_growth(symbol, q_fin)
+            if rev_fig: outputs.setdefault("figures", {})["revenue"] = rev_fig
+            
+            eps_ttm = (outputs.get("ratios") or {}).get("eps_ttm")
+            pe_fig = self._figure_pe_trend(symbol, price_df, eps_ttm)
+            if pe_fig: outputs.setdefault("figures", {})["pe_trend"] = pe_fig
+        except Exception as e:
+            print(f"WARNING: Figure generation failed: {e}")
 
+        print("DEBUG: Analysis pipeline complete.")
+        outputs["conversations"] = conversations
+        return outputs
 
 
 
@@ -2588,13 +2569,7 @@ class TestmailClient:
         except Exception as e:
             return {"error": str(e)}
 
-    def _get_technical_ai_summary(
-        self, symbol: str, tech_summary: str, model_preference: str = "auto"
-    ) -> Dict[str, Any]:
-        """Calls an LLM to get a technical analysis recommendation.
-        Honors AI provider selection via env var AI_PROVIDER in {auto|local|gemini|do}.
-        """
-        system_msg = textwrap.dedent(
+'''    # (moved into ResearchOrchestrator above)
             """
             You are an expert technical analyst. Based on the provided technical indicators for a stock, you will:
             1. Provide a recommendation: "Buy", "Sell", or "Hold".
@@ -2609,7 +2584,7 @@ class TestmailClient:
                 "justification": "The stock is currently in a consolidation phase. The price is trading between the SMA(20) and EMA(50), indicating a lack of clear trend. The RSI is near 50, further supporting a neutral stance. MACD is close to the signal line, suggesting no immediate momentum."
             }
             """
-        )
+        
         user_msg = f"Symbol: {symbol}\n\nTechnical Summary:\n{tech_summary}"
 
         # Read provider choice and common params
@@ -2771,3 +2746,4 @@ class TestmailClient:
             return out
 
         return {}
+'''

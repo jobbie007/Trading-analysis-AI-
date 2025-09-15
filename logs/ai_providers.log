@@ -1578,3 +1578,330 @@
 2025-09-07 15:49:33,744 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=local analyze=True
 2025-09-07 15:49:38,446 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
 2025-09-07 15:50:22,004 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=5
+2025-09-08 15:59:26,324 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=local analyze=True
+2025-09-08 15:59:32,612 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-08 15:59:33,118 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-08 15:59:38,051 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-08 15:59:38,695 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-08 15:59:44,251 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-08 15:59:47,084 [INFO] dash.ai: news.summary: asset=ETH model_pref=local items=5
+2025-09-08 15:59:51,126 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-08 15:59:57,605 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-09 19:33:16,077 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-09 19:33:27,207 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-09 19:33:27,839 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-09 19:33:33,897 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-09 19:33:34,953 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-09 19:33:42,917 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-09 19:33:45,239 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-09 19:33:52,827 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-09 19:33:59,034 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-09 19:34:00,892 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-09 19:34:06,629 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-10 14:56:49,375 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-10 14:56:55,375 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-10 14:57:08,780 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 10:54:10,162 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 10:54:11,469 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 10:54:19,488 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 10:54:19,538 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 10:54:31,580 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 10:54:32,604 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 10:54:46,383 [INFO] dash.ai: news.fetch: asset=AVGO days=7 max=6 model_pref=auto analyze=True
+2025-09-11 10:54:51,052 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 10:55:11,851 [INFO] dash.ai: news.summary: asset=AVGO model_pref=local items=6
+2025-09-11 11:00:40,943 [INFO] dash.ai: news.fetch: asset=AVGO days=7 max=6 model_pref=auto analyze=True
+2025-09-11 11:00:46,639 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:01:03,368 [INFO] dash.ai: news.summary: asset=AVGO model_pref=local items=6
+2025-09-11 11:04:57,634 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:05:02,041 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:05:08,829 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:05:18,328 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:05:22,582 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:05:27,075 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:05:30,283 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:05:34,616 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:05:48,326 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:14:52,917 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:14:54,890 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:14:57,554 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-11 11:14:59,743 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:14:59,778 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:15:07,677 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:15:12,087 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:15:13,777 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:15:33,663 [INFO] dash.ai: news.summary: asset=AAPL model_pref=local items=6
+2025-09-11 11:19:07,322 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:19:14,035 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:19:27,307 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:19:32,218 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:19:32,799 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:19:37,597 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:19:39,138 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:19:44,951 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-11 11:19:52,270 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:19:52,987 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:20:07,130 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:20:38,688 [INFO] dash.ai: news.summary: asset=AAPL model_pref=local items=6
+2025-09-11 11:32:02,767 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:32:03,809 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:32:05,728 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=auto analyze=True
+2025-09-11 11:32:11,231 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:32:11,277 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:32:12,151 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:32:26,575 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:32:27,670 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:32:30,989 [INFO] dash.ai: news.summary: asset=AAPL model_pref=local items=6
+2025-09-11 11:40:04,475 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:40:05,853 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:40:11,294 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:40:11,336 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:40:19,645 [INFO] dash.ai: news.fetch: asset=AVGO days=7 max=6 model_pref=local analyze=True
+2025-09-11 11:40:24,967 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:40:25,200 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:40:26,615 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:40:29,598 [INFO] dash.ai: news.summary: asset=AVGO model_pref=local items=6
+2025-09-11 11:50:02,249 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:50:04,220 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:50:07,934 [INFO] dash.ai: news.fetch: asset=AVGO days=7 max=6 model_pref=local analyze=True
+2025-09-11 11:50:09,998 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:50:10,010 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:50:12,620 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:50:25,288 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:50:25,934 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:50:44,189 [INFO] dash.ai: news.summary: asset=AVGO model_pref=local items=6
+2025-09-11 11:52:23,148 [INFO] dash.ai: news.fetch: asset=AVGO days=7 max=6 model_pref=local analyze=True
+2025-09-11 11:52:27,632 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:52:31,478 [INFO] dash.ai: news.summary: asset=AVGO model_pref=local items=6
+2025-09-11 11:55:01,043 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:55:06,717 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:55:16,809 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 11:55:20,278 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 11:55:23,783 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 11:55:38,878 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 12:09:28,784 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:09:30,028 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:09:38,068 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:09:38,133 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:09:55,365 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 12:09:55,542 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 12:38:22,387 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:38:30,094 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:38:45,795 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 12:42:54,947 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:42:56,004 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:43:02,403 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:43:02,452 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:43:08,199 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-11 12:43:15,635 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:43:19,631 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 12:43:19,985 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 12:43:57,207 [INFO] dash.ai: news.summary: asset=AAPL model_pref=local items=6
+2025-09-11 12:48:45,966 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:48:52,667 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:48:59,784 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:49:07,896 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:49:08,738 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:49:13,910 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:49:15,045 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:49:29,635 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 12:49:29,866 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 12:49:42,330 [INFO] dash.ai: news.fetch: asset=AVGO days=7 max=6 model_pref=local analyze=True
+2025-09-11 12:49:47,182 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:50:19,480 [INFO] dash.ai: news.summary: asset=AVGO model_pref=local items=6
+2025-09-11 12:54:07,210 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:54:14,608 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:54:30,935 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 12:57:11,804 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:57:12,510 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 12:57:19,803 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:57:19,870 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:57:21,144 [INFO] dash.ai: news.fetch: asset=AVGO days=7 max=6 model_pref=local analyze=True
+2025-09-11 12:57:27,097 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 12:57:46,445 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 12:57:50,649 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 12:58:02,025 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-11 12:58:06,321 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-11 12:58:09,760 [INFO] dash.ai: news.summary: asset=AVGO model_pref=local items=6
+2025-09-11 13:02:49,333 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 13:02:57,166 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 13:03:07,918 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 13:03:08,961 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 13:03:15,176 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 13:03:15,778 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 13:03:24,383 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=auto analyze=True
+2025-09-11 13:03:32,735 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 13:04:10,239 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 13:04:19,030 [INFO] dash.ai: news.summary: asset=ETH model_pref=auto items=5
+2025-09-11 13:04:21,293 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-11 13:04:25,129 [INFO] dash.ai: news.summary.DO: POST /chat/completions model=llama3-8b-instruct status=200
+2025-09-11 13:04:33,707 [INFO] dash.ai: news.summary: asset=CRCL model_pref=auto items=6
+2025-09-11 13:08:50,585 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-11 13:09:00,448 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 13:15:16,313 [INFO] dash.ai: news.fetch: asset=AVGO days=7 max=6 model_pref=auto analyze=True
+2025-09-11 13:15:21,083 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 13:15:55,056 [INFO] dash.ai: news.summary: asset=AVGO model_pref=auto items=6
+2025-09-11 13:26:20,870 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=auto analyze=True
+2025-09-11 13:26:28,275 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 13:27:03,787 [INFO] dash.ai: news.summary: asset=CRCL model_pref=auto items=6
+2025-09-11 13:38:10,432 [INFO] dash.ai: news.fetch: asset=AVGO days=7 max=6 model_pref=auto analyze=True
+2025-09-11 13:38:15,200 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 13:38:46,523 [INFO] dash.ai: news.summary: asset=AVGO model_pref=auto items=6
+2025-09-11 14:51:01,159 [INFO] dash.ai: news.fetch: asset=NVDA days=7 max=6 model_pref=auto analyze=True
+2025-09-11 14:51:06,944 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 14:51:42,021 [INFO] dash.ai: news.summary: asset=NVDA model_pref=auto items=6
+2025-09-11 15:01:39,626 [INFO] dash.ai: news.fetch: asset=ETH-USD days=7 max=6 model_pref=auto analyze=True
+2025-09-11 15:01:46,588 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 15:02:18,298 [INFO] dash.ai: news.summary: asset=ETH-USD model_pref=auto items=6
+2025-09-11 15:06:49,379 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=auto analyze=True
+2025-09-11 15:06:57,361 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 15:07:31,702 [INFO] dash.ai: news.summary: asset=CRCL model_pref=auto items=6
+2025-09-11 15:27:46,781 [INFO] dash.ai: news.fetch: asset=GOOGL days=7 max=6 model_pref=auto analyze=True
+2025-09-11 15:28:00,606 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 15:28:36,843 [INFO] dash.ai: news.summary: asset=GOOGL model_pref=auto items=6
+2025-09-11 15:29:58,420 [INFO] dash.ai: news.fetch: asset=GOOGL days=7 max=6 model_pref=auto analyze=True
+2025-09-11 15:30:06,433 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 15:30:42,851 [INFO] dash.ai: news.summary: asset=GOOGL model_pref=auto items=6
+2025-09-11 15:51:40,412 [INFO] dash.ai: news.fetch: asset=AMZN days=7 max=6 model_pref=auto analyze=True
+2025-09-11 15:51:46,856 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 15:59:47,757 [INFO] dash.ai: news.fetch: asset=GOOGL days=7 max=6 model_pref=local analyze=True
+2025-09-11 15:59:54,167 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 16:03:22,730 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=local analyze=True
+2025-09-11 16:03:30,641 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 16:08:41,317 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-11 16:08:49,121 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 16:11:38,293 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-11 16:11:43,225 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 16:22:46,653 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=local analyze=True
+2025-09-11 16:22:54,133 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 16:31:35,794 [INFO] dash.ai: news.fetch: asset=AMZN days=7 max=6 model_pref=local analyze=True
+2025-09-11 16:31:40,965 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 16:36:21,097 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-11 16:36:29,890 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 16:44:50,468 [INFO] dash.ai: news.fetch: asset=AMD days=7 max=6 model_pref=local analyze=True
+2025-09-11 16:45:02,066 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 16:50:15,501 [INFO] dash.ai: news.fetch: asset=TSM days=7 max=6 model_pref=local analyze=True
+2025-09-11 16:50:27,698 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 16:53:44,976 [INFO] dash.ai: news.fetch: asset=SMCI days=7 max=6 model_pref=local analyze=True
+2025-09-11 16:53:54,142 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 18:17:00,333 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=local analyze=True
+2025-09-11 18:17:08,403 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 18:20:45,467 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-11 18:20:51,867 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 18:26:49,411 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=local analyze=True
+2025-09-11 18:26:57,090 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 18:31:36,117 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-11 18:31:42,351 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 18:34:38,413 [INFO] dash.ai: news.fetch: asset=AVGO days=7 max=6 model_pref=local analyze=True
+2025-09-11 18:34:43,464 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 18:41:41,672 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-11 18:41:48,693 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 18:48:29,644 [INFO] dash.ai: news.fetch: asset=NVDA days=7 max=6 model_pref=local analyze=True
+2025-09-11 18:48:37,107 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 18:57:38,602 [INFO] dash.ai: news.fetch: asset=AMD days=7 max=6 model_pref=local analyze=True
+2025-09-11 18:57:49,214 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 19:12:49,967 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-11 19:12:53,872 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 19:13:29,671 [INFO] dash.ai: news.fetch: asset=CRCL days=7 max=6 model_pref=local analyze=True
+2025-09-11 19:13:36,649 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 19:16:02,117 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-11 19:16:05,452 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 19:23:58,227 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-11 19:24:01,199 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-11 19:28:46,958 [INFO] dash.ai: news.fetch: asset=MSFT days=7 max=6 model_pref=local analyze=True
+2025-09-11 19:28:52,709 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-12 15:02:05,434 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-12 15:02:11,266 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-12 15:04:38,954 [INFO] dash.ai: news.fetch: asset=TSLA days=7 max=6 model_pref=local analyze=True
+2025-09-12 15:04:46,595 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-12 15:15:22,372 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-12 15:15:24,732 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-12 15:20:25,254 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-12 15:20:27,768 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-12 15:21:28,314 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-12 15:21:29,914 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-12 15:36:44,458 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-12 15:36:47,417 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-12 15:39:17,911 [INFO] dash.ai: news.fetch: asset=TSLA days=1 max=1 model_pref=local analyze=True
+2025-09-12 15:39:19,895 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-12 15:40:05,047 [INFO] dash.ai: news.fetch: asset=TSLA days=1 max=5 model_pref=auto analyze=True
+2025-09-12 15:40:11,847 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 10:12:24,825 [INFO] dash.ai: news.fetch: asset=TSLA days=1 max=1 model_pref=auto analyze=True
+2025-09-15 10:12:27,403 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 10:12:28,897 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 10:12:30,558 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-15 10:12:32,743 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-15 10:12:32,744 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 10:12:39,230 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 10:12:40,690 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 10:19:12,380 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=10 model_pref=auto analyze=True
+2025-09-15 10:19:20,792 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 19:40:07,918 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=10 model_pref=auto analyze=True
+2025-09-15 19:40:10,435 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-15 19:40:18,239 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 19:40:18,270 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 19:42:15,653 [INFO] dash.ai: news.fetch: asset=GOOGL days=7 max=6 model_pref=local analyze=True
+2025-09-15 19:42:21,752 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:06:25,395 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=auto analyze=True
+2025-09-15 23:06:32,823 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:06:33,967 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:06:35,597 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:07:19,743 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:07:21,466 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:08:07,873 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:08:09,545 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:08:57,876 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:08:59,501 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:09:41,928 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:09:43,541 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:10:49,286 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:10:50,731 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:11:29,082 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:11:30,592 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:11:58,622 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:12:00,170 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:12:05,276 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:12:06,827 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:12:37,578 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:12:38,046 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:12:39,097 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:12:39,599 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:15:24,823 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:15:26,398 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:15:55,942 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:16:17,703 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:16:19,171 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:16:54,367 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:16:55,977 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:18:19,833 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:18:21,409 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:20:33,608 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:20:35,295 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:21:20,675 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:24:33,580 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:24:35,153 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:25:15,717 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:25:17,383 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:25:49,958 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:25:51,508 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:27:03,791 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:27:05,452 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:27:19,739 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:27:21,256 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:27:37,682 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=auto analyze=True
+2025-09-15 23:27:39,268 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:30:23,917 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=10 model_pref=local analyze=True
+2025-09-15 23:30:29,026 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:41:13,034 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=10 model_pref=local analyze=True
+2025-09-15 23:41:16,246 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=10 model_pref=local analyze=True
+2025-09-15 23:41:20,338 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:46:36,278 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-15 23:46:37,874 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:47:24,513 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-15 23:47:29,435 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-15 23:51:00,063 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-15 23:51:01,812 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 00:04:43,944 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 00:04:45,858 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 00:05:30,653 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=local analyze=True
+2025-09-16 00:05:32,939 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
