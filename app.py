@@ -523,83 +523,81 @@ def update_tv(asset):
     prevent_initial_call=True,
 )
 def fetch_news(asset, refresh_clicks, model_pref, count, days_back, do_model_choice, hf_model_choice, existing_data, existing_overall, existing_meta):
+    
+    ctx = dash.callback_context
+    trig_id = (ctx.triggered[0]["prop_id"].split(".")[0] if ctx.triggered else "initial")
 
-    # Short-circuit: if controls re-mounted on tab switch caused this callback and we already have data, do not refetch
-    try:
-        ctx = dash.callback_context
-        trig = (ctx.triggered[0]["prop_id"].split(".")[0] if ctx and ctx.triggered else None)
-    except Exception:
-        trig = None
-    prev_asset = (existing_meta or {}).get("asset") if isinstance(existing_meta, dict) else None
-    if trig in {"model-pref", "news-count", "news-days"} and existing_data:
-        # Return what we already have to preserve UI state
-        probe = ((existing_meta or {}).get("ts") if isinstance(existing_meta, dict) else None) or datetime.now().isoformat() + "Z"
-        return existing_data, (existing_overall or {"summary": "", "provider": ""}), (existing_meta or {}), probe
-    # Note: On explicit refresh button click, proceed to refetch (no early return)
-    # If active-asset fired but asset hasn't actually changed, preserve
-    if trig == "active-asset" and existing_data and prev_asset == asset:
-        probe = ((existing_meta or {}).get("ts") if isinstance(existing_meta, dict) else None) or datetime.now().isoformat() + "Z"
-        return existing_data, (existing_overall or {"summary": "", "provider": ""}), (existing_meta or {}), probe
+    if trig_id in {"news-count", "news-days"} and existing_data:
+        return existing_data, (existing_overall or {}), (existing_meta or {}), (existing_meta or {}).get("ts", "")
+
+    prev_asset = (existing_meta or {}).get("asset")
+    if trig_id == "active-asset" and existing_data and prev_asset == asset:
+        return existing_data, (existing_overall or {}), (existing_meta or {}), (existing_meta or {}).get("ts", "")
+
     max_articles = int(count or 0)
-    # If 0, skip fetching to avoid auto-loads on reload
     if max_articles <= 0:
-        meta = {"asset": asset, "ts": datetime.now(timezone.utc).isoformat() + "Z", "fetch_summary": "news disabled (count=0)"}
-        probe = meta["ts"]
-        return [], {"summary": "", "provider": ""}, meta, probe
-    # If DigitalOcean is selected and a model is chosen, set env so NewsBridge prefers it
-    if (model_pref or "auto") == "do" and (do_model_choice or os.getenv("DO_AI_MODEL")):
-        os.environ["AI_PROVIDER"] = "do"
-        if do_model_choice:
-            os.environ["DO_AI_MODEL"] = str(do_model_choice)
-    # If Hugging Face is selected and a model is chosen, set env so NewsBridge prefers it
-    if (model_pref or "auto") == "hf":
-        os.environ["AI_PROVIDER"] = "hf"
-        # Prefer dropdown choice, then env, then default to requested model
-        chosen = (hf_model_choice or os.getenv("HF_MODEL") or "Qwen/Qwen3-4B-Base")
-        os.environ["HF_MODEL"] = str(chosen)
-        if not os.getenv("HF_BASE_URL"):
-            os.environ["HF_BASE_URL"] = "https://router.huggingface.co/v1"
-    # Coerce/clip lookback
+        meta = {"asset": asset, "ts": datetime.now(timezone.utc).isoformat(), "fetch_summary": "News disabled (count=0)"}
+        return [], {"summary": "", "provider": ""}, meta, meta["ts"]
+
+    if trig_id == "model-pref" and existing_data and prev_asset == asset:
+        print("DEBUG (app.py): AI model changed. Re-using fetched articles to generate a new summary.")
+        items_for_summary = existing_data
+    else:
+        print(f"DEBUG (app.py): Performing a full news fetch for '{asset}'.")
+        # Set AI provider env vars
+        if (model_pref or "auto") == "do" and (do_model_choice or os.getenv("DO_AI_MODEL")):
+            os.environ["AI_PROVIDER"] = "do"
+            if do_model_choice: os.environ["DO_AI_MODEL"] = str(do_model_choice)
+        if (model_pref or "auto") == "hf":
+            os.environ["AI_PROVIDER"] = "hf"
+            chosen = (hf_model_choice or os.getenv("HF_MODEL") or "Qwen/Qwen3-4B-Base")
+            os.environ["HF_MODEL"] = str(chosen)
+            if not os.getenv("HF_BASE_URL"): os.environ["HF_BASE_URL"] = "https://router.huggingface.co/v1"
+        
+        days = min(max(int(days_back or 7), 1), 60)
+        
+        items = bridge.fetch(asset, days_back=days, max_articles=max_articles, model_preference=model_pref or "auto", analyze=True)
+        items_for_summary = [i.__dict__ for i in (items or [])]
+
+    # --- FIX #2: IMPROVED ERROR HANDLING FOR THE SUMMARY CALL ---
+    # This block will now always run unless an early exit happened.
+    overall = {"summary": "", "provider": ""}
     try:
-        days = int(days_back or 7)
-        if days < 1:
-            days = 1
-        if days > 60:
-            days = 60
-    except Exception:
-        days = 7
-    items = bridge.fetch(asset, days_back=days, max_articles=max_articles, model_preference=model_pref or "auto", analyze=True)
-    data = [
-        {
-            "title": i.title,
-            "url": i.url,
-            "source": i.source,
-            "published_at": i.published_at,
-            "ai_summary": i.ai_summary,
-            "description": i.description,
-            "sentiment_label": i.sentiment_label,
-            "sentiment_score": i.sentiment_score,
-            "analysis_provider": i.analysis_provider,
-        } for i in (items or [])
-    ]
-    overall = None
-    try:
-        overall = bridge.summarize_overall(asset, data, model_preference=model_pref or "auto", max_chars=60000)
-    except Exception as _:
-        overall = {"summary": "", "provider": ""}
-    # Emit simple meta for UX messaging
-    fetch_summary = ""
-    try:
-        fetch_summary = bridge.get_fetch_summary()
-    except Exception:
-        fetch_summary = ""
-    # Use South Africa local time for refresh timestamp
-    from datetime import timedelta, timezone
+        # The 'data' passed to summarize_overall must be in the correct format.
+        # NewsBridge now returns NewsItem objects, so we pass that directly if available.
+        # If we reused 'existing_data', it's already a list of dicts.
+        if items_for_summary and isinstance(items_for_summary[0], dict):
+             # Convert list of dicts to list of NewsItem objects for the function
+            from services import NewsItem
+            news_item_objects = [NewsItem(**d) for d in items_for_summary]
+        else:
+            news_item_objects = items_for_summary
+        
+        # Now, call the summarize function
+        if news_item_objects:
+             print(f"DEBUG (app.py): Calling summarize_overall with {len(news_item_objects)} items.")
+             overall = bridge.summarize_overall(asset, news_item_objects, model_preference=model_pref or "auto", max_chars=60000)
+        else:
+             print("DEBUG (app.py): No items to summarize.")
+
+    except Exception as e:
+        # This will print any error from the summarizer to your console!
+        print(f"!!!!!!!!!!!!!! ERROR IN SUMMARIZE_OVERALL !!!!!!!!!!!!!!")
+        print(f"Asset: {asset}, Model Pref: {model_pref}")
+        import traceback
+        traceback.print_exc()
+        print(f"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        overall = {"summary": f"Error during summary generation: {e}", "provider": "error"}
+
+    # Finalize and return data
+    fetch_summary = bridge.get_fetch_summary() or ""
     sast = timezone(timedelta(hours=2))
     meta = {"asset": asset, "ts": datetime.now(sast).isoformat(), "fetch_summary": fetch_summary}
-    # Probe content changes every call -> triggers loading overlay reliably
     probe = meta["ts"]
-    return data, overall, meta, probe
+
+    # 'items_for_summary' is already the list of dicts we need for the news-data store
+    return items_for_summary, overall, meta, probe
+
 
 # Render news list + inline summaries (light)
 @app.callback(
