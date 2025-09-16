@@ -1905,3 +1905,59 @@
 2025-09-16 00:04:45,858 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
 2025-09-16 00:05:30,653 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=local analyze=True
 2025-09-16 00:05:32,939 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 10:01:05,337 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=local analyze=True
+2025-09-16 10:01:07,405 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=local analyze=True
+2025-09-16 10:01:08,350 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=local analyze=True
+2025-09-16 10:01:08,583 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 10:01:09,137 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 10:01:09,255 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=local analyze=True
+2025-09-16 10:01:10,031 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 10:01:10,136 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=local analyze=True
+2025-09-16 10:01:11,058 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 10:01:11,791 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 10:08:18,835 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=local analyze=True
+2025-09-16 10:08:20,883 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=local analyze=True
+2025-09-16 10:08:23,097 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 10:08:23,190 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 10:08:23,948 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 10:08:25,573 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 14:29:50,932 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 14:29:55,572 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 14:30:50,907 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 14:30:52,457 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 14:35:50,933 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 14:35:52,368 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 14:38:50,914 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 14:38:52,368 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 15:34:40,572 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 15:34:43,928 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 15:34:49,144 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 15:34:51,774 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 15:36:22,794 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 15:36:27,390 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 15:36:37,070 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 15:36:39,185 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 15:43:32,585 [INFO] dash.ai: news.fetch: asset=GOOGL days=7 max=6 model_pref=local analyze=True
+2025-09-16 15:43:41,557 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 15:52:58,223 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 15:53:02,932 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 15:53:46,214 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 15:53:47,865 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 15:53:54,101 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 15:53:55,664 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 16:53:51,166 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 16:53:54,355 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 16:57:17,599 [INFO] dash.ai: news.fetch: asset=GOOGL days=7 max=6 model_pref=local analyze=True
+2025-09-16 16:57:29,748 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 17:04:27,527 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=5 model_pref=auto analyze=True
+2025-09-16 17:04:38,639 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 19:43:47,150 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=5 model_pref=auto analyze=True
+2025-09-16 19:43:49,147 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=5 model_pref=auto analyze=True
+2025-09-16 19:43:57,962 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 19:43:58,233 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 19:44:17,630 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=5 model_pref=auto analyze=True
+2025-09-16 19:44:22,399 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 19:51:42,834 [INFO] dash.ai: news.fetch: asset=MSFT days=7 max=6 model_pref=local analyze=True
+2025-09-16 19:51:48,120 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True
+2025-09-16 20:09:27,501 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-16 20:09:29,923 [INFO] dash.ai: news.fetch: providers use_do=False use_hf=False have_keys do=True hf=True

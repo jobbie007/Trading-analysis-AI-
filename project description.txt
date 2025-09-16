@@ -285,3 +285,22 @@ For issues or questions:
 6. **Document Learning**: Contribute to vibe-coding manifesto
 
 ---
+
+
+
+
+Agents in Research
+DataAgent
+Fetches price data (OHLCV) for the selected symbol using free sources like yfinance or stooq.
+RequirementsAgent
+Reads your local requirements.pdf and project description.txt to understand project requirements and shape research tasks.
+NewsAgent
+Uses the NewsBridge to get recent headlines and AI-generated news summaries for the symbol.
+WebSearchAgent
+Performs a web search for the symbol using Serper.dev or DuckDuckGo, prioritizing finance-related sources.
+SynthesisAgent
+Merges all signals (data, news, web search, requirements) and proposes actionable findings and goals.
+What Happens
+The orchestrator (ResearchOrchestrator) coordinates these agents.
+Each agent runs its task and returns a message and results.
+The results are combined and shown in the research tab, including price data, news, web findings, and synthesized insights.
