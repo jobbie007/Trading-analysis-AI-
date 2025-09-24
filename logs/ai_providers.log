@@ -3062,3 +3062,7 @@ requests.exceptions.ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=1234)
 2025-09-24 16:08:06,503 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
 2025-09-24 16:08:15,952 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
 2025-09-24 20:04:18,990 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=gemini analyze=True
+2025-09-24 21:19:16,668 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=gemini analyze=True
+2025-09-24 21:19:16,909 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=gemini analyze=True
+2025-09-24 21:19:19,537 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=gemini analyze=True
+2025-09-24 21:20:11,177 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=gemini analyze=True

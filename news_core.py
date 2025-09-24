@@ -1,8 +1,3 @@
-"""
-Self-contained news and analysis core used by the dashboard.
-This file consolidates the minimal functionality previously sourced from the
-separate MarketNews project, so no external package import is required.
-"""
 from __future__ import annotations
 
 import json
@@ -17,25 +12,22 @@ from urllib.parse import urlparse
 import requests
 
 try:
-    from bs4 import BeautifulSoup  # type: ignore
+    from bs4 import BeautifulSoup 
 except Exception:  # pragma: no cover - optional dependency
-    BeautifulSoup = None  # type: ignore
+    BeautifulSoup = None  
 
 # Optional DDG Search client
 try:
-    from duckduckgo_search import DDGS  # type: ignore
+    from duckduckgo_search import DDGS  
 except Exception:  # pragma: no cover
-    try:
-        from ddgs import DDGS  # type: ignore
-    except Exception:
-        DDGS = None  # type: ignore
+    DDGS = None 
 
 # Optional Gemini (google-generativeai)
 try:
-    import google.generativeai as genai  # type: ignore
+    import google.generativeai as genai  
     GEMINI_AVAILABLE = True
 except Exception:  # pragma: no cover
-    genai = None  # type: ignore
+    genai = None 
     GEMINI_AVAILABLE = False
 
 logger = logging.getLogger(__name__)

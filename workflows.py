@@ -1,6 +1,6 @@
 # In dash/workflows.py
 
-from services import Task # Assuming Task is in services.py
+from services import Task
 
 WORKFLOWS = {
     "technical": [
