@@ -24,6 +24,63 @@ try:
 except Exception:
     _load_dotenv = None
 
+# --- Project bootstrap (paths, env, logger, lazy imports) ---
+# Resolve important paths
+_THIS_FILE = pathlib.Path(__file__).resolve()
+_PROJECT_ROOT = _THIS_FILE.parents[1]
+_DASH_DIR = _THIS_FILE.parent
+
+# Load environment variables from .env if present
+if _load_dotenv:
+    try:
+        env_path = _DASH_DIR / ".env"
+        if env_path.exists():
+            _load_dotenv(dotenv_path=str(env_path), override=False)
+        else:
+            root_env = _PROJECT_ROOT / ".env"
+            if root_env.exists():
+                _load_dotenv(dotenv_path=str(root_env), override=False)
+    except Exception:
+        pass
+
+# Quiet some noisy third-party loggers
+for _name in ("duckduckgo_search", "ddgs", "httpx", "urllib3"):
+    try:
+        _log = logging.getLogger(_name)
+        _log.setLevel(logging.WARNING)
+        _log.propagate = False
+    except Exception:
+        pass
+
+# Central app logger used across this module
+def _get_app_logger() -> logging.Logger:
+    logger = logging.getLogger("dash.ai")
+    if not logger.handlers:
+        logger.setLevel(logging.INFO)
+        try:
+            logs_dir = _PROJECT_ROOT / "dash" / "logs"
+            logs_dir.mkdir(parents=True, exist_ok=True)
+            fh = logging.FileHandler(str(logs_dir / "ai_providers.log"), encoding="utf-8")
+            fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+            fh.setFormatter(fmt)
+            logger.addHandler(fh)
+        except Exception:
+            # Fallback to stderr-only if file logging unavailable
+            sh = logging.StreamHandler()
+            logger.addHandler(sh)
+    return logger
+
+# Lazy single import of yfinance
+def _get_yf():
+    global yf
+    if yf is None:
+        try:
+            import importlib as _il
+            yf = _il.import_module("yfinance")
+        except Exception as e:
+            raise RuntimeError("yfinance not installed") from e
+    return yf
+
 # Task dataclass for workflow management
 @dataclass
 class Task:
@@ -82,90 +139,26 @@ class _SerperClient:
                 tried += 1
                 continue
         return out
-
-# Lazy, single import of yfinance
-def _get_yf():
-    """Return the cached yfinance module, importing it lazily once."""
-    global yf
-    if yf is None:
-        try:
-            import importlib as _il
-            yf = _il.import_module("yfinance")
-        except Exception as e:
-            raise RuntimeError("yfinance not installed") from e
-    return yf
-
-# Ensure the project root is on sys.path so we can import the sibling 'marketNews' package
-_THIS_FILE = pathlib.Path(__file__).resolve()
-_PROJECT_ROOT = _THIS_FILE.parents[1]
-# Add sibling 'marketNews' directory (which contains the 'marketnews' package) to import path
-_SIBLING_MARKETNEWS_DIR = _PROJECT_ROOT / "marketNews"
-for p in (str(_SIBLING_MARKETNEWS_DIR), str(_PROJECT_ROOT)):
-    if p not in sys.path:
-        sys.path.append(p)
-
-# Proactively load env variables from the sibling marketNews/.env if present
-if _load_dotenv:
-    _env_path = _SIBLING_MARKETNEWS_DIR / ".env"
-    if _env_path.exists():
-        _load_dotenv(dotenv_path=str(_env_path), override=False)
-
-# Quiet noisy libraries (e.g., duckduckgo_search/httpx) without affecting app logs
-for _name in ("duckduckgo_search", "ddg", "ddgs", "httpx", "urllib3"):
-    try:
-        _log = logging.getLogger(_name)
-        _log.setLevel(logging.WARNING)
-        _log.propagate = False
-    except Exception:
-        pass
-
-# Central app logger (writes to dash/logs/ai_providers.log)
-def _get_app_logger() -> logging.Logger:
-    logger = logging.getLogger("dash.ai")
-    if not logger.handlers:
-        logger.setLevel(logging.INFO)
-        try:
-            logs_dir = _PROJECT_ROOT / "dash" / "logs"
-            logs_dir.mkdir(parents=True, exist_ok=True)
-            fh = logging.FileHandler(str(logs_dir / "ai_providers.log"), encoding="utf-8")
-            fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s")
-            fh.setFormatter(fmt)
-            logger.addHandler(fh)
-        except Exception:
-            # If file logging fails, fallback to stderr only
-            sh = logging.StreamHandler()
-            logger.addHandler(sh)
-    return logger
-
-# Lightweight bridge that reuses your marketNews services when available
-# Robust multi-path import that works whether the package is named 'marketnews' or 'marketNews'
-_MNArticle = None
-_MNFetcher = None
-_MNLLM = None
-_MNSettings = None
-_MNAnalyst = None
-_HAS_MN = False
+"""Use a single local module that provides News services without external packages."""
 try:
-    import importlib
-    for _pkg in ("marketnews", "marketNews"):
-        try:
-            _a = importlib.import_module(f"{_pkg}.core.article")
-            _s = importlib.import_module(f"{_pkg}.services.news_fetcher")
-            _l = importlib.import_module(f"{_pkg}.services.llm_client")
-            _an = importlib.import_module(f"{_pkg}.analysis.analyst")
-            _cfg = importlib.import_module(f"{_pkg}.config.settings")
-            _MNArticle = getattr(_a, "NewsArticle", None)
-            _MNFetcher = getattr(_s, "NewsFetcher", None)
-            _MNLLM = getattr(_l, "LLMClientManager", None)
-            _MNAnalyst = getattr(_an, "Analyst", None)
-            _MNSettings = getattr(_cfg, "settings", None)
-            if all([_MNArticle, _MNFetcher, _MNLLM, _MNAnalyst, _MNSettings]):
-                _HAS_MN = True
-                break
-        except Exception:
-            continue
-except Exception:
-    pass
+    # When imported as part of a package (e.g., python -m dash.app from parent dir)
+    from .news_core import (
+        NewsArticle as _MNArticle,
+        NewsFetcher as _MNFetcher,
+        LLMClientManager as _MNLLM,
+        Analyst as _MNAnalyst,
+        settings as _MNSettings,
+    )
+except ImportError:
+    # When run as a script inside the dash folder (e.g., python app.py)
+    from news_core import (
+        NewsArticle as _MNArticle,
+        NewsFetcher as _MNFetcher,
+        LLMClientManager as _MNLLM,
+        Analyst as _MNAnalyst,
+        settings as _MNSettings,
+    )
+_HAS_MN = True
 
 @dataclass
 class NewsItem:
@@ -267,6 +260,33 @@ class NewsBridge:
             start = text.find("{", start + 1)
         return None
     
+    def _provider_order(self, model_preference: str = "auto") -> List[str]:
+        """Return the provider attempt order.
+        - AI_PROVIDER_PRIORITY env var can specify a comma-separated order, e.g. "do,local,gemini,hf,bridgelocal".
+        - AI_PROVIDER or model_preference, if set to a known provider, is placed first.
+        - Default order: ["do", "local", "gemini", "hf", "bridgelocal"].
+        """
+        allowed = ["do", "local", "gemini", "hf", "bridgelocal"]
+        raw = os.getenv("AI_PROVIDER_PRIORITY", "")
+        if raw.strip():
+            parts = [p.strip().lower() for p in raw.split(",") if p.strip()]
+            order = [p for p in parts if p in allowed]
+            for p in allowed:
+                if p not in order:
+                    order.append(p)
+            return order
+
+        # Default: prefer Gemini first, then Local, then DO, then HF, then bridged local
+        base_default = ["gemini", "local", "do", "hf", "bridgelocal"]
+        ai_provider = (os.getenv("AI_PROVIDER", model_preference) or "auto").strip().lower()
+        order: List[str] = []
+        if ai_provider in allowed:
+            order.append(ai_provider)
+        for p in base_default:
+            if p not in order:
+                order.append(p)
+        return order
+
     def _get_provider_config(self) -> Dict[str, Dict[str, Any]]:
         """Consolidates provider configurations from environment variables."""
         # Use getattr for safe access to self attributes that might not be set
@@ -343,8 +363,8 @@ class NewsBridge:
 
         self.last_logs = []
         providers = self._get_provider_config()
-        use_do = (str(model_preference or "").lower() == "do") or (os.getenv("AI_PROVIDER", "").strip().lower() == "do")
-        use_hf = (str(model_preference or "").lower() == "hf") or (os.getenv("AI_PROVIDER", "").strip().lower() == "hf")
+        # Unified provider order (gemini-first by default, overridable via env)
+        order: List[str] = self._provider_order(model_preference)
 
         system_msg = ("You are a financial news analyst. Given an article, return a compact JSON with keys: "
                       "'summary' (2-4 sentences), 'sentiment_label' (bullish|bearish|neutral), and 'sentiment_score' (a float between -1 and 1).")
@@ -360,23 +380,35 @@ class NewsBridge:
                 messages = [{"role": "system", "content": system_msg}, {"role": "user", "content": user_msg}]
                 
                 analysis_done = False
-                for provider_key, use_flag in [("do", use_do), ("hf", use_hf)]:
-                    if use_flag:
-                        raw_text = self._query_llm(providers[provider_key], messages, 0.2)
+                # Try providers in order: for 'gemini' and 'bridgelocal' use bridge callers
+                bridge_callers: Dict[str, Callable] = {
+                    "gemini": lambda: hasattr(self.analyst, "_query_gemini") and self.analyst._query_gemini(messages),
+                    "bridgelocal": lambda: hasattr(self.analyst, "_query_local_llm") and self.analyst._query_local_llm(messages),
+                }
+                for prov in order:
+                    parsed: Optional[Dict[str, Any]] = None
+                    if prov in providers:
+                        raw_text = self._query_llm(providers[prov], messages, 0.2)
                         parsed = self._extract_json_object(raw_text) if raw_text else None
-                        if parsed:
-                            setattr(a, 'ai_summary', parsed.get('summary', '') or '')
-                            setattr(a, 'sentiment_label', (parsed.get('sentiment_label', '') or '').lower())
-                            try: setattr(a, 'sentiment_score', float(parsed.get('sentiment_score', 0.0) or 0.0))
-                            except Exception: setattr(a, 'sentiment_score', 0.0)
-                            setattr(a, 'analysis_provider', provider_key)
-                            self.last_logs.append(f"{asset} | {provider_key.upper()} | {(a.title or '')[:80]}")
-                            analysis_done = True
-                            break
-                
+                    elif prov in bridge_callers:
+                        res = bridge_callers[prov]()
+                        parsed = res if isinstance(res, dict) else None
+                    if isinstance(parsed, dict):
+                        setattr(a, 'ai_summary', parsed.get('summary', '') or '')
+                        setattr(a, 'sentiment_label', (parsed.get('sentiment_label', '') or '').lower())
+                        try:
+                            setattr(a, 'sentiment_score', float(parsed.get('sentiment_score', 0.0) or 0.0))
+                        except Exception:
+                            setattr(a, 'sentiment_score', 0.0)
+                        setattr(a, 'analysis_provider', prov)
+                        self.last_logs.append(f"{asset} | {prov.upper()} | {(a.title or '')[:80]}")
+                        analysis_done = True
+                        break
+
                 if analysis_done:
                     continue
 
+                # Final fallback: use Analyst's internal strategy (gemini -> local -> deterministic)
                 self._last_provider = None
                 self.analyst.analyze_article(a, asset, model_preference=model_preference)
                 provider = (self._last_provider or "fallback").lower()
@@ -401,13 +433,7 @@ class NewsBridge:
         ai_provider = (os.getenv("AI_PROVIDER", model_preference) or "auto").strip().lower()
         providers_config = self._get_provider_config()
 
-        order: List[str] = []
-        if ai_provider in {"local", "do", "gemini"}:
-            order = [ai_provider]
-        else:
-            if providers_config["local"].get("base_url"): order.append("local")
-            if providers_config["do"].get("api_key"): order.append("do")
-            order.extend(["gemini", "bridgelocal"])
+        order: List[str] = self._provider_order(ai_provider)
 
         bridge_callers: Dict[str, Callable] = {
             "gemini": lambda: hasattr(self.analyst, "_query_gemini") and self.analyst._query_gemini(messages),
@@ -483,12 +509,7 @@ class NewsBridge:
         messages = [{"role": "system", "content": system_msg}, {"role": "user", "content": user_msg}]
         
         providers_config = self._get_provider_config()
-        ai_provider = (os.getenv("AI_PROVIDER", model_preference) or "auto").strip().lower()
-
-        order: List[str] = []
-        if ai_provider in providers_config: order.append(ai_provider)
-        for p in ["local", "do", "hf", "gemini", "bridgelocal"]:
-            if p not in order: order.append(p)
+        order: List[str] = self._provider_order(model_preference)
         
         print(f"DEBUG: Provider attempt order: {order}")
 
@@ -550,9 +571,9 @@ class ResearchOrchestrator:
       - SynthesisAgent: merge signals and propose actions.
     """
     
-    def __init__(self, base_dir: Optional[str] = None):
+    def __init__(self, news_bridge: NewsBridge, base_dir: Optional[str] = None):
         self.base_dir = pathlib.Path(base_dir or _PROJECT_ROOT)
-        self.bridge = NewsBridge()
+        self.bridge = news_bridge
 
     WHITELIST_DOMAINS = {
         "sec.gov", "seekingalpha.com", "bloomberg.com", "reuters.com",
@@ -835,6 +856,60 @@ class ResearchOrchestrator:
             summary = ""
 
         return fig, summary
+
+    def wallet_strategy_agent(self, chain: str, balance: float, token_count: int, tokens_list: List[str]) -> List[str]:
+        """
+        Uses the local LLM to generate a more dynamic wallet strategy.
+        """
+        base_url = os.getenv("LOCAL_LLM_BASE_URL", "").strip()
+        if not base_url:
+            return ["LLM not configured. Set LOCAL_LLM_BASE_URL to enable AI strategy."]
+
+        prompt = f"""
+        You are an expert crypto portfolio analyst. A user has provided a snapshot of their wallet.
+        Based on the data below, provide a concise, actionable analysis and strategy in 3-4 bullet points.
+
+        Wallet Data:
+        - Blockchain: {chain}
+        - Native Coin Balance ({'BTC' if chain == 'bitcoin' else 'ETH'}): {balance:.6f}
+        - Number of Different Tokens: {token_count}
+        - Notable Tokens: {', '.join(tokens_list[:5]) if tokens_list else 'N/A'}
+
+        Your analysis should consider the wallet's posture (e.g., concentrated, diversified, passive holding)
+        and suggest potential next steps or areas to research. Be encouraging and insightful.
+        Example:
+        - Your portfolio appears to be a passive holding with a focus on the native asset. This is a solid, lower-risk strategy.
+        - With {token_count} different assets, you have a good level of diversification. Consider reviewing underperforming assets quarterly.
+        - To increase potential upside, you could explore adding a small position in a trending narrative like AI or DePIN.
+        """
+        
+        system_message = "You are a helpful crypto analyst that provides brief, actionable advice."
+        
+        try:
+            payload = {
+                "model": os.getenv("LOCAL_LLM_MODEL", "llama-3.1-8b-instruct"),
+                "messages": [
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": prompt}
+                ],
+                "temperature": 0.4,
+                "max_tokens": 300,
+            }
+            headers = {"Content-Type": "application/json"}
+            api_key = os.getenv("LOCAL_LLM_API_KEY", "lm-studio")
+            if api_key and api_key != "not-needed":
+                headers["Authorization"] = f"Bearer {api_key}"
+                
+            response = requests.post(f"{base_url.rstrip('/')}/chat/completions", headers=headers, json=payload, timeout=25)
+            response.raise_for_status()
+            
+            content = response.json()['choices'][0]['message']['content']
+            strategy_points = [p.strip().lstrip('-* ').capitalize() for p in content.split('\n') if p.strip()]
+            return strategy_points
+
+        except Exception as e:
+            print(f"LLM strategy generation failed: {e}")
+            return ["AI strategy could not be generated at this time."]
 
     def news_agent(self, symbol: str, count: int = 5) -> Tuple[str, List[NewsItem]]:
         items = self.bridge.fetch(symbol, days_back=7, max_articles=count, model_preference="auto", analyze=True)

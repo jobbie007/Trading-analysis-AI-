@@ -1,10 +1,10 @@
 from typing import Dict, Any, List
 import json
 import re
-from services import ResearchOrchestrator  # Use relative import since services.py is in the same directory
+from services import ResearchOrchestrator, NewsBridge  # Use local module since services.py is in the same directory
 
 
-_orchestrator = ResearchOrchestrator()
+_orchestrator = ResearchOrchestrator(news_bridge=NewsBridge())
 
 
 def _extract_params_from_request(user_request: str) -> Dict[str, Any]:

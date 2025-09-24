@@ -26,7 +26,7 @@ server = app.server
 CRYPTO_ASSETS = {"BTC", "ETH", "SOL"}
 
 bridge = NewsBridge()
-research = ResearchOrchestrator()
+research = ResearchOrchestrator(news_bridge=bridge)
 
 # Defaults for Local LLM fields pulled from environment (and sensible fallbacks)
 DEFAULT_LLM_BASE = os.getenv("LOCAL_LLM_BASE_URL", "http://127.0.0.1:1234/v1")

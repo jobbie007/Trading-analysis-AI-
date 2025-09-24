@@ -1993,3 +1993,875 @@
 2025-09-16 21:27:12,773 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
 2025-09-16 21:27:18,668 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
 2025-09-16 21:27:53,640 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-16 21:30:30,436 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 21:30:40,767 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:31:58,215 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=local analyze=True
+2025-09-16 21:32:10,956 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:36:59,070 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=local analyze=True
+2025-09-16 21:37:00,248 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:37:27,996 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 21:37:29,177 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:38:16,022 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 21:38:25,888 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:40:48,449 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 21:40:57,690 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:44:38,165 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 21:44:46,435 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:45:09,604 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 21:45:18,095 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:50:16,814 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 21:50:27,319 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:50:35,220 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 21:50:45,998 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:58:01,817 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 21:58:15,358 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:58:39,710 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=200
+2025-09-16 21:58:46,179 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-16 22:00:04,405 [ERROR] dash.ai: news._query_llm exception (Local OpenAI-Compat): HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 565, in getresponse
+    httplib_response = super().getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1430, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 719, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\util.py", line 39, in reraise
+    raise value
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+        self, url, f"Read timed out. (read timeout={timeout_value})"
+    ) from err
+urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\services.py", line 298, in _query_llm
+    r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 690, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+2025-09-16 22:00:08,927 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 22:00:10,360 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 22:00:12,830 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=404
+2025-09-16 22:00:12,830 [WARNING] dash.ai: news._query_llm error (Local OpenAI-Compat): {
+    "error": {
+        "message": "Model \"gpt-4o-mini-compat\" not found. Please specify a valid model.\n\nYour models:\n\nqwen2.5-7b-instruct\nqwen/qwen3-4b-thinking-2507\ndeepseek/deepseek-r1-052
+2025-09-16 22:00:13,394 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=404
+2025-09-16 22:00:13,394 [WARNING] dash.ai: news._query_llm error (Local OpenAI-Compat): {
+    "error": {
+        "message": "Model \"gpt-4o-mini-compat\" not found. Please specify a valid model.\n\nYour models:\n\nqwen2.5-7b-instruct\nqwen/qwen3-4b-thinking-2507\ndeepseek/deepseek-r1-052
+2025-09-16 22:00:15,139 [INFO] dash.ai: news._query_llm: provider=DigitalOcean model=llama3-8b-instruct status=200
+2025-09-16 22:00:15,158 [INFO] dash.ai: news._query_llm: provider=DigitalOcean model=llama3-8b-instruct status=200
+2025-09-16 22:00:24,958 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-16 22:00:57,723 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-16 22:09:03,856 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-16 22:10:16,619 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 22:10:16,627 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=404
+2025-09-16 22:10:16,628 [WARNING] dash.ai: news._query_llm error (Local OpenAI-Compat): {
+    "error": {
+        "message": "Model \"gpt-4o-mini-compat\" not found. Please specify a valid model.\n\nYour models:\n\nqwen2.5-7b-instruct\nqwen/qwen3-4b-thinking-2507\ndeepseek/deepseek-r1-052
+2025-09-16 22:10:18,701 [INFO] dash.ai: news._query_llm: provider=DigitalOcean model=llama3-8b-instruct status=200
+2025-09-16 22:16:26,802 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=1 model_pref=local analyze=True
+2025-09-16 22:16:26,808 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=gpt-4o-mini-compat status=404
+2025-09-16 22:16:26,808 [WARNING] dash.ai: news._query_llm error (Local OpenAI-Compat): {
+    "error": {
+        "message": "Model \"gpt-4o-mini-compat\" not found. Please specify a valid model.\n\nYour models:\n\nqwen2.5-7b-instruct\nqwen/qwen3-4b-thinking-2507\ndeepseek/deepseek-r1-052
+2025-09-16 22:16:28,669 [INFO] dash.ai: news._query_llm: provider=DigitalOcean model=llama3-8b-instruct status=200
+2025-09-18 23:29:42,890 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-18 23:29:52,657 [ERROR] dash.ai: news._query_llm exception (Local OpenAI-Compat): HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001EEF93EF620>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+        (self._dns_host, self.port),
+    ...<2 lines>...
+        socket_options=self.socket_options,
+    )
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+    ~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<6 lines>...
+        enforce_content_length=enforce_content_length,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connection.py", line 494, in request
+    self.endheaders()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connection.py", line 325, in connect
+    self.sock = self._new_conn()
+                ~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+        self, f"Failed to establish a new connection: {e}"
+    ) from e
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x000001EEF93EF620>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001EEF93EF620>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\services.py", line 298, in _query_llm
+    r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001EEF93EF620>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-09-18 23:29:54,635 [INFO] dash.ai: news._query_llm: provider=DigitalOcean model=llama3-8b-instruct status=200
+2025-09-18 23:30:37,115 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-18 23:30:43,646 [ERROR] dash.ai: news._query_llm exception (Local OpenAI-Compat): HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000246F04FF620>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+        (self._dns_host, self.port),
+    ...<2 lines>...
+        socket_options=self.socket_options,
+    )
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+    ~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<6 lines>...
+        enforce_content_length=enforce_content_length,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connection.py", line 494, in request
+    self.endheaders()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connection.py", line 325, in connect
+    self.sock = self._new_conn()
+                ~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+        self, f"Failed to establish a new connection: {e}"
+    ) from e
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x00000246F04FF620>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000246F04FF620>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\services.py", line 298, in _query_llm
+    r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\.venv\Lib\site-packages\requests\adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000246F04FF620>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-09-18 23:30:44,738 [INFO] dash.ai: news._query_llm: provider=DigitalOcean model=llama3-8b-instruct status=200
+2025-09-18 23:41:53,682 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-18 23:42:01,508 [ERROR] dash.ai: news._query_llm exception (Local OpenAI-Compat): HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002B39FFCBED0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+        (self._dns_host, self.port),
+    ...<2 lines>...
+        socket_options=self.socket_options,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+    ~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<6 lines>...
+        enforce_content_length=enforce_content_length,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 494, in request
+    self.endheaders()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 325, in connect
+    self.sock = self._new_conn()
+                ~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+        self, f"Failed to establish a new connection: {e}"
+    ) from e
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x000002B39FFCBED0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002B39FFCBED0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\services.py", line 1085, in _query_llm
+    r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002B39FFCBED0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-09-18 23:42:04,728 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-18 23:42:11,049 [ERROR] dash.ai: news._query_llm exception (Local OpenAI-Compat): HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000024C0186CB90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+        (self._dns_host, self.port),
+    ...<2 lines>...
+        socket_options=self.socket_options,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+    ~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<6 lines>...
+        enforce_content_length=enforce_content_length,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 494, in request
+    self.endheaders()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 325, in connect
+    self.sock = self._new_conn()
+                ~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+        self, f"Failed to establish a new connection: {e}"
+    ) from e
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x0000024C0186CB90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000024C0186CB90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\services.py", line 1085, in _query_llm
+    r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000024C0186CB90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-09-18 23:42:12,938 [INFO] dash.ai: news._query_llm: provider=DigitalOcean model=llama3-8b-instruct status=200
+2025-09-18 23:42:33,707 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-18 23:42:39,515 [ERROR] dash.ai: news._query_llm exception (Local OpenAI-Compat): HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002C2EBB5CB90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+        (self._dns_host, self.port),
+    ...<2 lines>...
+        socket_options=self.socket_options,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+    ~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<6 lines>...
+        enforce_content_length=enforce_content_length,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 494, in request
+    self.endheaders()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 325, in connect
+    self.sock = self._new_conn()
+                ~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+        self, f"Failed to establish a new connection: {e}"
+    ) from e
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x000002C2EBB5CB90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002C2EBB5CB90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\services.py", line 1085, in _query_llm
+    r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002C2EBB5CB90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-09-18 23:42:40,935 [INFO] dash.ai: news._query_llm: provider=DigitalOcean model=llama3-8b-instruct status=200
+2025-09-18 23:44:54,409 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-18 23:46:26,049 [ERROR] dash.ai: news._query_llm exception (Local OpenAI-Compat): HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 565, in getresponse
+    httplib_response = super().getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1430, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 719, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\util.py", line 39, in reraise
+    raise value
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+        self, url, f"Read timed out. (read timeout={timeout_value})"
+    ) from err
+urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\services.py", line 1085, in _query_llm
+    r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 690, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+2025-09-18 23:46:30,590 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-18 23:48:03,570 [ERROR] dash.ai: news._query_llm exception (Local OpenAI-Compat): HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 565, in getresponse
+    httplib_response = super().getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1430, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 719, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\util.py", line 39, in reraise
+    raise value
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+        self, url, f"Read timed out. (read timeout={timeout_value})"
+    ) from err
+urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\services.py", line 1085, in _query_llm
+    r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 690, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+2025-09-18 23:48:05,477 [INFO] dash.ai: news._query_llm: provider=DigitalOcean model=llama3-8b-instruct status=200
+2025-09-18 23:52:20,818 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-18 23:53:27,451 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-18 23:55:27,594 [ERROR] dash.ai: news._query_llm exception (Local OpenAI-Compat): HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 565, in getresponse
+    httplib_response = super().getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1430, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 719, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\util.py", line 39, in reraise
+    raise value
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+        self, url, f"Read timed out. (read timeout={timeout_value})"
+    ) from err
+urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\services.py", line 1111, in _query_llm
+    r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 690, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+2025-09-18 23:55:29,704 [INFO] dash.ai: news._query_llm: provider=DigitalOcean model=llama3-8b-instruct status=200
+2025-09-18 23:56:04,534 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=local analyze=True
+2025-09-18 23:57:38,243 [ERROR] dash.ai: news._query_llm exception (Local OpenAI-Compat): HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 565, in getresponse
+    httplib_response = super().getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1430, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 719, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\util.py", line 39, in reraise
+    raise value
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+        self, url, f"Read timed out. (read timeout={timeout_value})"
+    ) from err
+urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\services.py", line 1111, in _query_llm
+    r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 690, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+2025-09-18 23:57:40,563 [INFO] dash.ai: news._query_llm: provider=DigitalOcean model=llama3-8b-instruct status=200
+2025-09-19 00:01:03,037 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-19 00:02:54,145 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-19 00:06:03,678 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-19 09:22:07,568 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True

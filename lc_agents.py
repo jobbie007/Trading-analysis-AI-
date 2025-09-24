@@ -9,7 +9,7 @@ import os
 import json
 from typing import Any, Dict, List, Optional
 
-from dash.services import ResearchOrchestrator  # Update the module path as needed
+from services import ResearchOrchestrator, NewsBridge  # Use local services module
 
 AVAILABLE = False
 try:
@@ -20,7 +20,7 @@ try:
 except Exception:
     AVAILABLE = False
 
-_orch = ResearchOrchestrator()
+_orch = ResearchOrchestrator(news_bridge=NewsBridge())
 
 
 def run_langchain_workflow(user_request: str, model_name: str) -> Dict[str, Any]:

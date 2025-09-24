@@ -10,7 +10,7 @@ import json
 import inspect
 from typing import Any, Dict, List, Optional
 
-from dash.services import ResearchOrchestrator
+from services import ResearchOrchestrator, NewsBridge
 from autogen_core.models import ModelFamily  # type: ignore
 
 AVAILABLE = False
@@ -43,7 +43,7 @@ except Exception as e:
     except Exception:
         UNAVAILABLE_REASON = "unknown import error"
 
-_orch = ResearchOrchestrator()
+_orch = ResearchOrchestrator(news_bridge=NewsBridge())
 
 
 def _wrap_tools(tool_logs: Optional[List[Dict[str, str]]] = None, captured: Optional[Dict[str, Any]] = None) -> List[Any]:
