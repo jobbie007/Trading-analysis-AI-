@@ -2,6 +2,8 @@
 
 This is a standalone Dash app with tabs:
 - News & Analysis: Big TradingView chart with news below
+  <img width="1908" height="932" alt="image" src="https://github.com/user-attachments/assets/e6b8fc9d-1c71-4992-8b8f-9222b5582734" />
+
 - Strategy (Wallet): Enter a BTC/ETH address; uses Blockchair API to suggest a simple posture
 
 ## Quick start (Windows PowerShell)
