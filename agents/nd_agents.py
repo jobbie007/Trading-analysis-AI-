@@ -405,7 +405,7 @@ def _executive_brief(symbol: str, items: List[Dict[str, Any]]) -> Tuple[str, Dic
         SOURCE BULLETS:\n{chr(10).join(lines)[:9000]}
     """)
     res = _llm_chat([
-        {"role": "system", "content": "You are a senior equity analyst. Return JSON only—no extra text."},
+        {"role": "system", "content": "You are a senior equity analyst. Return JSON onlyno extra text."},
         {"role": "user", "content": user},
     ], temperature=0.3, max_tokens=800)
     j = _extract_json_object(res)
@@ -418,7 +418,7 @@ def _executive_brief(symbol: str, items: List[Dict[str, Any]]) -> Tuple[str, Dic
 
 def _categorize(items: List[Dict[str, Any]]) -> Dict[str, List[int]]:
     # items: list of {title,url,summary,category}
-    # Let LLM cluster via names; we’ll just respect category fields here for simplicity.
+    # Let LLM cluster via names; well just respect category fields here for simplicity.
     cats: Dict[str, List[int]] = {}
     for idx, it in enumerate(items):
         c = (it.get("category") or "Uncategorized").strip() or "Uncategorized"

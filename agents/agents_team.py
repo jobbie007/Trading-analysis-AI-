@@ -125,7 +125,7 @@ def _wrap_tools(tool_logs: Optional[List[Dict[str, str]]] = None, captured: Opti
 def run_team_workflow(user_request: str) -> Dict[str, Any]:
     """Run AutoGen AgentChat via LM Studio only; otherwise fall back to shim with a helpful message."""
     if not AVAILABLE:
-        import agents as _shim
+        from . import agents as _shim
         res = _shim.run_autogen_workflow(user_request)
         msgs = res.get("messages", []) or []
         note = "AutoGen AgentChat not available; using local orchestrator shim."
@@ -140,7 +140,7 @@ def run_team_workflow(user_request: str) -> Dict[str, Any]:
     # Prefer explicit LOCAL_LLM_MODEL; fall back to MODEL_NAME to align with .env and app defaults
     model_name = os.getenv("LOCAL_LLM_MODEL") or os.getenv("MODEL_NAME") or "llama-3.1-8b-instruct"
     if not base_url:
-        import agents as _shim
+        from . import agents as _shim
         res = _shim.run_autogen_workflow(user_request)
         msgs = res.get("messages", []) or []
         msgs.append({"agent": "Planner", "message": "LOCAL_LLM_BASE_URL not set. Configure LM Studio at http://127.0.0.1:1234/v1."})
@@ -377,7 +377,7 @@ def run_team_workflow(user_request: str) -> Dict[str, Any]:
                 pass
         raise RuntimeError("No structured result produced by team")
     except Exception as e:
-        import agents as _shim
+        from . import agents as _shim
         res = _shim.run_autogen_workflow(user_request)
         msgs = res.get("messages", []) or []
         msgs.append({"agent": "Planner", "message": f"AutoGen failed: {str(e)[:120]}. Using local orchestrator shim."})

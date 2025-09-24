@@ -2865,3 +2865,200 @@ requests.exceptions.ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=1234)
 2025-09-19 00:02:54,145 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
 2025-09-19 00:06:03,678 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
 2025-09-19 09:22:07,568 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-19 09:24:03,445 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=auto analyze=True
+2025-09-19 09:24:06,262 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-19 09:25:11,032 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-19 09:25:12,046 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-19 09:25:13,351 [INFO] dash.ai: news.fetch: asset=BTC days=1 max=1 model_pref=auto analyze=True
+2025-09-19 09:25:21,908 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-19 09:25:29,213 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-19 09:25:36,945 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-19 09:25:40,801 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-19 09:25:45,427 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-19 09:25:48,467 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-19 09:25:52,047 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-19 09:25:53,767 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-19 09:25:59,247 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-21 20:43:18,644 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=gemini analyze=True
+2025-09-21 20:43:50,523 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=gemini analyze=True
+2025-09-21 21:01:37,880 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=gemini analyze=True
+2025-09-21 21:35:59,808 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=gemini analyze=True
+2025-09-21 21:37:16,558 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-21 21:37:46,548 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-21 21:38:21,979 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-21 21:39:06,998 [ERROR] dash.ai: news._query_llm exception (Local OpenAI-Compat): HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connection.py", line 565, in getresponse
+    httplib_response = super().getresponse()
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 1430, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 719, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\util\util.py", line 39, in reraise
+    raise value
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\urllib3\connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+        self, url, f"Read timed out. (read timeout={timeout_value})"
+    ) from err
+urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jobbie\c++Workspace\Comp301 project\dash\services.py", line 318, in _query_llm
+    r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Jobbie\AppData\Local\Programs\Python\Python313\Lib\site-packages\requests\adapters.py", line 690, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=45)
+2025-09-21 21:39:13,092 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=gemini analyze=True
+2025-09-21 21:42:03,921 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=gemini analyze=True
+2025-09-21 21:45:58,813 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=gemini analyze=True
+2025-09-21 22:42:58,591 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=gemini analyze=True
+2025-09-23 19:51:22,609 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=gemini analyze=True
+2025-09-23 19:52:51,269 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=gemini analyze=True
+2025-09-23 19:52:56,526 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=gemini analyze=True
+2025-09-23 19:53:05,806 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=5 model_pref=gemini analyze=True
+2025-09-24 12:49:20,158 [INFO] dash.ai: news.fetch: asset=NVDA days=7 max=6 model_pref=local analyze=True
+2025-09-24 12:49:30,039 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 12:49:31,603 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 12:49:33,180 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 12:49:35,125 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 12:49:43,531 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 12:49:45,578 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 12:49:55,410 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 13:15:47,758 [INFO] dash.ai: news.fetch: asset=BTC days=7 max=1 model_pref=gemini analyze=True
+2025-09-24 13:16:33,526 [INFO] dash.ai: news.fetch: asset=TSMC days=7 max=1 model_pref=gemini analyze=True
+2025-09-24 13:17:08,461 [INFO] dash.ai: news.fetch: asset=NVDA days=7 max=1 model_pref=gemini analyze=True
+2025-09-24 13:25:04,485 [INFO] dash.ai: news.fetch: asset=NVDA days=7 max=1 model_pref=gemini analyze=True
+2025-09-24 13:35:53,610 [INFO] dash.ai: news.fetch: asset=NVDA days=1 max=1 model_pref=gemini analyze=True
+2025-09-24 13:37:48,890 [INFO] dash.ai: news.fetch: asset=NVDA days=1 max=1 model_pref=gemini analyze=True
+2025-09-24 13:37:54,884 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-24 13:37:55,013 [INFO] dash.ai: news.fetch: asset=NVDA days=1 max=1 model_pref=gemini analyze=True
+2025-09-24 13:37:57,241 [INFO] dash.ai: news.fetch: asset=NVDA days=1 max=1 model_pref=gemini analyze=True
+2025-09-24 13:37:58,441 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-24 13:37:58,559 [INFO] dash.ai: news.fetch: asset=NVDA days=1 max=1 model_pref=gemini analyze=True
+2025-09-24 13:38:01,537 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:38:03,634 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:38:05,459 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:38:18,148 [INFO] dash.ai: news.fetch: asset=NVDA days=1 max=1 model_pref=gemini analyze=True
+2025-09-24 13:38:25,625 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-24 13:38:27,962 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-24 13:38:31,822 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:38:35,607 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:38:39,038 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:44:40,320 [INFO] dash.ai: news.fetch: asset=NVDA days=1 max=1 model_pref=gemini analyze=True
+2025-09-24 13:44:41,993 [INFO] dash.ai: news.fetch: asset=NVDA days=1 max=1 model_pref=gemini analyze=True
+2025-09-24 13:44:49,224 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-24 13:44:55,875 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:45:00,900 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:45:05,369 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:45:11,122 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:45:16,211 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:45:23,841 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:45:25,462 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:45:30,694 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:47:04,625 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-24 13:47:07,863 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=local-model status=200
+2025-09-24 13:54:37,407 [INFO] dash.ai: news.fetch: asset=NVDA days=1 max=1 model_pref=gemini analyze=True
+2025-09-24 13:55:29,021 [INFO] dash.ai: news.fetch: asset=GOOGL days=7 max=6 model_pref=local analyze=True
+2025-09-24 13:55:44,072 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 13:55:46,788 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 13:55:52,297 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 13:55:58,458 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 13:56:06,810 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 13:56:08,630 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 13:56:14,414 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 14:04:06,178 [INFO] dash.ai: news.fetch: asset=NVDA days=7 max=6 model_pref=local analyze=True
+2025-09-24 14:04:23,773 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 14:04:30,872 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 14:04:34,527 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 14:04:40,198 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 14:04:46,002 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 14:04:47,819 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 14:04:55,754 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:03:06,855 [INFO] dash.ai: news.fetch: asset=AAPL days=7 max=6 model_pref=local analyze=True
+2025-09-24 15:03:22,528 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:03:28,374 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:03:33,309 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:03:39,797 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:03:44,178 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:03:45,871 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:03:51,553 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:29:29,882 [INFO] dash.ai: news.fetch: asset=TSLA days=7 max=6 model_pref=local analyze=True
+2025-09-24 15:29:46,675 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:29:52,454 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:29:59,779 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:30:06,588 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:30:08,331 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:30:09,942 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:30:17,226 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:54:25,545 [INFO] dash.ai: news.fetch: asset=NFLX days=7 max=10 model_pref=local analyze=True
+2025-09-24 15:54:37,603 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:54:44,290 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:54:45,756 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:54:50,318 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:54:52,379 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:54:53,931 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:54:55,647 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:54:57,001 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:54:58,993 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:55:00,943 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 15:55:15,444 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 16:07:32,691 [INFO] dash.ai: news.fetch: asset=MSTR days=14 max=10 model_pref=local analyze=True
+2025-09-24 16:07:43,996 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 16:07:48,511 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 16:07:50,544 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 16:07:55,204 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 16:07:59,447 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 16:08:01,278 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 16:08:03,046 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 16:08:04,906 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 16:08:06,503 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 16:08:15,952 [INFO] dash.ai: news._query_llm: provider=Local OpenAI-Compat model=qwen2.5-7b-instruct status=200
+2025-09-24 20:04:18,990 [INFO] dash.ai: news.fetch: asset=ETH days=1 max=5 model_pref=gemini analyze=True

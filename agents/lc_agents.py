@@ -53,7 +53,7 @@ def run_langchain_workflow(user_request: str, model_name: str) -> Dict[str, Any]
             symbol = (part.split(",")[0] or "").strip()
             break
     if not symbol:
-        import agents as _shim
+        from . import agents as _shim
         res = _shim.run_autogen_workflow(user_request)
         msgs = res.get("messages", []) or []
         msgs.append({"agent": "Planner(LC)", "message": "No symbol parsed; using local orchestrator shim."})
@@ -97,7 +97,7 @@ def run_langchain_workflow(user_request: str, model_name: str) -> Dict[str, Any]
 
     # If no local endpoint or LC can't initialize, fallback
     if not base_url:
-        import agents as _shim
+        from . import agents as _shim
         res = _shim.run_autogen_workflow(user_request)
         msgs = res.get("messages", []) or []
         msgs.append({"agent": "Planner(LC)", "message": "No LOCAL_LLM_BASE_URL; using local orchestrator shim."})

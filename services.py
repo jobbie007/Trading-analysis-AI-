@@ -1,18 +1,21 @@
 import os
-import sys
 import pathlib
 import requests
 import json
 import logging
-import re
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any, Tuple, Callable
 import textwrap
-import io
 import pandas as pd
 import plotly.graph_objects as go
 import requests as _requests
 from urllib.parse import urlparse
+try:
+    # Prefer canonical utils package
+    from utils.json_utils import extract_json_object  # type: ignore
+except Exception:
+    # Fallback to package-style import if available
+    from dash.utils.json_utils import extract_json_object  # type: ignore
 try:
     from duckduckgo_search import DDGS as _DDGS
 except Exception:
@@ -173,8 +176,6 @@ class NewsItem:
     sentiment_score: float = 0.0
     analysis_provider: str = ""
 
-# Replace your entire existing NewsBridge class with this one.
-
 class NewsBridge:
     def __init__(self):
         self.logger = _get_app_logger()
@@ -213,7 +214,7 @@ class NewsBridge:
                         if res is not None:
                             self._last_provider = "gemini"
                         return res
-                    self.analyst._query_gemini = _wrap_gemini  # type: ignore
+                    self.analyst._query_gemini = _wrap_gemini 
                 if hasattr(self.analyst, "_query_local_llm"):
                     _orig_loc = self.analyst._query_local_llm
                     def _wrap_local(messages):
@@ -221,7 +222,7 @@ class NewsBridge:
                         if res is not None and not self._last_provider:
                             self._last_provider = "local"
                         return res
-                    self.analyst._query_local_llm = _wrap_local  # type: ignore
+                    self.analyst._query_local_llm = _wrap_local
             except Exception:
                 pass
         else:
@@ -231,34 +232,12 @@ class NewsBridge:
             self._last_provider = None
         self.last_logs = []
         self._last_fetch_summary = ""
-        # Local LLM tunables are now accessed directly via os.getenv in helper methods
 
     # --- helpers ---
     @staticmethod
     def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
-        """Finds and parses the first complete JSON object in a string."""
-        if not text:
-            return None
-        try:
-            j = json.loads(text)
-            if isinstance(j, dict): return j
-        except Exception: pass
-        start = text.find("{")
-        while start != -1 and start < len(text):
-            depth = 0
-            for i in range(start, len(text)):
-                ch = text[i]
-                if ch == "{": depth += 1
-                elif ch == "}":
-                    depth -= 1
-                    if depth == 0:
-                        chunk = text[start : i + 1]
-                        try:
-                            j = json.loads(chunk)
-                            if isinstance(j, dict): return j
-                        except Exception: break
-            start = text.find("{", start + 1)
-        return None
+        """Deprecated shim: use dash.utils.json_utils.extract_json_object."""
+        return extract_json_object(text)
     
     def _provider_order(self, model_preference: str = "auto") -> List[str]:
         """Return the provider attempt order.
@@ -487,11 +466,12 @@ class NewsBridge:
             """))
         context = "\n".join(context_lines)[:min(int(max_chars or 20000), 12000)]
         
-        print("=" * 60)
-        print(f"DEBUG (summarize_overall): Starting for asset '{asset}'")
-        print(f"DEBUG: Total context length being sent to LLM: {len(context)} characters")
+        self.logger = getattr(self, 'logger', _get_app_logger())
+        self.logger.debug("%s", "=" * 60)
+        self.logger.debug("summarize_overall: asset=%s", asset)
+        self.logger.debug("summarize_overall: context_len=%d", len(context))
         if len(context) < 100:
-            print("DEBUG: WARNING - Context is very short or empty. No news items to summarize?")
+            self.logger.warning("summarize_overall: very short context; skipping summary")
             return {"summary": "Not enough news content to generate a summary.", "provider": "system", "overall_sentiment": "neutral", "confidence": 0.0, "payload": {}}
 
         system_msg = (
@@ -511,7 +491,7 @@ class NewsBridge:
         providers_config = self._get_provider_config()
         order: List[str] = self._provider_order(model_preference)
         
-        print(f"DEBUG: Provider attempt order: {order}")
+        self.logger.debug("summarize_overall: provider_order=%s", order)
 
         bridge_callers = {
             "gemini": lambda: self.analyst._query_gemini(messages) if hasattr(self.analyst, "_query_gemini") else None,
@@ -520,22 +500,22 @@ class NewsBridge:
 
         raw_result, provider = None, "fallback"
         for p_name in order:
-            print(f"DEBUG: --> Attempting provider: '{p_name}'")
+            self.logger.debug("summarize_overall: trying provider=%s", p_name)
             if p_name in providers_config:
                 raw_result = self._query_llm(providers_config[p_name], messages, 0.1)
             elif p_name in bridge_callers:
                 raw_result = bridge_callers[p_name]()
             
             if raw_result:
-                print(f"DEBUG: SUCCESS with provider '{p_name}'!")
+                self.logger.debug("summarize_overall: success provider=%s", p_name)
                 provider = p_name
                 break
             else:
-                print(f"DEBUG: FAILED with provider '{p_name}'. Trying next.")
+                self.logger.debug("summarize_overall: failed provider=%s", p_name)
         
         if not raw_result:
-            print("DEBUG: All providers failed to return a result.")
-        print("=" * 60)
+            self.logger.warning("summarize_overall: all providers failed")
+        self.logger.debug("%s", "=" * 60)
 
         payload = self._extract_json_object(raw_result) if isinstance(raw_result, str) else (raw_result if isinstance(raw_result, dict) else {})
         summary_text = (payload or {}).get('executive_summary') or (payload or {}).get('summary') or ""
@@ -545,7 +525,8 @@ class NewsBridge:
             summary_text = "Overall summary (fallback):\n" + "\n".join(bullets)
         
         sent = (str((payload or {}).get("overall_sentiment", "")).lower() or "neutral")
-        if not sent in ["bullish", "bearish", "neutral"]: sent = "neutral"
+        if sent not in ["bullish", "bearish", "neutral"]:
+            sent = "neutral"
 
         conf = 0.5
         try: conf = float((payload or {}).get('confidence', 0.5))
@@ -559,9 +540,7 @@ class NewsBridge:
     def get_fetch_summary(self) -> str:
         return getattr(self, '_last_fetch_summary', '') or ''
 
-# ---------------- Multi‑Agent Research (free-data) ----------------
-# NOTE: The rest of the file (ResearchOrchestrator, etc.) remains unchanged.
-# I am including it here for completeness so you can copy the whole file.
+# ---------------- Multi‑Agent Research  ----------------
 class ResearchOrchestrator:
     """Lightweight multi-agent system tailored for this app.
     Agents:
@@ -625,7 +604,7 @@ class ResearchOrchestrator:
                 df = pd.read_csv(url)
                 if not df.empty:
                     df.rename(columns=str.title, inplace=True)
-                    df["Date"] = pd.to_datetime(df["Date"])  # type: ignore
+                    df["Date"] = pd.to_datetime(df["Date"]) 
                     df.set_index("Date", inplace=True)
                     payload["source"] = "stooq"
                     payload["hist"] = df.tail(180)
@@ -767,7 +746,6 @@ class ResearchOrchestrator:
             raise RuntimeError("No historical data provided")
 
         df = hist.copy()
-        # Normalize column names and accessors
         cols = {c.lower(): c for c in df.columns}
         def _col(name: str) -> str:
             return cols.get(name.lower(), name)
@@ -1065,10 +1043,10 @@ class ResearchOrchestrator:
                 OnBalanceVolumeIndicator = getattr(_ta_volu, "OnBalanceVolumeIndicator", None)
             except Exception as _e_ta:
                 # TA library not installed; skip detailed indicators
-                SMAIndicator = EMAIndicator = MACD = CCIIndicator = None  # type: ignore
-                BollingerBands = AverageTrueRange = None  # type: ignore
-                RSIIndicator = StochasticOscillator = ROCIndicator = None  # type: ignore
-                MFIIndicator = OnBalanceVolumeIndicator = None  # type: ignore
+                SMAIndicator = EMAIndicator = MACD = CCIIndicator = None
+                BollingerBands = AverageTrueRange = None
+                RSIIndicator = StochasticOscillator = ROCIndicator = None
+                MFIIndicator = OnBalanceVolumeIndicator = None
             hist = data_payload.get("hist")
             if hist is not None and not hist.empty:
                 df = hist.copy()
@@ -1382,10 +1360,10 @@ class ResearchOrchestrator:
 
         # Decide provider order
         order: List[str] = []
-        if ai_provider in {"local", "do", "gemini"}:
+        if ai_provider in {"local", "gemini", "do"}:
             order = [ai_provider]
-        else:  # auto
-            # Prefer configured local, then DO, then Gemini, then bridge local
+        else:
+            # Prefer local, then Gemini, then do, then bridge local
             if os.getenv("LOCAL_LLM_BASE_URL"):
                 order.append("local")
             if os.getenv("DO_AI_API_KEY") or os.getenv("DIGITALOCEAN_AI_API_KEY"):
@@ -1397,12 +1375,12 @@ class ResearchOrchestrator:
                 out = _try_local_openai()
                 if out:
                     return out
-            elif prov == "do":
-                out = _try_do()
-                if out:
-                    return out
             elif prov == "gemini":
                 out = _try_bridge_gemini()
+                if out:
+                    return out
+            elif prov == "do":
+                out = _try_do()
                 if out:
                     return out
             elif prov == "bridgelocal":
@@ -1739,10 +1717,12 @@ class ResearchOrchestrator:
                 r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
                 if r.status_code == 200:
                     data = r.json()
-                    raw = (data.get("choices", [{}])[0].get("message", {}).get("content")) or (data.get("choices", [{}])[0].get("text", ""))
-                    if raw:
-                        _log_llm("llm.response", {"provider": "local", "response": raw, "usage": data.get("usage")})
-                        return raw
+                    raw_text = (
+                        data.get("choices", [{}])[0].get("message", {}).get("content")
+                    ) or data.get("choices", [{}])[0].get("text", "")
+                    if raw_text:
+                        _log_llm("llm.response", {"provider": "local", "response": raw_text, "usage": data.get("usage")})
+                        return raw_text
             except Exception as e:
                 _log_llm("llm.error", {"provider": "local", "error": str(e)})
             return None
@@ -1765,10 +1745,12 @@ class ResearchOrchestrator:
                 r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
                 if r.status_code == 200:
                     data = r.json()
-                    raw = (data.get("choices", [{}])[0].get("message", {}).get("content")) or (data.get("choices", [{}])[0].get("text", ""))
-                    if raw:
-                        _log_llm("llm.response", {"provider": "do", "response": raw, "usage": data.get("usage")})
-                        return raw
+                    raw_text = (
+                        data.get("choices", [{}])[0].get("message", {}).get("content")
+                    ) or data.get("choices", [{}])[0].get("text", "")
+                    if raw_text:
+                        _log_llm("llm.response", {"provider": "do", "response": raw_text, "usage": data.get("usage")})
+                        return raw_text
             except Exception as e:
                 _log_llm("llm.error", {"provider": "do", "error": str(e)})
             return None
@@ -1791,10 +1773,12 @@ class ResearchOrchestrator:
                 r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
                 if r.status_code == 200:
                     data = r.json()
-                    raw = (data.get("choices", [{}])[0].get("message", {}).get("content")) or (data.get("choices", [{}])[0].get("text", ""))
-                    if raw:
-                        _log_llm("llm.response", {"provider": "hf", "response": raw, "usage": data.get("usage")})
-                        return raw
+                    raw_text = (
+                        data.get("choices", [{}])[0].get("message", {}).get("content")
+                    ) or data.get("choices", [{}])[0].get("text", "")
+                    if raw_text:
+                        _log_llm("llm.response", {"provider": "hf", "response": raw_text, "usage": data.get("usage")})
+                        return raw_text
             except Exception as e:
                 _log_llm("llm.error", {"provider": "hf", "error": str(e)})
             return None
@@ -1816,21 +1800,22 @@ class ResearchOrchestrator:
             "local": _try_local_openai,
             "do": _try_do,
             "hf": _try_hf,
-            "gemini": _try_gemini
+            "gemini": _try_gemini,
         }
 
-        provider_order = []
-        
+        provider_order: list[str] = []
+
         # If a specific provider is chosen, try it first.
         if ai_provider in provider_map:
             provider_order.append(ai_provider)
-        
-        # For 'auto' or as a fallback, add the rest in a sensible order (Gemini LAST)
-        for p in ["local", "do", "hf", "gemini"]:
+
+        # For 'auto' or as a fallback, add the rest in a sensible order
+        for p in ["local", "gemini", "hf", "do"]:
             if p not in provider_order:
                 provider_order.append(p)
-                
-        print(f"DEBUG: LLM provider order: {provider_order}")
+
+        _logger = getattr(self, 'logger', _get_app_logger())
+        _logger.debug("llm_generate: provider_order=%s", provider_order)
 
         # --- Execute the calls in the determined order ---
         for provider_name in provider_order:
@@ -1838,10 +1823,10 @@ class ResearchOrchestrator:
             if call_func:
                 result = call_func()
                 if isinstance(result, str) and result.strip():
-                    print(f"DEBUG: LLM call successful with provider: {provider_name}")
+                    _logger.debug("llm_generate: success provider=%s", provider_name)
                     return result
-        
-        print("DEBUG: All LLM providers failed.")
+
+        _logger.warning("llm_generate: all providers failed")
         return None
 
     def holistic_analysis_agent(self, symbol: str, notebook: Dict[str, Any], ai_provider: str = "auto") -> Tuple[str, str]:
@@ -1955,7 +1940,7 @@ class ResearchOrchestrator:
                 pass
 
         # --- 4. A SMARTER Heuristic Fallback ---
-        # This now attempts to synthesize the data instead of just listing it.
+        # This attempts to synthesize the data instead of just listing it.
 
         just_lines = []
         confidence_score = 5 # Start at neutral
@@ -2049,8 +2034,19 @@ class ResearchOrchestrator:
         print(f"\nDEBUG: Executing workflow '{analysis_type}' for {symbol}...")
 
         # Initialize the outputs and the shared "notebook"
-        outputs: Dict[str, Any] = {"plan": {"analysis_type": analysis_type, "symbol": symbol}}
-        notebook: Dict[str, Any] = {"symbol": symbol, "profile": {}, "financials": {"ratios": {}, "earnings": {}}, "technical": {}, "news_sentiment": {}, "web": [], "errors": []}
+        outputs: Dict[str, Any] = {
+            "plan": {"analysis_type": analysis_type, "symbol": symbol},
+            "config": {k: v for k, v in config.items() if k in ("web_max_results", "analysis_type", "symbol")}
+        }
+        notebook: Dict[str, Any] = {
+            "symbol": symbol,
+            "profile": {},
+            "financials": {"ratios": {}, "earnings": {}},
+            "technical": {},
+            "news_sentiment": {},
+            "web": [],
+            "errors": []
+        }
         conversations: List[Dict[str, str]] = []
 
         # --- Agent Execution Logic ---
@@ -2058,10 +2054,24 @@ class ResearchOrchestrator:
         # News & Web (Run first for context)
         if analysis_type in ("web", "combined"):
             try:
-                news_items = self.bridge.fetch(symbol, days_back=7, max_articles=6, model_preference=ai_provider, analyze=True)
+                # Allow caller to specify how many news/articles to pull (default 6 if absent)
+                max_articles = int(config.get("web_max_results") or 6)
+                # Basic safety clamp
+                if max_articles <= 0:
+                    max_articles = 0
+                elif max_articles > 40:  # prevent runaway costs
+                    max_articles = 40
+                news_items = self.bridge.fetch(symbol, days_back=14, max_articles=max_articles, model_preference=ai_provider, analyze=True)
                 outputs["news"] = [i.__dict__ for i in news_items]
                 news_summary = self.bridge.summarize_overall(symbol, news_items, model_preference=ai_provider, max_chars=2500)
                 outputs["news_summary"] = news_summary
+                # Record requested vs fetched counts for UI transparency
+                try:
+                    outputs.setdefault("config", {})["web_requested"] = max_articles
+                    outputs.setdefault("config", {})["web_fetched"] = len(news_items)
+                    outputs.setdefault("config", {})["web_days_back"] = 14
+                except Exception:
+                    pass
                 if isinstance(news_summary, dict) and news_summary.get("summary"):
                     notebook["news_sentiment"] = {"summary": news_summary.get("summary"), "provider": news_summary.get("provider")}
                 conversations.append({"agent": "NewsAgent", "message": f"Fetched {len(news_items)} news items and generated summary for {symbol}"})

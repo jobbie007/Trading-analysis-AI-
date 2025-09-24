@@ -10,25 +10,36 @@ import dash
 from dash import Dash, dcc, html, Input, Output, State, ALL
 from services import NewsBridge, ResearchOrchestrator
 import plotly.graph_objects as go
-# Import tab layouts; handle both module and script execution paths
+# Import tab layouts; handle both package and script execution paths
 try:
-    from .layouts.news import layout as news_tab_layout
-    from .layouts.strategy import layout as strategy_tab_layout
+    from .ui.layouts.news import layout as news_tab_layout
+    from .ui.layouts.strategy import layout as strategy_tab_layout
 except Exception:
-    # When running as a script (python dash/app.py), use local package import
-    from layouts.news import layout as news_tab_layout  # type: ignore
-    from layouts.strategy import layout as strategy_tab_layout  # type: ignore
+    # When running as a script (python dash/app.py), use local import
+    from ui.layouts.news import layout as news_tab_layout
+    from ui.layouts.strategy import layout as strategy_tab_layout
 
-app = Dash(__name__, suppress_callback_exceptions=True, title="Financial Intelligence Dashboard")
+from pathlib import Path as _Path
+_BASE = _Path(__file__).resolve().parent
+_ASSETS_PATH = str(_BASE / "ui" / "assets")
+
+# Instantiate Dash app early (before callbacks)
+app = Dash(
+    __name__,
+    suppress_callback_exceptions=True,
+    title="Financial Intelligence Dashboard",
+    assets_folder=_ASSETS_PATH,
+)
 server = app.server
 
-# Explicit set of crypto tickers for TradingView mapping (avoid misclassifying stocks)
+# Explicit set of crypto tickers for TradingView mapping
 CRYPTO_ASSETS = {"BTC", "ETH", "SOL"}
 
+# Service singletons
 bridge = NewsBridge()
 research = ResearchOrchestrator(news_bridge=bridge)
 
-# Defaults for Local LLM fields pulled from environment (and sensible fallbacks)
+# Defaults for Local LLM fields pulled from environment
 DEFAULT_LLM_BASE = os.getenv("LOCAL_LLM_BASE_URL", "http://127.0.0.1:1234/v1")
 DEFAULT_LLM_MODEL = os.getenv("LOCAL_LLM_MODEL") or os.getenv("MODEL_NAME") or "llama-3.1-8b-instruct"
 try:
@@ -40,26 +51,19 @@ try:
 except Exception:
     DEFAULT_LLM_TEMP = 0.1
 
-# Helpers
-
 def tv_symbol(asset: str) -> str:
     a = (asset or '').strip().upper()
     if not a:
         return "AAPL"
-    # If explicit TradingView symbol (e.g., NASDAQ:AAPL), use it as-is
     if ":" in a:
         return a
-    # Treat known crypto tickers explicitly
     if a in CRYPTO_ASSETS:
         return f"CRYPTO:{a}USD"
-    # Heuristic: plain 1-5 letter tickers are stocks (no USD suffix)
     if a.isalpha() and 1 <= len(a) <= 5:
         return a
-    # Fallback: if it ends with a quote currency, drop it if base looks like a stock ticker
     for suf in ("USDT", "USD"):
         if a.endswith(suf) and a[:-len(suf)].isalpha() and 1 <= len(a[:-len(suf)]) <= 5:
             return a[:-len(suf)]
-    # Otherwise leave as provided (lets TV try to resolve), but avoid forcing CRYPTO mapping
     return a
 
 def strip_markdown_fences(text: str) -> str:
@@ -73,13 +77,27 @@ def strip_markdown_fences(text: str) -> str:
     return text.strip().strip('`').strip()
 
 # Layout with enhanced visual design
+HISTORY_LIMIT = 25  # maximum number of research history entries retained
+
+def _load_initial_history():
+    try:
+        import json as _json
+        p = _BASE / "logs" / "research_history.json"
+        if p.exists():
+            return _json.loads(p.read_text(encoding='utf-8'))[:HISTORY_LIMIT]
+    except Exception:
+        pass
+    return []
+
+_INITIAL_HISTORY = _load_initial_history()
+
 app.layout = html.Div(className="container", children=[
     # Enhanced tabs with icons
     dcc.Tabs(id="tabs", value="tab-news", className="tab-parent", children=[
         dcc.Tab(label="📊 News & Analysis", value="tab-news", className="tab"),
         dcc.Tab(label="💼 Strategy (Wallet)", value="tab-strategy", className="tab"),
         dcc.Tab(label="🔬 Research", value="tab-research", className="tab"),
-        # You can add the Market Vitals tab back here when you're ready
+        dcc.Tab(label="🕒 History", value="tab-history", className="tab"),
     ]),
     
     # Data stores
@@ -88,6 +106,10 @@ app.layout = html.Div(className="container", children=[
     dcc.Store(id="selected-idx"),
     dcc.Store(id="overall-summary"),
     dcc.Store(id="update-meta"),
+    # Research history (persist recent research runs; max HISTORY_LIMIT entries)
+    dcc.Store(id="research-history", data=_INITIAL_HISTORY),
+    # Selected history item (expanded)
+    dcc.Store(id="history-selected"),
     # One-shot interval to pre-list DigitalOcean models on first load
     dcc.Interval(id="do-models-primer", interval=300, n_intervals=0, max_intervals=1),
     
@@ -101,7 +123,7 @@ app.layout = html.Div(className="container", children=[
 research_layout = html.Div(
     style={"display": "grid", "gridTemplateColumns": "380px 1fr", "gap": "16px"},
     children=[
-        # --- NEW WIZARD-STYLE SIDEBAR ---
+        # --- WIZARD-STYLE SIDEBAR ---
         html.Div(
             className="card",
             style={"padding": "16px"},
@@ -186,7 +208,7 @@ research_layout = html.Div(
                                 id="execution-engine",
                                 options=[
                                     {'label': ' LangChain (Fast & Focused)', 'value': 'lang'},
-                                    {'label': ' AutoGen (Deep & Collaborative)', 'value': 'multi'},
+                                    #{'label': ' AutoGen (Deep & Collaborative)', 'value': 'multi'}, # Disabled for now 
                                 ],
                                 value='lang',
                                 className="radio-items"
@@ -355,10 +377,151 @@ research_layout = html.Div(
         
         # --- MAIN CONTENT AREA (UNCHANGED) ---
         html.Div(id="research-output-container", style={"paddingTop": "200px"}, children=[
-            dcc.Loading(id="research-loader", type="cube", color="#3b82f6", children=html.Div(id="research-content"))
+            dcc.Loading(id="research-loader", type="cube", color="#3b82f6", children=html.Div(id="research-content")),
         ]),
     ],
 )
+
+# History tab layout
+def history_tab_layout():
+    return html.Div(id="history-tab-content", style={"padding":"20px"})
+
+# History tab renderer (placed before server start so it registers)
+@app.callback(
+    Output("history-tab-content", "children"),
+    Input("research-history", "data"),
+    Input("tabs", "value"),
+    Input("history-selected", "data")
+)
+def render_history_tab(history, active_tab, selected_idx):
+    if active_tab != 'tab-history':
+        raise dash.exceptions.PreventUpdate
+    items = history or []
+    if not items:
+        return html.Div(className="card", style={"textAlign":"center","padding":"40px"}, children=[
+            html.Div("🕒", style={"fontSize":"48px","marginBottom":"12px"}),
+            html.Div("No research history yet", style={"fontSize":"18px","fontWeight":"500","marginBottom":"8px"}),
+            html.Div("Run some analysis to see your research timeline here", style={"color":"var(--text-muted)"})
+        ])
+
+    def _fmt_ts(ts):
+        try:
+            dt = datetime.fromisoformat(ts.replace('Z','+00:00'))
+            return dt.strftime('%b %d, %Y at %H:%M')
+        except Exception:
+            return ts
+
+    def _get_analysis_badge(analysis_type):
+        badge_styles = {
+            'combined': {'bg':'linear-gradient(135deg, #6366f1, #8b5cf6)', 'icon':'🔬'},
+            'technical': {'bg':'linear-gradient(135deg, #10b981, #059669)', 'icon':'📈'},
+            'fundamental': {'bg':'linear-gradient(135deg, #f59e0b, #d97706)', 'icon':'💰'},
+            'web': {'bg':'linear-gradient(135deg, #0ea5e9, #0284c7)', 'icon':'🌐'},
+        }
+        style = badge_styles.get(analysis_type, {'bg':'linear-gradient(135deg, #64748b, #475569)', 'icon':'🔍'})
+        return html.Span([
+            style['icon'], ' ', (analysis_type or 'Unknown').title()
+        ], style={
+            "background": style['bg'],
+            "color": "#fff",
+            "fontSize": "11px",
+            "padding": "4px 10px",
+            "borderRadius": "16px",
+            "fontWeight": "500",
+            "letterSpacing": "0.3px",
+            "textShadow": "0 1px 2px rgba(0,0,0,0.3)"
+        })
+
+    def _get_rec_badge(rec, conf):
+        if not rec:
+            return None
+        rec_colors = {
+            'buy': '#10b981', 'strong buy': '#059669',
+            'sell': '#ef4444', 'strong sell': '#dc2626', 
+            'hold': '#f59e0b'
+        }
+        color = rec_colors.get(rec.lower(), '#6366f1')
+        return html.Span([
+            "🎯 ", f"{rec} ({conf})"
+        ], style={
+            "background": color,
+            "color": "#fff",
+            "fontSize": "11px",
+            "padding": "4px 8px",
+            "borderRadius": "12px",
+            "fontWeight": "500"
+        })
+
+    nodes = []
+    for idx, h in enumerate(items):
+        is_expanded = (selected_idx == idx)
+        full_summary = h.get('summary', '')
+        # Create preview (first ~320 chars now, but break at sentence/word boundary)
+        # Increase preview length for more context before expansion
+        preview_length = 430
+        if len(full_summary) <= preview_length:
+            preview_text = full_summary
+        else:
+            # Try to break at sentence end first
+            preview_text = full_summary[:preview_length]
+            sentence_end = preview_text.rfind('. ')
+            if sentence_end > preview_length * 0.6:  # Only use sentence break if it's not too short
+                preview_text = preview_text[:sentence_end + 1]
+            else:
+                # Break at word boundary
+                space_pos = preview_text.rfind(' ')
+                if space_pos > preview_length * 0.8:
+                    preview_text = preview_text[:space_pos] + '...'
+                else:
+                    preview_text = preview_text + '...'
+        
+        card_id = {"type": "history-card", "index": idx}
+        
+        nodes.append(html.Div(
+            className="news-card clickable",
+            id=card_id,
+            n_clicks=0,
+            style={"marginBottom":"0"},  # Remove margin since we're using grid gap
+            children=[
+                html.Div(className="news-head", children=[
+                    html.Div("📊", style={"fontSize":"20px","marginRight":"8px"}),
+                    html.Div([
+                        html.Div(f"{h.get('symbol','?')} Analysis", className="news-title", style={"marginBottom":"4px"}),
+                        html.Div([
+                            _get_analysis_badge(h.get('analysis_type')),
+                            _get_rec_badge(h.get('recommendation'), h.get('rec_confidence')),
+                        ], style={"display":"flex","gap":"8px","alignItems":"center","flexWrap":"wrap"})
+                    ], style={"flex":"1"}),
+                ]),
+                html.Div(className="news-meta", children=[
+                    "🕒 ", _fmt_ts(h.get('ts', '')),
+                ]),
+                # Always show preview text (like news description)
+                html.Div(className="news-desc", children=preview_text),
+                # Expandable summary section (only shows when clicked)
+                html.Div(
+                    id={"type": "history-summary", "index": idx},
+                    className=("summary" + (" open" if is_expanded else "")),
+                    children=[
+                        html.Div("🤖 Full AI Analysis", className="summary-title"),
+                        # Render markdown so **bold** and headings show properly
+                        dcc.Markdown(
+                            full_summary,
+                            className="markdown-content",
+                            style={"lineHeight": "1.55", "whiteSpace": "pre-wrap"}
+                        )
+                    ]
+                )
+            ]
+        ))
+
+    return html.Div([
+        html.Div(style={"display":"flex","alignItems":"center","justifyContent":"space-between","marginBottom":"20px"}, children=[
+            html.H2("📚 Research History", style={"margin":"0","fontSize":"24px","fontWeight":"600"}),
+            html.Div(f"{len(items)} of {HISTORY_LIMIT} entries", style={"color":"var(--text-muted)","fontSize":"14px"})
+        ]),
+        html.Div(className="news-list", children=nodes, style={"display":"grid","gap":"16px"})
+    ])
 @app.callback(
     Output("web-results-container", "style"),
     Input("allow-web-search", "value")
@@ -374,11 +537,13 @@ def render_tab(tab):
     news_style = {"display": "block" if tab == "tab-news" else "none"}
     strategy_style = {"display": "block" if tab == "tab-strategy" else "none"}
     research_style = {"display": "block" if tab == "tab-research" else "none"}
+    history_style = {"display": "block" if tab == "tab-history" else "none"}
     
     return html.Div([
         html.Div(news_tab_layout(), style=news_style),
         html.Div(strategy_tab_layout(), style=strategy_style) if tab == "tab-strategy" else html.Div(),
         html.Div(research_layout, style=research_style) if tab == "tab-research" else html.Div(),
+        html.Div(history_tab_layout(), style=history_style) if tab == "tab-history" else html.Div(),
     ])
 # Test local LLM endpoint quickly
 @app.callback(
@@ -515,6 +680,7 @@ def update_tv(asset):
     Input("model-pref", "value"),
     Input("news-count", "value"),
     Input("news-days", "value"),
+    Input("tabs", "value"),
     State("news-do-model-dd", "value"),
     State("news-hf-model-dd", "value"),
     State("news-data", "data"),
@@ -522,7 +688,10 @@ def update_tv(asset):
     State("update-meta", "data"),
     prevent_initial_call=True,
 )
-def fetch_news(asset, refresh_clicks, model_pref, count, days_back, do_model_choice, hf_model_choice, existing_data, existing_overall, existing_meta):
+def fetch_news(asset, refresh_clicks, model_pref, count, days_back, current_tab, do_model_choice, hf_model_choice, existing_data, existing_overall, existing_meta):
+    # Do not perform heavy fetches when user isn't on News tab; just keep existing state
+    if current_tab != 'tab-news':
+        raise dash.exceptions.PreventUpdate
     
     ctx = dash.callback_context
     trig_id = (ctx.triggered[0]["prop_id"].split(".")[0] if ctx.triggered else "initial")
@@ -859,7 +1028,7 @@ def _toggle_provider_controls(model_pref):
     hide = {"display": "none"}
     return (show if mp == "do" else hide, show if mp == "hf" else hide)
 
-# --- START: WALLET STRATEGY SECTION (ALL FIXES APPLIED) ---
+# --- START: WALLET STRATEGY SECTION ---
 
 def generate_llm_strategy(chain, balance, token_count, tokens_list):
     """
@@ -975,7 +1144,7 @@ def analyze_wallet(n_clicks, chain, addr):
             fallback_note = blockchair_status_note or "Used fallback data source. For more detailed analysis, please add a Blockchair API key."
             
           
-        # --- DATA PARSING AND STRATEGY GENERATION (ALL FIXES APPLIED HERE) ---
+        # --- DATA PARSING AND STRATEGY GENERATION ---
         idea = []
         if chain == "bitcoin":
             # Bitcoin parsing logic
@@ -1077,9 +1246,9 @@ def show_refresh_status(meta, tab):
         return "", False
 
 try:
-    from agents_team import run_team_workflow as run_autogen_workflow
+    from agents.agents_team import run_team_workflow as run_autogen_workflow
 except Exception:
-    from agents import run_autogen_workflow
+    from agents.agents import run_autogen_workflow
 from telemetry import log_event, Timer
 
 # ---------------- Research callbacks ----------------
@@ -1169,6 +1338,7 @@ def list_hf_models_research(_primer):
 @app.callback(
     Output("research-content", "children"),
     Output("research-status", "children"),
+    Output("research-history", "data"),
     Input("research-run", "n_clicks"),
     State("analysis-type", "value"),
     State("execution-engine", "value"),
@@ -1199,6 +1369,7 @@ def list_hf_models_research(_primer):
     State("hf-base-url", "value"),
     State("hf-model", "value"),
     State("hf-model-dd", "value"),
+    State("research-history", "data"),
     prevent_initial_call=True,
 )
 def run_research(
@@ -1206,11 +1377,15 @@ def run_research(
     lookback_unit, indicators, length, rsi_length, macd_fast, macd_slow, macd_signal,
     speed_mode, autogen_max_turns, allow_web_search, web_max_results, ai_provider,
     llm_base_url, llm_model, llm_max_tokens, llm_temp, agent_rounds, do_base_url,
-    do_model_text, do_model_choice, hf_base_url, hf_model_text, hf_model_choice
+    do_model_text, do_model_choice, hf_base_url, hf_model_text, hf_model_choice,
+    existing_history
 ):
+    # Guard: only run when button actually clicked
+    if not n:
+        raise dash.exceptions.PreventUpdate
     symbol = (symbol_input or "").strip() if symbol_input else (symbol_dd or "").strip()
     if not symbol:
-        return html.Div("Enter a ticker."), "Idle"
+        return html.Div("Enter a ticker."), "Idle", (existing_history or [])
 
     try:
         if ai_provider: os.environ["AI_PROVIDER"] = str(ai_provider)
@@ -1253,17 +1428,15 @@ def run_research(
         "macd_slow": int(macd_slow or 26),
         "macd_signal_len": int(macd_signal or 9),
         "ai_provider": ai_provider,
-        # Add any other parameters the agents might need
+        "web_max_results": (int(web_max_results) if str(web_max_results).isdigit() else 6) if web_max_results is not None else 6,
     }
 
     try:
         with Timer() as t:
-            # 2. Call the single, clean orchestrator method
-            # Note we are now calling `execute_workflow`
             out = research.execute_workflow(config)
     except Exception as e:
         log_event("research_error", {"error": str(e)})
-        return html.Div(f"Analysis failed unexpectedly: {e}"), "Failed"
+        return html.Div(f"Analysis failed unexpectedly: {e}"), "Failed", (existing_history or [])
 
     # --- UI Rendering Section ---
     plan = out.get("plan", {})
@@ -1288,7 +1461,7 @@ def run_research(
         
         # Clean the justification text from the agent's output
         justification_text = tech.get('justification', 'No strategic summary was generated.')
-        cleaned_justification = strip_markdown_fences(justification_text) # <-- APPLY THE FIX HERE
+        cleaned_justification = strip_markdown_fences(justification_text)
 
         tech_section = html.Div([
             html.H4("Technical Analysis"),
@@ -1296,15 +1469,14 @@ def run_research(
             html.Div([
                 html.P(f"Recommendation: {tech.get('recommendation','N/A')} | Confidence: {tech.get('confidence','N/A')}"),
                 html.H5("Technical Strategy & Key Levels"),
-                dcc.Markdown( # Your component is correct!
-                    cleaned_justification # <-- USE THE CLEANED TEXT
+                dcc.Markdown(
+                    cleaned_justification #
                 )
             ])
         ], className="card", style={"padding":"12px"})
 
     ratios = out.get("ratios") or {}
     figs = out.get("figures") or {}
-    # --- GET THE NEW AI-GENERATED SUMMARY ---
     fundamental_summary_text = out.get("fundamental_summary")
     
     fundamentals_section = None
@@ -1312,14 +1484,13 @@ def run_research(
         kv_pairs = [("P/E (TTM)", ratios.get("pe_ttm")), ("P/S (TTM)", ratios.get("ps_ttm")), ("Debt/Equity", ratios.get("debt_to_equity")),
                     ("ROE", ratios.get("roe")), ("ROA", ratios.get("roa")), ("Gross Margin", ratios.get("gross_margin")),
                     ("Net Margin", ratios.get("net_margin"))]
-        # THIS IS THE CORRECTED STYLING FOR KEY RATIOS
         ratio_rows = [html.Div([
             html.Span(k), html.Span(f"{v:.2f}" if isinstance(v, (int, float)) else str(v))
         ], style={"display":"flex", "justifyContent":"space-between", "gap":"12px", "padding":"4px 0"}) for k,v in kv_pairs if v is not None]
         
         fund_children = []
 
-        # --- NEW: Add the AI-powered summary card at the top ---
+        # --- AI-powered summary card at the top ---
         if fundamental_summary_text:
             fund_children.append(
                 html.Div([
@@ -1338,15 +1509,36 @@ def run_research(
 
     news_items = out.get("news", [])
     news_summary = out.get("news_summary", {})
+    # Determine how many news to display: prefer the same limit used during fetch
+    desired_news_max = None
+    cfg_for_news = out.get("config", {})
+    # Prefer explicit fetched/requested counts if present
+    requested_raw = cfg_for_news.get("web_requested") or cfg_for_news.get("web_max_results") or cfg_for_news.get("news_max_results")
+    try:
+        desired_news_max = int(requested_raw) if requested_raw is not None else 0
+    except Exception:
+        desired_news_max = 0
+    fetched_count = len(news_items)
+    if desired_news_max <= 0:
+        desired_news_max = fetched_count
     news_section = None
     if analysis_type in ("web", "combined") and news_items:
         cards = [html.Div([
             html.A(it.get("title", "(no title)"), href=it.get("url"), target="_blank", className="news-title-link"),
             html.P(it.get("source",""), style={"fontSize":"12px", "color":"var(--text-muted)", "margin":"4px 0"}),
             html.P(it.get("ai_summary") or it.get("description") or "", style={"fontSize":"13px"})
-        ], className="card", style={"padding":"10px"}) for it in news_items[:6]]
+        ], className="card", style={"padding":"10px"}) for it in news_items[:desired_news_max]]
+        showing = min(desired_news_max, fetched_count)
+        req_note = ""
+        req = None
+        try:
+            req = int(requested_raw) if requested_raw is not None else None
+        except Exception:
+            req = None
+        if req is not None and req > fetched_count:
+            req_note = f" (requested {req})"
         news_section = html.Div([
-            html.H4("News & Sentiment"),
+            html.H4(f"News & Sentiment (showing {showing} of {fetched_count}{req_note})"),
             html.Div(cards, style={"display":"grid", "gap":"10px"}),
             dcc.Markdown(news_summary.get("summary",""), className="markdown-content", style={"marginTop":"15px"})
         ])
@@ -1365,15 +1557,14 @@ def run_research(
             dcc.Markdown(rec.get("justification",""), className="markdown-content")
         ], className="card", style={"padding":"12px"})
 
-    # --- Assemble Tabs (WITH CONVERSATIONS RESTORED) ---
+    # --- Assemble Tabs ---
     tabs, overview_children = [], []
     overview_children.extend([c for c in [plan_badge, profile_card, hol_section, rec_section] if c is not None])
     tabs.append(dcc.Tab(label="Overview", value="overview", children=html.Div(overview_children, style={"display":"grid", "gap":"15px"})))
     if tech_section: tabs.append(dcc.Tab(label="Technical", value="tech", children=tech_section))
     if fundamentals_section: tabs.append(dcc.Tab(label="Fundamentals", value="fund", children=fundamentals_section))
     if news_section: tabs.append(dcc.Tab(label="News", value="news", children=news_section))
-    
-    # --- ADD THIS ENTIRE BLOCK BACK IN ---
+
     conversations = out.get("conversations") or []
     if conversations:
         conv_nodes = []
@@ -1394,9 +1585,63 @@ def run_research(
     ])
     
     log_event("research_success", {"symbol": symbol, "duration_sec": getattr(t, 'elapsed', None)})
-    return main, "Done"
 
-# (Removed unused Testmail and Quick Research callbacks)
+    # --- History entry creation ---
+    try:
+        from datetime import datetime as _dt
+        hist_entry = {
+            "ts": _dt.now(timezone.utc).isoformat(),
+            "symbol": symbol.upper(),
+            "analysis_type": analysis_type,
+            "recommendation": (rec or {}).get("recommendation"),
+            "rec_confidence": (rec or {}).get("confidence"),
+            "summary": strip_markdown_fences(holistic_text or (rec or {}).get("justification") or fundamental_summary_text or ""),
+        }
+    except Exception:
+        hist_entry = {"ts": datetime.now(timezone.utc).isoformat(), "symbol": symbol.upper(), "analysis_type": analysis_type, "summary": "(unable to build summary)"}
+
+    current_history = existing_history or []
+    # Prepend new entry; enforce max HISTORY_LIMIT
+    try:
+        _limit_tail = max(HISTORY_LIMIT - 1, 0)
+    except Exception:
+        _limit_tail = 24  # fallback if constant missing
+    new_history = [hist_entry] + [h for h in current_history if isinstance(h, dict)][: _limit_tail]
+
+    # Persist to disk (best-effort)
+    try:
+        import json as _json, os as _os
+        hist_path = _BASE / "logs" / "research_history.json"
+        hist_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(hist_path, 'w', encoding='utf-8') as _f:
+            _json.dump(new_history, _f, indent=2)
+    except Exception as _e:  # non-fatal
+        print(f"[HISTORY] Failed to persist: {_e}")
+
+    return main, "Done", new_history
+
+# Expansion toggle for history items (now using clickable cards)
+@app.callback(
+    Output("history-selected", "data"),
+    Input({"type":"history-card","index": ALL}, "n_clicks"),
+    State("history-selected", "data"),
+    prevent_initial_call=True
+)
+def toggle_history_expansion(clicks, current):
+    if not clicks or not any(clicks):
+        raise dash.exceptions.PreventUpdate
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        raise dash.exceptions.PreventUpdate
+    trig = ctx.triggered_id
+    if isinstance(trig, dict) and 'index' in trig:
+        idx = trig['index']
+        # Collapse if same index clicked again
+        if current == idx:
+            return None
+        return idx
+    raise dash.exceptions.PreventUpdate
+
 
 if __name__ == "__main__":
     app.run_server(debug=True, host="127.0.0.1", port=8050)

@@ -16,3 +16,9 @@ autogen-ext[openai]>=0.3.0
 langchain>=0.2.10
 langchain-openai>=0.1.10
 streamlit>=1.36.0
+
+# Dev/test (optional; install separately if needed)
+# ruff==0.6.3
+# black==24.8.0
+# mypy==1.11.2
+# pytest==8.3.2
