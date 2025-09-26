@@ -1,4 +1,6 @@
 import os
+import logging
+import builtins
 import re
 import json
 import requests
@@ -22,6 +24,26 @@ except Exception:
 from pathlib import Path as _Path
 _BASE = _Path(__file__).resolve().parent
 _ASSETS_PATH = str(_BASE / "ui" / "assets")
+
+# --- Console logging controls ---
+_LOG_LEVEL = (os.getenv("LOG_LEVEL", "INFO") or "INFO").upper()
+_LEVEL_MAP = {
+    "CRITICAL": logging.CRITICAL,
+    "ERROR": logging.ERROR,
+    "WARNING": logging.WARNING,
+    "INFO": logging.INFO,
+    "DEBUG": logging.DEBUG,
+}
+logging.basicConfig(level=_LEVEL_MAP.get(_LOG_LEVEL, logging.INFO))
+# Quiet werkzeug/server logs if desired
+try:
+    logging.getLogger("werkzeug").setLevel(_LEVEL_MAP.get(_LOG_LEVEL, logging.INFO))
+except Exception:
+    pass
+
+if (os.getenv("DISABLE_CONSOLE_PRINTS", "").strip().lower() in ("1", "true", "yes")):
+    # Replace print with a no-op to silence ad-hoc printing
+    builtins.print = lambda *args, **kwargs: None
 
 # Configurable research history path (supports Render Disks or other mounts)
 def _history_file() -> _Path:
