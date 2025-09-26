@@ -160,14 +160,6 @@
     "summary": "Broadcom Inc. (AVGO) is trading at a high valuation, with a P/E ratio of 134.57 and a P/S ratio of 30.47, alongside a moderate debt-to-equity ratio of 1.45. The company's earnings have shown volatility. The technical analysis resulted in a 'Sell' recommendation with a high confidence level of 8, as the stock was in an uptrend but showing signs of being overbought (RSI of 77.1), indicating a potential for a reversal.\n\nIn contrast, the broader market news was positive, with major indices reaching new highs, which could provide a tailwind for the stock. The final 'Hold' recommendation is a result of these conflicting data points. The strategy suggests caution due to the strong technical sell signal and high valuation, but acknowledges that the positive market sentiment makes an outright sell risky. Therefore, holding the current position is advised until a clearer trend emerges."
   },
   {
-    "ts": "2025-09-11T10:59:14.843498+00:00",
-    "symbol": "AVGO",
-    "analysis_type": "combined",
-    "recommendation": "Hold",
-    "rec_confidence": 6,
-    "summary": "Broadcom Inc. shows a high valuation with a P/E ratio of 134.57 and a moderate debt-to-equity ratio of 1.45, suggesting the stock is priced for high growth. The company has seen steadily increasing annual EPS. The technical analysis resulted in a 'Sell' recommendation with a confidence of 8, indicating that despite the uptrend, the stock is overbought (RSI 77.1) and may be due for a correction. The news summary was mixed, with major indices hitting new highs but the Dow Jones showing weakness. The final 'Hold' recommendation reflects the conflict between the strong negative technical signal and the more ambiguous market sentiment, suggesting that while the stock is risky at its current price, the overall market trend does not support an aggressive short position."
-  },
-  {
     "ts": "2025-09-11T09:21:29.305786+00:00",
     "symbol": "AAPL",
     "analysis_type": "combined",

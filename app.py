@@ -23,6 +23,22 @@ from pathlib import Path as _Path
 _BASE = _Path(__file__).resolve().parent
 _ASSETS_PATH = str(_BASE / "ui" / "assets")
 
+# Configurable research history path (supports Render Disks or other mounts)
+def _history_file() -> _Path:
+    """Resolve path to research history JSON file.
+    Priority:
+    1) RESEARCH_HISTORY_PATH (full file path)
+    2) RESEARCH_STORAGE_DIR (directory to place research_history.json)
+    3) default: <project>/logs/research_history.json
+    """
+    p = os.getenv("RESEARCH_HISTORY_PATH")
+    if p:
+        return _Path(p)
+    d = os.getenv("RESEARCH_STORAGE_DIR")
+    if d:
+        return _Path(d) / "research_history.json"
+    return _BASE / "logs" / "research_history.json"
+
 # Instantiate Dash app early (before callbacks)
 app = Dash(
     __name__,
@@ -77,12 +93,12 @@ def strip_markdown_fences(text: str) -> str:
     return text.strip().strip('`').strip()
 
 # Layout with enhanced visual design
-HISTORY_LIMIT = 25  # maximum number of research history entries retained
+HISTORY_LIMIT = 100  # maximum number of research history entries retained
 
 def _load_initial_history():
     try:
         import json as _json
-        p = _BASE / "logs" / "research_history.json"
+        p = _history_file()
         if p.exists():
             return _json.loads(p.read_text(encoding='utf-8'))[:HISTORY_LIMIT]
     except Exception:
@@ -491,7 +507,25 @@ def render_history_tab(history, active_tab, selected_idx):
                             _get_analysis_badge(h.get('analysis_type')),
                             _get_rec_badge(h.get('recommendation'), h.get('rec_confidence')),
                         ], style={"display":"flex","gap":"8px","alignItems":"center","flexWrap":"wrap"})
-                    ], style={"flex":"1"}),
+                    ], style={"minWidth": "0"}),
+                    html.Button(
+                        "🗑️",
+                        id={"type": "history-delete", "index": idx},
+                        title="Delete this entry",
+                        n_clicks=0,
+                        className="btn",
+                        style={
+                            "padding": "4px 8px",
+                            "border": "1px solid var(--border-secondary)",
+                            "background": "var(--bg-elevated)",
+                            "borderRadius": "6px",
+                            "cursor": "pointer",
+                            "gridColumn": "3",
+                            "gridRow": "1",
+                            "justifySelf": "end",
+                            "alignSelf": "start",
+                        }
+                    ),
                 ]),
                 html.Div(className="news-meta", children=[
                     "🕒 ", _fmt_ts(h.get('ts', '')),
@@ -516,9 +550,25 @@ def render_history_tab(history, active_tab, selected_idx):
         ))
 
     return html.Div([
-        html.Div(style={"display":"flex","alignItems":"center","justifyContent":"space-between","marginBottom":"20px"}, children=[
+        html.Div(style={"display":"flex","alignItems":"center","justifyContent":"space-between","marginBottom":"20px","gap":"12px"}, children=[
             html.H2("📚 Research History", style={"margin":"0","fontSize":"24px","fontWeight":"600"}),
-            html.Div(f"{len(items)} of {HISTORY_LIMIT} entries", style={"color":"var(--text-muted)","fontSize":"14px"})
+            html.Div(style={"display":"flex","alignItems":"center","gap":"10px"}, children=[
+                html.Div(f"{len(items)} of {HISTORY_LIMIT} entries", style={"color":"var(--text-muted)","fontSize":"14px"}),
+                html.Button(
+                    "Clear All",
+                    id="history-clear-all",
+                    className="btn",
+                    n_clicks=0,
+                    title="Delete all history",
+                    style={
+                        "padding": "6px 10px",
+                        "border": "1px solid var(--border-secondary)",
+                        "background": "var(--bg-elevated)",
+                        "borderRadius": "6px",
+                        "cursor": "pointer"
+                    }
+                ),
+            ])
         ]),
         html.Div(className="news-list", children=nodes, style={"display":"grid","gap":"16px"})
     ])
@@ -992,10 +1042,11 @@ def render_overall(overall, asset, tab_value, meta, news_data):
 @app.callback(
     Output("selected-idx", "data"),
     Input({"type": "news-card", "index": ALL}, "n_clicks"),
+    Input({"type": "history-delete", "index": ALL}, "n_clicks"),
     State("selected-idx", "data"),
     prevent_initial_call=True,
 )
-def toggle_selected(n_clicks, current_selected_idx):
+def toggle_selected(n_clicks, delete_clicks, current_selected_idx):
     # If no cards have been clicked yet, do nothing
     if not any(n_clicks):
         raise dash.exceptions.PreventUpdate
@@ -1007,6 +1058,9 @@ def toggle_selected(n_clicks, current_selected_idx):
 
     # The ID of the clicked element is a dictionary, e.g., {'type': 'news-card', 'index': 1}
     triggered_id = ctx.triggered_id
+    # Ignore delete button triggers here so they don't toggle expansion
+    if isinstance(triggered_id, dict) and triggered_id.get("type") == "history-delete":
+        raise dash.exceptions.PreventUpdate
     clicked_index = triggered_id['index'] if isinstance(triggered_id, dict) else None
     
     # If the user clicks the same card that is already open, close it
@@ -1611,12 +1665,12 @@ def run_research(
     # Persist to disk (best-effort)
     try:
         import json as _json, os as _os
-        hist_path = _BASE / "logs" / "research_history.json"
+        hist_path = _history_file()
         hist_path.parent.mkdir(parents=True, exist_ok=True)
         with open(hist_path, 'w', encoding='utf-8') as _f:
             _json.dump(new_history, _f, indent=2)
     except Exception as _e:  # non-fatal
-        print(f"[HISTORY] Failed to persist: {_e}")
+        print(f"[HISTORY] Failed to persist to {str(hist_path)}: {_e}")
 
     return main, "Done", new_history
 
@@ -1641,6 +1695,70 @@ def toggle_history_expansion(clicks, current):
             return None
         return idx
     raise dash.exceptions.PreventUpdate
+
+# --- Deletion controls for history ---
+@app.callback(
+    Output("research-history", "data", allow_duplicate=True),
+    Output("history-selected", "data", allow_duplicate=True),
+    Input({"type": "history-delete", "index": ALL}, "n_clicks"),
+    State("research-history", "data"),
+    State("history-selected", "data"),
+    prevent_initial_call=True,
+)
+def delete_history_item(delete_clicks, history, selected_idx):
+    if not delete_clicks or not any(delete_clicks):
+        raise dash.exceptions.PreventUpdate
+    try:
+        ctx = dash.callback_context
+        trig = ctx.triggered_id
+        if isinstance(trig, dict) and "index" in trig:
+            idx = trig["index"]
+        else:
+            raise dash.exceptions.PreventUpdate
+        new_hist = []
+        for i, item in enumerate(history or []):
+            if i == idx:
+                continue
+            new_hist.append(item)
+        # Persist
+        try:
+            import json as _json
+            p = _history_file()
+            p.parent.mkdir(parents=True, exist_ok=True)
+            with open(p, "w", encoding="utf-8") as f:
+                _json.dump(new_hist[:HISTORY_LIMIT], f, indent=2)
+        except Exception as e:
+            print(f"[HISTORY] Delete persist failed: {e}")
+        # Adjust selected index if needed
+        new_selected = None
+        if isinstance(selected_idx, int):
+            if selected_idx == idx:
+                new_selected = None
+            elif selected_idx > idx:
+                new_selected = selected_idx - 1
+            else:
+                new_selected = selected_idx
+        return new_hist[:HISTORY_LIMIT], new_selected
+    except Exception:
+        raise dash.exceptions.PreventUpdate
+
+@app.callback(
+    Output("research-history", "data", allow_duplicate=True),
+    Input("history-clear-all", "n_clicks"),
+    prevent_initial_call=True,
+)
+def clear_all_history(n):
+    if not n:
+        raise dash.exceptions.PreventUpdate
+    try:
+        import json as _json
+        p = _history_file()
+        p.parent.mkdir(parents=True, exist_ok=True)
+        with open(p, "w", encoding="utf-8") as f:
+            _json.dump([], f)
+    except Exception as e:
+        print(f"[HISTORY] Clear-all persist failed: {e}")
+    return []
 
 
 if __name__ == "__main__":
