@@ -1,7 +1,11 @@
 from typing import Dict, Any, List
 import json
 import re
-from services import ResearchOrchestrator, NewsBridge  # Use local module since services.py is in the same directory
+# Import services with package-safe relative import first, fallback to absolute for script execution
+try:
+    from ..services import ResearchOrchestrator, NewsBridge
+except Exception:
+    from services import ResearchOrchestrator, NewsBridge  # Fallback when running inside dash folder
 
 
 _orchestrator = ResearchOrchestrator(news_bridge=NewsBridge())
@@ -97,9 +101,9 @@ def _extract_params_from_request(user_request: str) -> Dict[str, Any]:
     }
 
 
-def run_autogen_workflow(user_request: str) -> Dict[str, Any]:
-    """Compatibility shim: executes the in-project research pipeline and returns a JSON string.
-    When AutoGen is configured, this can be swapped to a real multi-agent team run.
+def run_research_workflow(user_request: str) -> Dict[str, Any]:
+    """Single public entrypoint for the UI: executes the in-project research pipeline and returns a JSON string.
+    Backward-compat alias `run_autogen_workflow` is provided for older imports.
     """
     try:
         from telemetry import log_event
@@ -176,3 +180,7 @@ def run_autogen_workflow(user_request: str) -> Dict[str, Any]:
     except Exception:
         pass
     return out
+
+
+# Backward compatibility: keep the previous function name used across the UI
+run_autogen_workflow = run_research_workflow

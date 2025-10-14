@@ -80,6 +80,18 @@ class Settings:
             self.temperature: float = float(os.getenv("TEMPERATURE", "0.1"))
         except Exception:
             self.temperature = 0.1
+
+        # HTTP timeout for OpenAI-compatible calls (seconds)
+        for key in ("LLM_HTTP_TIMEOUT", "LOCAL_LLM_TIMEOUT", "LLM_TIMEOUT"):
+            raw = os.getenv(key)
+            if raw:
+                try:
+                    self.local_llm_timeout = max(float(raw), 1.0)
+                    break
+                except Exception:
+                    continue
+        else:
+            self.local_llm_timeout = 180.0
         self.log_level: str = os.getenv("LOG_LEVEL", "INFO")
         self.disable_api_keys: bool = (os.getenv("DISABLE_API_KEYS", "false").strip().lower() in ("1", "true", "yes", "on"))
 
@@ -707,12 +719,22 @@ class Analyst:
 
         try:
             base = self.local_llm_url.rstrip("/")
-            response = requests.post(f"{base}/chat/completions", headers=headers, json=chat_payload_schema, timeout=45)
+            response = requests.post(
+                f"{base}/chat/completions",
+                headers=headers,
+                json=chat_payload_schema,
+                timeout=settings.local_llm_timeout,
+            )
 
             if response.status_code == 400 and "response_format" in (response.text or "").lower():
                 chat_payload_text = dict(chat_payload_simple)
                 chat_payload_text["response_format"] = {"type": "text"}
-                response = requests.post(f"{base}/chat/completions", headers=headers, json=chat_payload_text, timeout=45)
+                response = requests.post(
+                    f"{base}/chat/completions",
+                    headers=headers,
+                    json=chat_payload_text,
+                    timeout=settings.local_llm_timeout,
+                )
 
             if response.status_code == 200:
                 data = response.json()
@@ -726,7 +748,12 @@ class Analyst:
                 return self._parse_llm_response(raw_text)
 
             # Fallback: try /completions endpoint
-            resp2 = requests.post(f"{base}/completions", headers=headers, json=completions_payload, timeout=45)
+            resp2 = requests.post(
+                f"{base}/completions",
+                headers=headers,
+                json=completions_payload,
+                timeout=settings.local_llm_timeout,
+            )
             if resp2.status_code == 200:
                 data2 = resp2.json()
                 raw_text2 = data2.get("choices", [{}])[0].get("text", "")

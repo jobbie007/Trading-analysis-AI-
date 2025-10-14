@@ -16,6 +16,7 @@ autogen-ext[openai]>=0.3.0
 langchain>=0.2.10
 langchain-openai>=0.1.10
 streamlit>=1.36.0
+rank-bm25>=0.2.2
 
 # Dev/test (optional; install separately if needed)
 # ruff==0.6.3

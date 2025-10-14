@@ -1,15 +1,22 @@
 import os
 import pathlib
-import requests
 import json
 import logging
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any, Tuple, Callable
 import textwrap
+import time
 import pandas as pd
 import plotly.graph_objects as go
 import requests as _requests
 from urllib.parse import urlparse
+import json as _json
+from dataclasses import asdict as _asdict
+import re
+try:
+    from rank_bm25 import BM25Okapi as _BM25
+except Exception:
+    _BM25 = None
 try:
     # Prefer canonical utils package
     from utils.json_utils import extract_json_object  # type: ignore
@@ -73,6 +80,36 @@ def _get_app_logger() -> logging.Logger:
             logger.addHandler(sh)
     return logger
 
+
+def _resolve_llm_timeout(default: float = 180.0) -> float:
+    """Load HTTP timeout for LLM calls from env, fallback to default."""
+    for key in ("LLM_HTTP_TIMEOUT", "LOCAL_LLM_TIMEOUT", "LLM_TIMEOUT"):
+        raw = os.getenv(key)
+        if not raw:
+            continue
+        try:
+            val = float(raw)
+            if val > 0:
+                return val
+        except Exception:
+            continue
+    return default
+
+
+_LLM_HTTP_TIMEOUT = _resolve_llm_timeout()
+
+
+def strip_markdown_fences(text: str) -> str:
+    """Remove wrapping markdown fences from text if present."""
+    if not isinstance(text, str):
+        return ""
+    import re as _re
+
+    match = _re.search(r"^```(?:\w+)?\n(.*)\n```$", text, _re.DOTALL | _re.MULTILINE)
+    if match:
+        return match.group(1).strip()
+    return text.strip().strip('`').strip()
+
 # Lazy single import of yfinance
 def _get_yf():
     global yf
@@ -90,6 +127,72 @@ class Task:
     agent_name: str  # The name of the agent method to call
     output_key: str  # Where to store the result in the final output dictionary
     params: Dict[str, Any] = field(default_factory=dict)
+
+# ---- Lightweight Retrieval (BM25) ----
+_BM25_INDEX_PATH = _PROJECT_ROOT / "dash" / "dev" / "docs" / "index_bm25.json"
+
+def _bm25_retrieve(query: str, top_k: int = 3) -> list[str]:
+    """Return top-k supporting text chunks for a query using a prebuilt BM25 corpus.
+
+    Build corpus via dev/scripts/ingest_docs.py. Fails gracefully if index is missing.
+    """
+    try:
+        if not _BM25 or not _BM25_INDEX_PATH.exists():
+            return []
+        data = _json.loads(_BM25_INDEX_PATH.read_text(encoding="utf-8"))
+        texts = data.get("texts") or []
+        tokenized = data.get("tokenized") or []
+        if not texts or not tokenized:
+            return []
+        bm25 = _BM25(tokenized)
+        scores = bm25.get_scores(query.lower().split())
+        # top-k indices
+        top_idx = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[: max(1, top_k)]
+        return [texts[i] for i in top_idx]
+    except Exception:
+        return []
+
+# ---- Schema validation and self-critique ----
+def _validate_json_schema(obj: Any, required_keys: list[str]) -> tuple[bool, list[str]]:
+    """Lightweight validator: ensure required keys exist and are non-empty.
+
+    Returns (ok, errors).
+    """
+    errs: list[str] = []
+    if not isinstance(obj, dict):
+        return False, ["output is not a JSON object"]
+    for k in required_keys:
+        if k not in obj:
+            errs.append(f"missing key: {k}")
+        else:
+            v = obj[k]
+            if v is None or (isinstance(v, str) and not v.strip()):
+                errs.append(f"empty value for key: {k}")
+    return len(errs) == 0, errs
+
+
+def _self_critique_repair(raw_text: Optional[str], required_keys: list[str], *, system_msg: str, ask_func: Callable[[str, str, str], Optional[str]]) -> Optional[str]:
+    """If raw_text fails json/schema, prompt the model to repair with minimal instruction.
+
+    ask_func(provider, system, user) should return new text or None.
+    """
+    try:
+        if not raw_text:
+            return None
+        obj = extract_json_object(raw_text)
+        ok, errs = _validate_json_schema(obj or {}, required_keys)
+        if ok:
+            return raw_text
+        repair_user = (
+            "Your previous output was invalid for the following reasons: "
+            + "; ".join(errs)
+            + ". Return ONLY valid JSON with the keys: "
+            + ", ".join(required_keys)
+            + ". No prose."
+        )
+        return ask_func("auto", system_msg, repair_user) or raw_text
+    except Exception:
+        return raw_text
 
 # ---- Serper.dev Google Search (key-rotation) ----
 class _SerperClient:
@@ -312,7 +415,12 @@ class NewsBridge:
                 "stream": False,
             }
             
-            r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+            r = _requests.post(
+                f"{base_url}/chat/completions",
+                headers=headers,
+                json=payload,
+                timeout=_LLM_HTTP_TIMEOUT,
+            )
             self.logger.info("news._query_llm: provider=%s model=%s status=%s", provider_config.get("name", "Unknown"), model, r.status_code)
 
             if r.status_code != 200:
@@ -345,26 +453,61 @@ class NewsBridge:
         # Unified provider order (gemini-first by default, overridable via env)
         order: List[str] = self._provider_order(model_preference)
 
+        # --- Workload caps to keep Dash callbacks responsive ---
+        try:
+            analyze_cap = int(os.getenv("ANALYZE_MAX_ARTICLES", "8"))
+        except Exception:
+            analyze_cap = 8
+        try:
+            per_article_budget = float(os.getenv("ANALYZE_ARTICLE_BUDGET_SEC", "8"))
+        except Exception:
+            per_article_budget = 8.0
+        try:
+            total_budget = float(os.getenv("ANALYZE_TOTAL_BUDGET_SEC", "20"))
+        except Exception:
+            total_budget = 20.0
+        overall_start = time.time()
+
         system_msg = ("You are a financial news analyst. Given an article, return a compact JSON with keys: "
                       "'summary' (2-4 sentences), 'sentiment_label' (bullish|bearish|neutral), and 'sentiment_score' (a float between -1 and 1).")
         
+        analyzed_count = 0
         for a in arts:
+            # Respect overall time budget
+            if (time.time() - overall_start) > total_budget:
+                self.logger.warning("news.fetch: total analysis budget exceeded; stopping at %d items", analyzed_count)
+                break
+            if analyzed_count >= max(0, analyze_cap):
+                break
             try:
+                try:
+                    clip_len = int(os.getenv("ANALYZE_CONTENT_CLIP", "4000") or 4000)
+                    if clip_len < 500:
+                        clip_len = 500
+                    if clip_len > 16000:
+                        clip_len = 16000
+                except Exception:
+                    clip_len = 4000
                 user_msg = textwrap.dedent(f"""
                     Title: {getattr(a, 'title', '')}
                     Description: {getattr(a, 'description', '')}
-                    Content: {(getattr(a, 'content', '') or '')[:8000]}
+                    Content: {(getattr(a, 'content', '') or '')[:clip_len]}
                     Return only a JSON object, no extra text. Do not include any chain-of-thought or analysis outside JSON.
                 """)
                 messages = [{"role": "system", "content": system_msg}, {"role": "user", "content": user_msg}]
                 
                 analysis_done = False
+                item_start = time.time()
                 # Try providers in order: for 'gemini' and 'bridgelocal' use bridge callers
                 bridge_callers: Dict[str, Callable] = {
                     "gemini": lambda: hasattr(self.analyst, "_query_gemini") and self.analyst._query_gemini(messages),
                     "bridgelocal": lambda: hasattr(self.analyst, "_query_local_llm") and self.analyst._query_local_llm(messages),
                 }
                 for prov in order:
+                    # Enforce per-article budget
+                    if (time.time() - item_start) > per_article_budget:
+                        self.logger.info("news.fetch: per-article budget exceeded for provider=%s", prov)
+                        break
                     parsed: Optional[Dict[str, Any]] = None
                     if prov in providers:
                         raw_text = self._query_llm(providers[prov], messages, 0.2)
@@ -382,6 +525,7 @@ class NewsBridge:
                         setattr(a, 'analysis_provider', prov)
                         self.last_logs.append(f"{asset} | {prov.upper()} | {(a.title or '')[:80]}")
                         analysis_done = True
+                        analyzed_count += 1
                         break
 
                 if analysis_done:
@@ -393,49 +537,28 @@ class NewsBridge:
                 provider = (self._last_provider or "fallback").lower()
                 setattr(a, 'analysis_provider', provider)
                 self.last_logs.append(f"{asset} | {provider.upper()} | {(a.title or '')[:80]}")
+                analyzed_count += 1
             except Exception:
                 continue
 
-        return [NewsItem(**{k: getattr(a, k, v) for k, v in NewsItem.__dataclass_fields__.items()}) for a in arts]
+        def _coerce_news_item(a) -> NewsItem:
+            # Safely build NewsItem with JSON-serializable primitives only
+            return NewsItem(
+                title=str(getattr(a, 'title', '') or ''),
+                url=str(getattr(a, 'url', '') or ''),
+                description=str(getattr(a, 'description', '') or ''),
+                published_at=str(getattr(a, 'published_at', '') or ''),
+                source=str(getattr(a, 'source', '') or ''),
+                content=str(getattr(a, 'content', '') or ''),
+                ai_summary=str(getattr(a, 'ai_summary', '') or ''),
+                sentiment_label=str(getattr(a, 'sentiment_label', '') or ''),
+                sentiment_score=float(getattr(a, 'sentiment_score', 0.0) or 0.0),
+                analysis_provider=str(getattr(a, 'analysis_provider', '') or ''),
+            )
+
+        return [_coerce_news_item(a) for a in arts]
     
-    def _get_technical_ai_summary(self, symbol: str, tech_summary: str, model_preference: str = "auto") -> Dict[str, Any]:
-        system_msg = textwrap.dedent("""
-            You are an expert technical analyst. Based on the provided technical indicators for a stock, you will:
-            1. Provide a recommendation: "Buy", "Sell", or "Hold".
-            2. Provide a confidence score for your recommendation on a scale of 1 to 10.
-            3. Provide a detailed justification for your recommendation, referencing the specific indicator values provided.
-            Respond in a JSON format with three keys: "recommendation", "confidence", "justification".
-        """)
-        user_msg = f"Symbol: {symbol}\n\nTechnical Summary:\n{tech_summary}"
-        messages = [{"role": "system", "content": system_msg}, {"role": "user", "content": user_msg}]
-
-        ai_provider = (os.getenv("AI_PROVIDER", model_preference) or "auto").strip().lower()
-        providers_config = self._get_provider_config()
-
-        order: List[str] = self._provider_order(ai_provider)
-
-        bridge_callers: Dict[str, Callable] = {
-            "gemini": lambda: hasattr(self.analyst, "_query_gemini") and self.analyst._query_gemini(messages),
-            "bridgelocal": lambda: hasattr(self.analyst, "_query_local_llm") and self.analyst._query_local_llm(messages)
-        }
-        
-        for prov in order:
-            result = None
-            if prov in providers_config:
-                raw_text = self._query_llm(providers_config[prov], messages, 0.1)
-                if raw_text: result = self._extract_json_object(raw_text)
-            elif prov in bridge_callers:
-                result = bridge_callers[prov]()
-
-            if isinstance(result, dict):
-                return result
-        
-        for prov in {"bridgelocal", "gemini"}:
-            if prov not in order:
-                result = bridge_callers.get(prov, lambda: None)()
-                if isinstance(result, dict): return result
-        
-        return {}
+    
     
     def summarize_overall(self, asset: str, items: List[NewsItem], *, model_preference: str = "auto", max_chars: int = 20000) -> Dict[str, str]:
         if self.fetcher:
@@ -738,6 +861,8 @@ class ResearchOrchestrator:
         macd_fast: int,
         macd_slow: int,
         macd_signal_len: int,
+        trades: Optional[List[Dict[str, Any]]] = None,
+        levels: Optional[List[Dict[str, Any]]] = None,
     ) -> Tuple[go.Figure, str]:
         """Create a multi-panel technical chart and a brief textual summary.
         Returns (figure, summary_text). Raises if hist is missing/empty.
@@ -793,14 +918,44 @@ class ResearchOrchestrator:
         fig = make_subplots(rows=3, cols=1, shared_xaxes=True, vertical_spacing=0.05, row_heights=[0.6, 0.2, 0.2])
         # Price panel
         fig.add_trace(
-            go.Candlestick(x=df.index, open=df[_col("Open")], high=high, low=low, close=df[_col("Close")], name="Price"),
+            go.Candlestick(
+                x=df.index,
+                open=df[_col("Open")],
+                high=high,
+                low=low,
+                close=df[_col("Close")],
+                name="Price",
+                increasing=dict(line=dict(color="#10b981"), fillcolor="#065f46"),
+                decreasing=dict(line=dict(color="#ef4444"), fillcolor="#7f1d1d"),
+            ),
             row=1, col=1
         )
         fig.add_trace(go.Scatter(x=df.index, y=sma, name=f"SMA({length})", line=dict(color="#eab308")), row=1, col=1)
         fig.add_trace(go.Scatter(x=df.index, y=ema20, name="EMA(20)", line=dict(color="#22c55e")), row=1, col=1)
         fig.add_trace(go.Scatter(x=df.index, y=ema50, name="EMA(50)", line=dict(color="#3b82f6")), row=1, col=1)
-        fig.add_trace(go.Scatter(x=df.index, y=bb_u, name="BBand U", line=dict(color="#94a3b8", width=1), opacity=0.8), row=1, col=1)
-        fig.add_trace(go.Scatter(x=df.index, y=bb_l, name="BBand L", line=dict(color="#94a3b8", width=1), opacity=0.8), row=1, col=1)
+        # Bollinger Bands with fill between lower and upper
+        fig.add_trace(
+            go.Scatter(
+                x=df.index,
+                y=bb_l,
+                name="BBand L",
+                line=dict(color="#64748b", width=1),
+                opacity=0.5
+            ),
+            row=1, col=1
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=df.index,
+                y=bb_u,
+                name="BBand U",
+                line=dict(color="#64748b", width=1),
+                fill="tonexty",
+                fillcolor="rgba(100,116,139,0.10)",
+                opacity=0.6
+            ),
+            row=1, col=1
+        )
 
         # RSI panel
         fig.add_trace(go.Scatter(x=df.index, y=rsi, name=f"RSI({rsi_length})", line=dict(color="#f97316")), row=2, col=1)
@@ -811,9 +966,146 @@ class ResearchOrchestrator:
         fig.add_trace(go.Scatter(x=df.index, y=macd_line, name="MACD", line=dict(color="#14b8a6")), row=3, col=1)
         fig.add_trace(go.Scatter(x=df.index, y=macd_signal, name="Signal", line=dict(color="#a78bfa")), row=3, col=1)
 
-        fig.update_layout(template="plotly_dark", height=800, margin=dict(l=10, r=10, t=40, b=10), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+        fig.update_layout(
+            template="plotly_dark",
+            height=820,
+            margin=dict(l=10, r=10, t=40, b=10),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+            hovermode="x unified",
+        )
         fig.update_xaxes(showgrid=False)
         fig.update_yaxes(showgrid=True, gridcolor="#1f2937")
+
+        # Compress gaps by hiding weekends and missing weekdays (holidays) for daily charts
+        try:
+            idx = pd.to_datetime(df.index)
+            if len(idx) > 3:
+                # Determine if chart is approximately daily resolution (>= ~20h median step)
+                idx_sorted = idx.sort_values()
+                diffs = (idx_sorted[1:] - idx_sorted[:-1]).to_series(index=idx_sorted[1:])
+                median_sec = float(diffs.median().total_seconds()) if not diffs.empty else 0.0
+                is_daily = median_sec >= 20 * 3600
+                if is_daily:
+                    start = idx.min().normalize()
+                    end = idx.max().normalize()
+                    # Business days series (weekdays only)
+                    bdays = pd.date_range(start=start, end=end, freq="B")
+                    present = set(idx.normalize())
+                    # Holidays/missed weekdays are those business days not in present
+                    missing = [d.strftime("%Y-%m-%d") for d in bdays if d not in present]
+                    # Only hide weekends if the dataset itself does not include weekend candles (i.e., equities)
+                    dows = set(pd.to_datetime(idx).dayofweek.tolist())
+                    rb = []
+                    if 5 not in dows and 6 not in dows:
+                        rb.append(dict(bounds=["sat", "mon"]))
+                    if missing:
+                        # Limit to reasonable size for performance
+                        rb.append(dict(values=missing[-1000:]))
+                    if rb:
+                        fig.update_xaxes(rangebreaks=rb)
+        except Exception:
+            pass
+
+        # --- Optional trade overlays (buy/sell markers and guide lines) ---
+        try:
+            if trades:
+                def _ts(val: Any):
+                    try:
+                        return pd.to_datetime(val)
+                    except Exception:
+                        return None
+                for tr in trades:
+                    ts = _ts(tr.get("time"))
+                    price = tr.get("price")
+                    side = (tr.get("side") or "").lower()
+                    qty = tr.get("qty") or tr.get("quantity") or None
+                    if ts is None or price is None or side not in ("buy", "sell"):
+                        continue
+                    color = "#10b981" if side == "buy" else "#ef4444"
+                    symbol = "triangle-up" if side == "buy" else "triangle-down"
+                    # Marker at trade price
+                    fig.add_trace(
+                        go.Scatter(
+                            x=[ts], y=[price], mode="markers",
+                            marker=dict(color=color, size=11, symbol=symbol, line=dict(color="#111827", width=1)),
+                            name=f"{side.title()}",
+                            hovertemplate=(
+                                f"<b>{side.title()}</b><br>Time: {{x}}<br>Price: {{y:.4f}}" + ("<br>Qty: %s" % qty if qty else "") +
+                                "<extra></extra>"
+                            ),
+                        ),
+                        row=1, col=1
+                    )
+                    # Vertical guide line at trade time
+                    fig.add_vline(
+                        x=ts,
+                        line_dash="dot",
+                        line_color=color,
+                        opacity=0.4,
+                        row=1, col=1
+                    )
+        except Exception:
+            pass
+
+        # --- Optional horizontal levels (support/resistance/fib/etc.) ---
+        try:
+            if levels:
+                # Deduplicate and select a small set of most relevant levels near the last close
+                last_close = float(close.iloc[-1]) if len(close) else None
+                # Price window: use recent visible range to drop extreme/out-of-range lines
+                try:
+                    win = df.tail(min(len(df), 200))
+                    pmin = float(win[_col("Low")].min())
+                    pmax = float(win[_col("High")].max())
+                except Exception:
+                    pmin, pmax = (None, None)
+
+                # group near-duplicates (within 0.1% of price or absolute 0.05)
+                def _key(v: float) -> float:
+                    return round(float(v), 2)
+
+                dedup: dict[float, dict] = {}
+                for lv in levels:
+                    v = lv.get("value")
+                    if v is None:
+                        continue
+                    v = float(v)
+                    if pmin is not None and pmax is not None and (v < pmin*0.98 or v > pmax*1.02):
+                        # Skip far outside recent range
+                        continue
+                    k = _key(v)
+                    if k not in dedup:
+                        dedup[k] = {"value": v, "label": lv.get("label") or "Level", "color": lv.get("color") or "#6366f1"}
+                    else:
+                        # prefer Support/Resistance labels if encountered later
+                        if (lv.get("label") or "").lower() in ("support", "resistance"):
+                            dedup[k].update({"label": lv.get("label")})
+
+                items = list(dedup.values())
+                # Priority sort: support/resistance first, then nearest to last_close
+                def _prio(it: dict) -> tuple:
+                    lbl = (it.get("label") or "").lower()
+                    pri = 0 if lbl in ("support", "resistance") else 1
+                    if last_close is None:
+                        return (pri, 0.0)
+                    return (pri, abs(float(it.get("value")) - last_close))
+                items.sort(key=_prio)
+                # Cap to a reasonable count to avoid clutter
+                for it in items[:8]:
+                    val = float(it.get("value"))
+                    label = it.get("label") or "Level"
+                    color = it.get("color") or "#6366f1"
+                    fig.add_hline(y=val, line_color=color, opacity=0.45, line_dash="dash")
+                    try:
+                        fig.add_annotation(
+                            xref="paper", x=0.995, y=val, yref="y",
+                            xanchor="right", showarrow=False, text=label, font=dict(color=color, size=11),
+                            bgcolor="rgba(0,0,0,0.2)", bordercolor=color, borderwidth=1, borderpad=2
+                        )
+                    except Exception:
+                        pass
+        except Exception:
+            pass
 
         # Summary of last values
         try:
@@ -834,6 +1126,83 @@ class ResearchOrchestrator:
             summary = ""
 
         return fig, summary
+
+    # ----- Helper: parse AI strategy text for price levels -----
+    @staticmethod
+    def _parse_levels_from_text(text: Optional[str]) -> List[Dict[str, Any]]:
+        levels: List[Dict[str, Any]] = []
+        if not text:
+            return levels
+        try:
+            # Normalize whitespace for easier scanning
+            t = re.sub(r"\s+", " ", text)
+
+            # Helper to decide label/color from context around the number
+            def _intent(ctx: str, base_label: str) -> tuple[str, str]:
+                c = ctx.lower()
+                # Entry triggers
+                if ("enter" in c or "buy" in c) and ("above" in c or "breaks above" in c):
+                    return ("Buy Trigger", "#10b981")
+                if ("enter" in c or "short" in c or "sell short" in c) and ("below" in c or "breaks below" in c):
+                    return ("Short Trigger", "#ef4444")
+                # Take profit / reduce
+                if any(k in c for k in ["take profit", "tp", "reduce", "trim", "profit"]):
+                    return ("Take Profit", "#f59e0b")
+                # Support/Resistance hints
+                if "support" in c:
+                    return ("Support", "#22c55e")
+                if "resistance" in c:
+                    return ("Resistance", "#ef4444")
+                # Default to base
+                palette = {
+                    "Fibonacci": "#6366f1",
+                    "Period High": "#0ea5e9",
+                    "Period Low": "#0ea5e9",
+                    "S1": "#22c55e",
+                    "R1": "#ef4444",
+                    "S2": "#16a34a",
+                    "R2": "#dc2626",
+                }
+                return (base_label, palette.get(base_label, "#6366f1"))
+
+            # 1) Explicit S/R and period highs/lows
+            simple_patterns = [
+                (r"resistance[^\d]{0,40}(\d+(?:\.\d+)?)", "Resistance"),
+                (r"support[^\d]{0,40}(\d+(?:\.\d+)?)", "Support"),
+                (r"period\s+high[^\d]{0,40}(\d+(?:\.\d+)?)", "Period High"),
+                (r"period\s+low[^\d]{0,40}(\d+(?:\.\d+)?)", "Period Low"),
+                (r"\bS1\b[^\d]{0,20}(\d+(?:\.\d+)?)", "S1"),
+                (r"\bR1\b[^\d]{0,20}(\d+(?:\.\d+)?)", "R1"),
+                (r"\bS2\b[^\d]{0,20}(\d+(?:\.\d+)?)", "S2"),
+                (r"\bR2\b[^\d]{0,20}(\d+(?:\.\d+)?)", "R2"),
+            ]
+            for pat, base in simple_patterns:
+                for m in re.finditer(pat, t, flags=re.IGNORECASE):
+                    try:
+                        val = float(m.group(1))
+                        # Look back a bit for intent hints
+                        start = max(0, m.start() - 60)
+                        ctx = t[start:m.end()+10]
+                        label, color = _intent(ctx, base)
+                        levels.append({"value": val, "label": label, "color": color})
+                    except Exception:
+                        continue
+
+            # 2) Fibonacci with ratio in label
+            for m in re.finditer(r"(0\.236|0\.382|0\.5|0\.618|0\.786)\s*fibonacci[^\d]{0,40}(\d+(?:\.\d+)?)", t, flags=re.IGNORECASE):
+                try:
+                    ratio = m.group(1)
+                    val = float(m.group(2))
+                    start = max(0, m.start() - 60)
+                    ctx = t[start:m.end()+10]
+                    base = f"Fib {ratio}"
+                    label, color = _intent(ctx, base)
+                    levels.append({"value": val, "label": label if label not in ("Support", "Resistance") else f"{label} ({base})", "color": color})
+                except Exception:
+                    continue
+        except Exception:
+            return levels
+        return levels
 
     def wallet_strategy_agent(self, chain: str, balance: float, token_count: int, tokens_list: List[str]) -> List[str]:
         """
@@ -878,7 +1247,12 @@ class ResearchOrchestrator:
             if api_key and api_key != "not-needed":
                 headers["Authorization"] = f"Bearer {api_key}"
                 
-            response = requests.post(f"{base_url.rstrip('/')}/chat/completions", headers=headers, json=payload, timeout=25)
+            response = _requests.post(
+                f"{base_url.rstrip('/')}/chat/completions",
+                headers=headers,
+                json=payload,
+                timeout=_LLM_HTTP_TIMEOUT,
+            )
             response.raise_for_status()
             
             content = response.json()['choices'][0]['message']['content']
@@ -1282,7 +1656,12 @@ class ResearchOrchestrator:
                     "max_tokens": max_tokens,
                     "stream": False,
                 }
-                resp = _requests.post(f"{base}/chat/completions", headers=headers, json=payload, timeout=45)
+                resp = _requests.post(
+                    f"{base}/chat/completions",
+                    headers=headers,
+                    json=payload,
+                    timeout=_LLM_HTTP_TIMEOUT,
+                )
                 if resp.status_code == 200:
                     data = resp.json()
                     raw_text = (
@@ -1316,7 +1695,12 @@ class ResearchOrchestrator:
                     "max_tokens": max_tokens,
                     "stream": False,
                 }
-                resp = _requests.post(f"{base}/chat/completions", headers=headers, json=payload, timeout=45)
+                resp = _requests.post(
+                    f"{base}/chat/completions",
+                    headers=headers,
+                    json=payload,
+                    timeout=_LLM_HTTP_TIMEOUT,
+                )
                 if resp.status_code == 200:
                     data = resp.json()
                     raw_text = (
@@ -1714,7 +2098,12 @@ class ResearchOrchestrator:
                     "temperature": float(os.getenv("LOCAL_LLM_TEMPERATURE", "0.2") or 0.2),
                     "max_tokens": int(os.getenv("LOCAL_LLM_MAX_TOKENS", "4096") or 4096), "stream": False,
                 }
-                r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+                r = _requests.post(
+                    f"{base_url}/chat/completions",
+                    headers=headers,
+                    json=payload,
+                    timeout=_LLM_HTTP_TIMEOUT,
+                )
                 if r.status_code == 200:
                     data = r.json()
                     raw_text = (
@@ -1742,7 +2131,12 @@ class ResearchOrchestrator:
                     "temperature": float(os.getenv("LOCAL_LLM_TEMPERATURE", "0.2") or 0.2),
                     "max_tokens": int(os.getenv("LOCAL_LLM_MAX_TOKENS", "4096") or 4096), "stream": False,
                 }
-                r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+                r = _requests.post(
+                    f"{base_url}/chat/completions",
+                    headers=headers,
+                    json=payload,
+                    timeout=_LLM_HTTP_TIMEOUT,
+                )
                 if r.status_code == 200:
                     data = r.json()
                     raw_text = (
@@ -1770,7 +2164,12 @@ class ResearchOrchestrator:
                     "temperature": float(os.getenv("LOCAL_LLM_TEMPERATURE", "0.2") or 0.2),
                     "max_tokens": int(os.getenv("LOCAL_LLM_MAX_TOKENS", "4096") or 4096), "stream": False,
                 }
-                r = _requests.post(f"{base_url}/chat/completions", headers=headers, json=payload, timeout=45)
+                r = _requests.post(
+                    f"{base_url}/chat/completions",
+                    headers=headers,
+                    json=payload,
+                    timeout=_LLM_HTTP_TIMEOUT,
+                )
                 if r.status_code == 200:
                     data = r.json()
                     raw_text = (
@@ -1858,40 +2257,124 @@ class ResearchOrchestrator:
         )
         user_msg = json.dumps(snapshot, default=str)
 
+        def _fmt_pct(x, fallback="N/A"):
+            try:
+                return f"{float(x) * 100:.1f}%"
+            except Exception:
+                return fallback
+
+        def _fmt_num(x, digits=2, fallback="N/A"):
+            try:
+                return f"{float(x):.{digits}f}"
+            except Exception:
+                return fallback
+
+        rev_growth = earnings.get("revenue_growth_pct") if isinstance(earnings.get("revenue_growth_pct"), list) else []
+        eps_growth = earnings.get("earnings_growth_pct") if isinstance(earnings.get("earnings_growth_pct"), list) else []
+
+        def _compose_markdown(extra_narrative: Optional[str] = None) -> str:
+            title = f"{prof.get('name', symbol)} ({symbol})" if prof else symbol
+            sections: List[str] = [f"# {title} Comprehensive Analysis"]
+
+            # Company profile
+            profile_bits: List[str] = []
+            if prof:
+                sector = prof.get("sector")
+                industry = prof.get("industry")
+                summary = prof.get("longBusinessSummary") or prof.get("summary")
+                if sector or industry:
+                    profile_bits.append(
+                        f"{prof.get('name', symbol)} operates in the {sector or 'N/A'} sector within the {industry or 'broader market'} industry."
+                    )
+                if summary:
+                    profile_bits.append(summary.strip())
+            if profile_bits:
+                sections.append("### Company Profile\n" + " ".join(profile_bits))
+
+            # Financial analysis
+            if ratios:
+                pe = _fmt_num(ratios.get("pe_ttm"))
+                ps = _fmt_num(ratios.get("ps_ttm"))
+                de = _fmt_num(ratios.get("debt_to_equity"))
+                gm = _fmt_pct(ratios.get("gross_margin"))
+                nm = _fmt_pct(ratios.get("net_margin"))
+                fin_section = [
+                    f"Valuation metrics show a P/E of {pe} and a P/S of {ps}, framing how the market prices earnings and sales.",
+                    f"Leverage sits at a debt-to-equity ratio of {de}, while profitability is underscored by a gross margin of {gm} and net margin of {nm}."
+                ]
+                sections.append("### Financial Analysis\n" + " ".join(fin_section))
+
+            # Earnings analysis
+            earnings_lines: List[str] = []
+            if rev_growth:
+                earnings_lines.append(
+                    "Revenue growth (q/q) over the last periods: " + ", ".join(
+                        _fmt_num(x, digits=2, fallback="n/a") for x in rev_growth[-4:]
+                    ) + "."
+                )
+            if eps_growth:
+                earnings_lines.append(
+                    "Earnings growth (q/q) prints: " + ", ".join(
+                        _fmt_num(x, digits=2, fallback="n/a") for x in eps_growth[-4:]
+                    ) + "."
+                )
+            if earnings_lines:
+                sections.append("### Earnings Analysis\n" + " ".join(earnings_lines))
+
+            # Technical section
+            if tech:
+                tech_summary = tech.get("summary") or "No technical summary available."
+                rec = tech.get("recommendation", "N/A")
+                conf = tech.get("confidence", "N/A")
+                sections.append(
+                    "### Technical Analysis\n" + f"{tech_summary.strip()} The current signal is **{rec}** with confidence {conf}."
+                )
+
+            # News sentiment
+            if news and news.get("summary"):
+                sections.append("### News Sentiment Analysis\n" + str(news.get("summary")).strip())
+
+            # Narrative from LLM
+            if extra_narrative:
+                cleaned = strip_markdown_fences(extra_narrative)
+                sections.append("### Narrative Highlights\n" + cleaned.strip())
+
+            # Data quality notes
+            if errors:
+                sections.append("### Data Quality Notes\n" + " ".join(errors))
+
+            # Recommendations
+            rec_points: List[str] = []
+            if tech and tech.get("recommendation"):
+                rec_points.append(
+                    f"Watch the technical setup: the system currently signals **{tech.get('recommendation')}** with confidence {tech.get('confidence', 'N/A')} — adjust exposure if momentum shifts."
+                )
+            if rev_growth:
+                rec_points.append("Monitor quarterly revenue trends to confirm any re-acceleration before leaning more bullish.")
+            if ratios:
+                rec_points.append(
+                    f"Benchmark valuation (P/E { _fmt_num(ratios.get('pe_ttm')) }, P/S { _fmt_num(ratios.get('ps_ttm')) }) against peers to judge whether the premium is justified."
+                )
+            if news and news.get("summary"):
+                rec_points.append("Stay alert to new headlines that could alter sentiment or guidance, especially around product strategy and regulation.")
+            if not rec_points:
+                rec_points.append("Gather additional data; limited insights prevented a detailed recommendation.")
+            sections.append("### Key Findings & Recommendations\n" + "\n".join(f"- {pt}" for pt in rec_points))
+
+            # Missing metric warnings
+            if ratios and (ratios.get("pe_ttm") in (None, 0) or ratios.get("ps_ttm") in (None, 0)):
+                sections.append(
+                    "### Warning\nCore valuation metrics (P/E or P/S) are missing; valuation conclusions should be treated cautiously."
+                )
+
+            return "\n\n".join(sections)
+
         llm_text = self._llm_generate(system_msg, user_msg, ai_provider=ai_provider)
         if isinstance(llm_text, str) and llm_text.strip():
-            return "HolisticAnalysisAgent: LLM", llm_text.strip()
+            return "HolisticAnalysisAgent: LLM", _compose_markdown(llm_text.strip())
 
-        # Heuristic fallback with anomaly detection
-        def _fmt_pct(x):
-            try:
-                return f"{float(x)*100:.1f}%"
-            except Exception:
-                return "n/a"
-        lines: List[str] = []
-        if prof:
-            lines.append(f"Company: {prof.get('name', symbol)} | Sector: {prof.get('sector','')} | Industry: {prof.get('industry','')}")
-        if ratios:
-            lines.append(
-                "Valuation & Profitability: "
-                f"P/E={ratios.get('pe_ttm')} | P/S={ratios.get('ps_ttm')} | D/E={ratios.get('debt_to_equity')} | "
-                f"Gross Margin={_fmt_pct(ratios.get('gross_margin'))} | Net Margin={_fmt_pct(ratios.get('net_margin'))}"
-            )
-        if earnings:
-            rg = earnings.get('revenue_growth_pct')
-            eg = earnings.get('earnings_growth_pct')
-            if rg or eg:
-                lines.append(f"Earnings Momentum: revenue q/q % {rg[-4:] if isinstance(rg, list) else 'n/a'}; earnings q/q % {eg[-4:] if isinstance(eg, list) else 'n/a'}")
-        if tech:
-            lines.append(f"Technicals: {tech.get('summary','No technical summary')}. Rec {tech.get('recommendation','N/A')} (Conf {tech.get('confidence','N/A')}).")
-        if news and news.get('summary'):
-            lines.append("News & Sentiment: " + str(news.get('summary'))[:500])
-        if errors:
-            lines.append("Data Quality Notes: " + "; ".join(errors))
-        # Flag critical missing metrics
-        if ratios and (ratios.get('pe_ttm') in (None, 0) or ratios.get('ps_ttm') in (None, 0)):
-            lines.append("Warning: Core valuation metrics (P/E or P/S) missing; valuation conclusions may be unreliable.")
-        return "HolisticAnalysisAgent: heuristic", "\n".join([l for l in lines if l])
+        # If LLM failed, fall back to heuristic template
+        return "HolisticAnalysisAgent: heuristic", _compose_markdown()
 
     def recommendation_agent(self, symbol: str, notebook: Dict[str, Any], ai_provider: str = "auto") -> Tuple[str, Dict[str, Any]]:
         """Provide Buy/Hold/Sell with confidence and detailed justification using a summarized notebook."""
@@ -2112,6 +2595,12 @@ class ResearchOrchestrator:
                 tech_fig, tech_summary = self.synthesis_agent_for_technicals(price_df, indicators, length, rsi_length, macd_fast, macd_slow, macd_signal_len)
                 ai_rec = self._get_technical_ai_summary(symbol, tech_summary, model_preference=ai_provider) or {}
                 _m, strategy_text = self.technical_strategist_agent(symbol, price_df, tech_summary, ai_provider=ai_provider)
+                # Parse levels from strategy text to render guides on the chart
+                parsed_levels = self._parse_levels_from_text(strategy_text)
+                # Rebuild the figure with levels (avoid recomputing indicators by reusing inputs)
+                tech_fig, _ = self.synthesis_agent_for_technicals(
+                    price_df, indicators, length, rsi_length, macd_fast, macd_slow, macd_signal_len, trades=None, levels=parsed_levels
+                )
                 
                 outputs["technical"] = notebook["technical"] = {
                     "summary": tech_summary,

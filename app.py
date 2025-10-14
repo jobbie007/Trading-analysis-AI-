@@ -1,16 +1,19 @@
 import os
-import logging
-import builtins
 import re
 import json
 import requests
+import logging
 from urllib.parse import urlparse
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 load_dotenv() # Ensures environment variables are loaded at the very start
 import dash
 from dash import Dash, dcc, html, Input, Output, State, ALL
-from services import NewsBridge, ResearchOrchestrator
+# Import services with package-safe relative import first, then fallback for script execution
+try:
+    from .services import NewsBridge, ResearchOrchestrator, strip_markdown_fences
+except Exception:
+    from services import NewsBridge, ResearchOrchestrator, strip_markdown_fences
 import plotly.graph_objects as go
 # Import tab layouts; handle both package and script execution paths
 try:
@@ -24,26 +27,6 @@ except Exception:
 from pathlib import Path as _Path
 _BASE = _Path(__file__).resolve().parent
 _ASSETS_PATH = str(_BASE / "ui" / "assets")
-
-# --- Console logging controls ---
-_LOG_LEVEL = (os.getenv("LOG_LEVEL", "INFO") or "INFO").upper()
-_LEVEL_MAP = {
-    "CRITICAL": logging.CRITICAL,
-    "ERROR": logging.ERROR,
-    "WARNING": logging.WARNING,
-    "INFO": logging.INFO,
-    "DEBUG": logging.DEBUG,
-}
-logging.basicConfig(level=_LEVEL_MAP.get(_LOG_LEVEL, logging.INFO))
-# Quiet werkzeug/server logs if desired
-try:
-    logging.getLogger("werkzeug").setLevel(_LEVEL_MAP.get(_LOG_LEVEL, logging.INFO))
-except Exception:
-    pass
-
-if (os.getenv("DISABLE_CONSOLE_PRINTS", "").strip().lower() in ("1", "true", "yes")):
-    # Replace print with a no-op to silence ad-hoc printing
-    builtins.print = lambda *args, **kwargs: None
 
 # Configurable research history path (supports Render Disks or other mounts)
 def _history_file() -> _Path:
@@ -61,6 +44,93 @@ def _history_file() -> _Path:
         return _Path(d) / "research_history.json"
     return _BASE / "logs" / "research_history.json"
 
+# Simple disk cache for News tab (reuses recent fetched cards)
+def _news_cache_file() -> _Path:
+    d = _BASE / "logs"
+    try:
+        d.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
+    return d / "news_cache.json"
+
+def _news_cache_load() -> dict:
+    try:
+        p = _news_cache_file()
+        if p.exists():
+            return json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    return {}
+
+def _news_cache_save(cache: dict) -> None:
+    try:
+        p = _news_cache_file()
+        p.write_text(json.dumps(cache), encoding="utf-8")
+    except Exception:
+        pass
+
+def _news_cache_get(key: str, ttl_minutes: int) -> tuple[list[dict], dict, dict] | None:
+    try:
+        # Allow disabling cache via env for quick recovery/debugging
+        if str(os.getenv("NEWS_CACHE_DISABLE", "")).strip().lower() in ("1", "true", "yes", "on"):
+            return None
+        cache = _news_cache_load()
+        entry = (cache or {}).get(key)
+        if not entry:
+            return None
+        ts = entry.get("meta", {}).get("ts")
+        if not ts:
+            return None
+        try:
+            dt = datetime.fromisoformat(ts.replace('Z','+00:00'))
+        except Exception:
+            return None
+        age = datetime.now(timezone.utc) - (dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc))
+        if age.total_seconds() > max(1, ttl_minutes) * 60:
+            return None
+        items = entry.get("items") or []
+        overall = entry.get("overall") or {}
+        meta = entry.get("meta") or {}
+        # basic shape checks
+        if not isinstance(items, list) or not isinstance(overall, dict) or not isinstance(meta, dict):
+            return None
+        return items, overall, meta
+    except Exception:
+        return None
+
+def _news_cache_put(key: str, items: list[dict], overall: dict, meta: dict) -> None:
+    try:
+        # Allow disabling cache via env for quick recovery/debugging
+        if str(os.getenv("NEWS_CACHE_DISABLE", "")).strip().lower() in ("1", "true", "yes", "on"):
+            return
+        # Skip caching obviously bad results to avoid freezing the UI in an error state
+        try:
+            provider = (overall or {}).get("provider", "")
+            summary_txt = (overall or {}).get("summary", "")
+            missing_ai = sum(1 for it in (items or []) if not (it or {}).get("ai_summary"))
+            total = len(items or [])
+            # Consider result low-quality if overall failed or majority of items lack ai_summary
+            low_quality = (provider == "error") or (not summary_txt) or (total > 0 and missing_ai >= max(1, total // 2))
+        except Exception:
+            low_quality = False
+
+        if low_quality:
+            # Don't cache low-quality results; let next call try again soon
+            return
+
+        cache = _news_cache_load()
+        cache[key] = {"items": items, "overall": overall, "meta": meta}
+        # Optional: cap cache size
+        if len(cache) > 100:
+            # Drop oldest by ts
+            try:
+                cache = dict(sorted(cache.items(), key=lambda kv: (kv[1].get("meta",{}).get("ts") or ""), reverse=True)[:80])
+            except Exception:
+                pass
+        _news_cache_save(cache)
+    except Exception:
+        pass
+
 # Instantiate Dash app early (before callbacks)
 app = Dash(
     __name__,
@@ -70,8 +140,114 @@ app = Dash(
 )
 server = app.server
 
+# Optionally silence noisy access logs like "POST /_dash-update-component 204".
+try:
+    _silence = str(os.getenv("SILENCE_ACCESS_LOGS", "1")).strip().lower() in ("1", "true", "yes", "on")
+    if _silence:
+        logging.getLogger("werkzeug").setLevel(logging.ERROR)
+        # Also quiet Dash/Flask app loggers
+        try:
+            app.logger.setLevel(logging.ERROR)
+            server.logger.setLevel(logging.ERROR)
+        except Exception:
+            pass
+except Exception:
+    pass
+
 # Explicit set of crypto tickers for TradingView mapping
 CRYPTO_ASSETS = {"BTC", "ETH", "SOL"}
+
+# Low-end model filter keywords (DRY across callbacks)
+LOW_END_MODEL_KEYWORDS = [
+    "7b", "8b", "9b", "10b", "12b", "13b", "15b", "20b", "mini", "tiny", "small"
+]
+
+# Curated HF models shown in dropdowns
+CURATED_HF_MODELS = [
+    {"label": "Qwen/Qwen3-4B-Base (default)", "value": "Qwen/Qwen3-4B-Base"},
+]
+
+# --- Symbol autocomplete support ---
+# Default popular symbols shown when there is no search input
+DEFAULT_SYMBOL_OPTIONS = [
+    {"label": x, "value": x}
+    for x in [
+        # Mega-cap tech
+        "AAPL", "MSFT", "GOOGL", "META", "AMZN", "TSLA", "NVDA", "AMD", "NFLX", "INTC",
+        # Popular ETFs and commodities
+        "VOO", "SPY", "QQQ", "IWM", "DIA", "GLD", "SLV",
+        # Top crypto pairs
+        "BTC-USD", "ETH-USD",
+        # Semis and TSMC/ASML frequently searched
+        "TSM", "ASML"
+    ]
+]
+
+# Research-specific defaults (symbol only, no names needed)
+RESEARCH_SYMBOL_OPTIONS = DEFAULT_SYMBOL_OPTIONS
+
+_SYMBOL_INDEX_CACHE: list[dict] | None = None
+
+def _symbols_index_path() -> _Path:
+    return _BASE / "dev" / "docs" / "symbols.json"
+
+def _load_symbol_index() -> list[dict]:
+    """Load a local symbol index JSON if present.
+
+    Expected format: list of {"symbol": "AAPL", "name": "Apple Inc.", "exchange": "NASDAQ"}
+    Falls back to an empty list if not found.
+    """
+    global _SYMBOL_INDEX_CACHE
+    if _SYMBOL_INDEX_CACHE is not None:
+        return _SYMBOL_INDEX_CACHE
+    try:
+        p = _symbols_index_path()
+        if p.exists():
+            data = json.loads(p.read_text(encoding="utf-8"))
+            if isinstance(data, list):
+                _SYMBOL_INDEX_CACHE = data
+                return _SYMBOL_INDEX_CACHE
+    except Exception:
+        pass
+    _SYMBOL_INDEX_CACHE = []
+    return _SYMBOL_INDEX_CACHE
+
+def _search_symbols(query: str, limit: int = 20) -> list[dict]:
+    """Return dropdown options matching the query from the local index.
+
+    Matches symbol prefix aggressively; also matches by name substring.
+    """
+    q = (query or "").strip()
+    if not q:
+        return DEFAULT_SYMBOL_OPTIONS
+    q_upper = q.upper()
+    q_lower = q.lower()
+    idx = _load_symbol_index() or []
+    # If no index, still offer default popular list filtered by prefix
+    if not idx:
+        base = [opt for opt in DEFAULT_SYMBOL_OPTIONS if opt["value"].startswith(q_upper)]
+        return base[: max(5, min(limit, 20))]
+    out: list[dict] = []
+    for row in idx:
+        sym = (row.get("symbol") or "").upper()
+        name = (row.get("name") or "").strip()
+        exch = (row.get("exchange") or "").strip()
+        # Prioritize symbol prefix match, then name contains
+        if sym.startswith(q_upper) or (name and q_lower in name.lower()):
+            label_parts = [sym]
+            if name:
+                label_parts.append(f"— {name}")
+            if exch:
+                label_parts.append(f"({exch})")
+            label = " ".join(label_parts)
+            out.append({"label": label, "value": sym})
+            if len(out) >= limit:
+                break
+    # Fallback: if no results, show default filtered by prefix
+    if not out:
+        base = [opt for opt in DEFAULT_SYMBOL_OPTIONS if opt["value"].startswith(q_upper)]
+        return base[: max(5, min(limit, 20))]
+    return out
 
 # Service singletons
 bridge = NewsBridge()
@@ -104,15 +280,30 @@ def tv_symbol(asset: str) -> str:
             return a[:-len(suf)]
     return a
 
-def strip_markdown_fences(text: str) -> str:
-    """Removes markdown code fences from the start and end of a string."""
-    if not isinstance(text, str):
-        return ""
-    match = re.search(r"^```(?:\w+)?\n(.*)\n```$", text, re.DOTALL | re.MULTILINE)
-    if match:
-        return match.group(1).strip()
-    
-    return text.strip().strip('`').strip()
+def _get_do_model_options(base_url: str) -> list[dict]:
+    """Fetch DO models and return filtered low-end options; returns empty on error.
+
+    Uses DO_AI_API_KEY or DIGITALOCEAN_AI_API_KEY from env.
+    """
+    try:
+        base = (base_url or "https://inference.do-ai.run/v1").rstrip("/")
+        key = os.getenv("DO_AI_API_KEY") or os.getenv("DIGITALOCEAN_AI_API_KEY")
+        if not key:
+            return []
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {key}"}
+        r = requests.get(f"{base}/models", headers=headers, timeout=20)
+        if r.status_code != 200:
+            return []
+        data = r.json() or {}
+        opts = []
+        for m in (data.get("data") or [])[:200]:
+            mid = (m.get("id") or m.get("name") or "").lower()
+            if mid and any(k in mid for k in LOW_END_MODEL_KEYWORDS):
+                lab = m.get("id") or m.get("name")
+                opts.append({"label": lab, "value": lab})
+        return opts
+    except Exception:
+        return []
 
 # Layout with enhanced visual design
 HISTORY_LIMIT = 100  # maximum number of research history entries retained
@@ -129,37 +320,74 @@ def _load_initial_history():
 
 _INITIAL_HISTORY = _load_initial_history()
 
-app.layout = html.Div(className="container", children=[
-    # Enhanced tabs with icons
-    dcc.Tabs(id="tabs", value="tab-news", className="tab-parent", children=[
-        dcc.Tab(label="📊 News & Analysis", value="tab-news", className="tab"),
-        dcc.Tab(label="💼 Strategy (Wallet)", value="tab-strategy", className="tab"),
-        dcc.Tab(label="🔬 Research", value="tab-research", className="tab"),
-        dcc.Tab(label="🕒 History", value="tab-history", className="tab"),
-    ]),
-    
-    # Data stores
-    dcc.Store(id="news-data"),
-    dcc.Store(id="active-asset"),
-    dcc.Store(id="selected-idx"),
-    dcc.Store(id="overall-summary"),
-    dcc.Store(id="update-meta"),
-    # Research history (persist recent research runs; max HISTORY_LIMIT entries)
-    dcc.Store(id="research-history", data=_INITIAL_HISTORY),
-    # Selected history item (expanded)
-    dcc.Store(id="history-selected"),
-    # One-shot interval to pre-list DigitalOcean models on first load
-    dcc.Interval(id="do-models-primer", interval=300, n_intervals=0, max_intervals=1),
-    
-    # Tab content container
-    html.Div(id="tab-content")
-])
+def serve_layout():
+    return html.Div(
+        className="container",
+        children=[
+            # Enhanced tabs with icons
+            dcc.Tabs(
+                id="tabs",
+                value="tab-news",
+                className="tab-parent",
+                children=[
+                    dcc.Tab(label="📊 News & Analysis", value="tab-news", className="tab"),
+                    dcc.Tab(label="💼 Strategy (Wallet)", value="tab-strategy", className="tab"),
+                    dcc.Tab(label="🔬 Research", value="tab-research", className="tab"),
+                    dcc.Tab(label="🕒 History", value="tab-history", className="tab"),
+                ],
+            ),
+
+            # Data stores
+            dcc.Store(id="news-data"),
+            dcc.Store(id="active-asset"),
+            dcc.Store(id="selected-idx"),
+            dcc.Store(id="overall-summary"),
+            dcc.Store(id="update-meta"),
+            # Research history (persist recent research runs; max HISTORY_LIMIT entries)
+            dcc.Store(id="research-history", data=_INITIAL_HISTORY),
+            # Persist the last selected tab across reloads (e.g., dev hot reload)
+            dcc.Store(id="tabs-memory", storage_type="local"),
+            # Selected history item (expanded)
+            dcc.Store(id="history-selected"),
+            # One-shot interval to pre-list DigitalOcean models on first load
+            dcc.Interval(id="do-models-primer", interval=300, n_intervals=0, max_intervals=1),
+            # One-shot primer to restore the last selected tab
+            dcc.Interval(id="tabs-primer", interval=300, n_intervals=0, max_intervals=1),
+
+            # Tab content container (keep tab children mounted and toggle visibility via style)
+            html.Div(
+                id="tab-content",
+                children=[
+                    html.Div(
+                        id="tab-news-container",
+                        children=news_tab_layout(),
+                        style={"display": "block"},
+                    ),
+                    html.Div(
+                        id="tab-strategy-container",
+                        children=strategy_tab_layout(),
+                        style={"display": "none"},
+                    ),
+                    html.Div(
+                        id="tab-research-container",
+                        children=research_layout,
+                        style={"display": "none"},
+                    ),
+                    html.Div(
+                        id="tab-history-container",
+                        children=history_tab_layout(),
+                        style={"display": "none"},
+                    ),
+                ],
+            ),
+        ],
+    )
 
 # Tab 1 and 2 layouts are imported from layouts/ modules
 
 # Tab 3: Research (multi-agent) layout (redesigned for specified agents)
 research_layout = html.Div(
-    style={"display": "grid", "gridTemplateColumns": "380px 1fr", "gap": "16px"},
+    style={"display": "grid", "gridTemplateColumns": "400px 1fr", "gap": "16px"},
     children=[
         # --- WIZARD-STYLE SIDEBAR ---
         html.Div(
@@ -171,18 +399,13 @@ research_layout = html.Div(
                 dcc.Tabs(id="config-wizard-tabs", value='tab-mission', className="wizard-tabs", children=[
                     
                     # --- STEP 1: DEFINE THE MISSION ---
-                    dcc.Tab(label='1. Mission', value='tab-mission', className="wizard-tab", children=[
+                    dcc.Tab(label='1. Mission ✨', value='tab-mission', className="wizard-tab", children=[
                         html.Div(className="wizard-step", children=[
                             html.Label("Ticker Symbol"),
                             html.Div([
                                 dcc.Dropdown(
                                     id="research-symbol-dd",
-                                    options=[
-                                        {"label": x, "value": x} for x in [
-                                            "AAPL","MSFT","GOOGL","META","AMZN","TSLA","NVDA","AMD","NFLX","INTC",
-                                            "SPY","QQQ","IWM","DIA","GLD","SLV","BTC-USD","ETH-USD"
-                                        ]
-                                    ],
+                                    options=RESEARCH_SYMBOL_OPTIONS,
                                     value="AAPL",
                                     clearable=False,
                                     searchable=True,
@@ -323,19 +546,7 @@ research_layout = html.Div(
                             html.Details([
                                 html.Summary("AI Agent Parameters"),
                                 html.Div(className="details-content", children=[
-                                     html.Label("AutoGen Max Turns"),
-                                    dcc.Dropdown(
-                                        id="autogen-max-turns",
-                                        options=[
-                                            {"label": "3 (Fast)", "value": 3},
-                                            {"label": "5 (Balanced)", "value": 5},
-                                            {"label": "8 (Thorough)", "value": 8},
-                                            {"label": "12 (Deep)", "value": 12},
-                                        ],
-                                        value=5,
-                                        clearable=False,
-                                    ),
-                                    html.Label("Agent Rounds (LangChain)"),
+                                    html.Label("Agent Rounds"),
                                     dcc.Input(id="agent-rounds", type="number", value=2, min=1, max=6, step=1, style={"width": "100%"}),
                                 ])
                             ]),
@@ -349,8 +560,8 @@ research_layout = html.Div(
                                             id="ai-provider",
                                             options=[
                                                 {"label": "Auto", "value": "auto"},
-                                                {"label": "Local (OpenAI-compatible)", "value": "local"},
-                                                {"label": "Gemini (marketNews)", "value": "gemini"},
+                                                {"label": "Local (LM STUDIO)", "value": "local"},
+                                                {"label": "Gemini", "value": "gemini"},
                                                 {"label": "DigitalOcean Inference", "value": "do"},
                                                 {"label": "Hugging Face (Router)", "value": "hf"},
                                             ],
@@ -366,8 +577,8 @@ research_layout = html.Div(
                                     ]),
                                     html.Div([
                                         html.Label("Local Model"),
-                                        dcc.Input(id="llm-model", type="text", value=DEFAULT_LLM_MODEL, placeholder="llama-3.1-8b-instruct", style={"width": "100%"}),
-                                        dcc.Dropdown(id="llm-model-dd", options=[], placeholder="Pick Local model (optional)", style={"marginTop": "6px"}),
+                                        dcc.Input(id="llm-model", type="text", value=DEFAULT_LLM_MODEL, placeholder="qwen/qwen3-4b-2507", style={"width": "100%"}),
+                                        dcc.Dropdown(id="llm-model-dd", options=[], placeholder="Pick Local model (optional)", style={"marginTop": "8px", "width": "100%"}),
                                         html.Div(id="llm-model-status", style={"fontSize": "12px", "color": "var(--text-muted)", "marginTop": "6px"}),
                                     ]),
                                     dcc.Interval(id="llm-models-primer", n_intervals=0, max_intervals=1, interval=1000),
@@ -419,6 +630,8 @@ research_layout = html.Div(
         ]),
     ],
 )
+
+app.layout = serve_layout
 
 # History tab layout
 def history_tab_layout():
@@ -603,20 +816,42 @@ def toggle_web_results_visibility(allow_search):
         return {'display': 'block', 'marginTop': '15px'} # Show it
     else:
         return {'display': 'none'} # Hide it
-@app.callback(Output("tab-content", "children"), Input("tabs", "value"))
+@app.callback(
+    Output("tab-news-container", "style"),
+    Output("tab-strategy-container", "style"),
+    Output("tab-research-container", "style"),
+    Output("tab-history-container", "style"),
+    Input("tabs", "value"),
+)
 def render_tab(tab):
-    # Always include news layout to keep components in DOM, but hide when not active
-    news_style = {"display": "block" if tab == "tab-news" else "none"}
-    strategy_style = {"display": "block" if tab == "tab-strategy" else "none"}
-    research_style = {"display": "block" if tab == "tab-research" else "none"}
-    history_style = {"display": "block" if tab == "tab-history" else "none"}
-    
-    return html.Div([
-        html.Div(news_tab_layout(), style=news_style),
-        html.Div(strategy_tab_layout(), style=strategy_style) if tab == "tab-strategy" else html.Div(),
-        html.Div(research_layout, style=research_style) if tab == "tab-research" else html.Div(),
-        html.Div(history_tab_layout(), style=history_style) if tab == "tab-history" else html.Div(),
-    ])
+    def _style_for(target):
+        return {"display": "block"} if tab == target else {"display": "none"}
+
+    return (
+        _style_for("tab-news"),
+        _style_for("tab-strategy"),
+        _style_for("tab-research"),
+        _style_for("tab-history"),
+    )
+
+# Save the currently selected tab into local storage
+@app.callback(
+    Output("tabs-memory", "data"),
+    Input("tabs", "value"),
+    prevent_initial_call=True,
+)
+def remember_tab(tab_val):
+    return tab_val
+
+# Restore the last selected tab on first load (or after dev hot reload)
+@app.callback(
+    Output("tabs", "value"),
+    Input("tabs-primer", "n_intervals"),
+    State("tabs-memory", "data"),
+    prevent_initial_call=True,
+)
+def restore_tab(_tick, saved):
+    return saved or "tab-news"
 # Test local LLM endpoint quickly
 @app.callback(
     Output("llm-test-status", "children"),
@@ -768,12 +1003,46 @@ def fetch_news(asset, refresh_clicks, model_pref, count, days_back, current_tab,
     ctx = dash.callback_context
     trig_id = (ctx.triggered[0]["prop_id"].split(".")[0] if ctx.triggered else "initial")
 
+    # Do not refetch just because the user switched to the News tab
+    if trig_id == "tabs":
+        return (
+            existing_data or [],
+            (existing_overall or {}),
+            (existing_meta or {}),
+            (existing_meta or {}).get("ts", ""),
+        )
+
     if trig_id in {"news-count", "news-days"} and existing_data:
         return existing_data, (existing_overall or {}), (existing_meta or {}), (existing_meta or {}).get("ts", "")
 
     prev_asset = (existing_meta or {}).get("asset")
     if trig_id == "active-asset" and existing_data and prev_asset == asset:
         return existing_data, (existing_overall or {}), (existing_meta or {}), (existing_meta or {}).get("ts", "")
+
+    # Try disk cache first to avoid refetching (cache key uses asset+days+count)
+    try:
+        cache_key = f"{asset}|d{int(days_back or 7)}|n{int(count or 0)}"
+    except Exception:
+        cache_key = f"{asset}|d7|n{int(count or 0) if str(count).isdigit() else 0}"
+    cache_ttl_min = int(os.getenv("NEWS_CACHE_TTL_MIN", "30") or 30)
+    cached = _news_cache_get(cache_key, ttl_minutes=cache_ttl_min)
+    if cached and trig_id not in {"model-pref"}:  # allow re-summarize on model change
+        items_for_summary, overall, meta = cached
+        # Quality gate: if cached result looks low quality, ignore cache and refetch+reanalyze
+        try:
+            missing_ai = sum(1 for it in (items_for_summary or []) if not (it or {}).get("ai_summary"))
+            total = len(items_for_summary or [])
+            provider = (overall or {}).get("provider", "")
+            summary_txt = (overall or {}).get("summary", "")
+            low_quality = (provider == "error") or (not summary_txt) or (total > 0 and missing_ai >= max(1, total // 2))
+        except Exception:
+            low_quality = False
+
+        if not low_quality:
+            return items_for_summary, overall, meta, meta.get("ts", "")
+        else:
+            print("DEBUG (app.py): Cached entry deemed low-quality (will refetch):",
+                  f"missing_ai={missing_ai}/{total}", f"overall_provider={provider}")
 
     max_articles = int(count or 0)
     if max_articles <= 0:
@@ -798,7 +1067,12 @@ def fetch_news(asset, refresh_clicks, model_pref, count, days_back, current_tab,
         days = min(max(int(days_back or 7), 1), 60)
         
         items = bridge.fetch(asset, days_back=days, max_articles=max_articles, model_preference=model_pref or "auto", analyze=True)
-        items_for_summary = [i.__dict__ for i in (items or [])]
+        # Ensure JSON-serializable dicts: dataclasses to dict, drop any non-serializable fields
+        try:
+            from dataclasses import asdict as _asdict
+            items_for_summary = [_asdict(i) for i in (items or [])]
+        except Exception:
+            items_for_summary = [i.__dict__ for i in (items or [])]
 
     # --- FIX #2: IMPROVED ERROR HANDLING FOR THE SUMMARY CALL ---
     # This block will now always run unless an early exit happened.
@@ -809,7 +1083,10 @@ def fetch_news(asset, refresh_clicks, model_pref, count, days_back, current_tab,
         # If we reused 'existing_data', it's already a list of dicts.
         if items_for_summary and isinstance(items_for_summary[0], dict):
              # Convert list of dicts to list of NewsItem objects for the function
-            from services import NewsItem
+            try:
+                from .services import NewsItem
+            except Exception:
+                from services import NewsItem
             news_item_objects = [NewsItem(**d) for d in items_for_summary]
         else:
             news_item_objects = items_for_summary
@@ -837,6 +1114,10 @@ def fetch_news(asset, refresh_clicks, model_pref, count, days_back, current_tab,
     probe = meta["ts"]
 
     # 'items_for_summary' is already the list of dicts we need for the news-data store
+    try:
+        _news_cache_put(cache_key, items_for_summary or [], overall or {}, meta or {})
+    except Exception:
+        pass
     return items_for_summary, overall, meta, probe
 
 
@@ -882,25 +1163,26 @@ def render_news(data, selected_idx, refresh_clicks, meta):
 
     def _badge(item):
         label = (item.get('sentiment_label') or '').lower()
-        if label == 'bullish':
-            cls = 'badge badge-bullish'
-            icon = '📈'
-        elif label == 'bearish':
-            cls = 'badge badge-bearish'
-            icon = '📉'
-        else:
-            cls = 'badge badge-neutral'
-            icon = '➖'
-        if not item.get('sentiment_label'):
+        parts = []
+        if label:
+            if label == 'bullish':
+                cls = 'badge badge-bullish'
+                icon = '📈'
+            elif label == 'bearish':
+                cls = 'badge badge-bearish'
+                icon = '📉'
+            else:
+                cls = 'badge badge-neutral'
+                icon = '➖'
+            score = item.get('sentiment_score')
+            score_txt = f" {score:+.2f}" if (score is not None) else ""
+            parts.append(html.Span([icon, " ", label + score_txt], className=cls))
+        # Always show provider chip; default to FALLBACK when missing
+        provider = (item.get('analysis_provider') or 'fallback').upper()
+        parts.append(html.Span(f"🤖 {provider}", className="provider"))
+        if not parts:
             return None
-        provider = (item.get('analysis_provider') or '').upper()
-        prov = html.Span(f"🤖 {provider}", className="provider") if provider else None
-        score = item.get('sentiment_score')
-        score_txt = f" {score:+.2f}" if (score is not None) else ""
-        return html.Span([
-            html.Span([icon, " ", item.get('sentiment_label') + score_txt], className=cls), 
-            prov
-        ], className="badge-wrap")
+        return html.Span(parts, className="badge-wrap")
 
     def _domain(u):
         try:
@@ -917,8 +1199,7 @@ def render_news(data, selected_idx, refresh_clicks, meta):
     # The selected_idx now directly corresponds to the visual item's index.
     # No complex URL lookup is needed.
 
-    # Round-robin across domains with a per-domain cap
-    max_per_domain = 3
+    # Round-robin across domains with an adaptive per-domain cap
     from collections import OrderedDict, deque
     groups = OrderedDict()
     order = []
@@ -929,6 +1210,11 @@ def render_news(data, selected_idx, refresh_clicks, meta):
             order.append(d)
         groups[d].append(item)
     used = {d: 0 for d in groups}
+    # If there are 1-2 domains, don't cap so all requested cards render. Otherwise cap to 3 per domain.
+    if len(groups) <= 2:
+        max_per_domain = len(data)
+    else:
+        max_per_domain = 3
     ordered_items = []
     # Interleave one-by-one
     while True:
@@ -1321,10 +1607,11 @@ def show_refresh_status(meta, tab):
     except Exception:
         return "", False
 
+# Use the built-in deterministic orchestrator shim; AutoGen team is deprecated/removed
 try:
-    from agents.agents_team import run_team_workflow as run_autogen_workflow
+    from .agents.agents import run_research_workflow
 except Exception:
-    from agents.agents import run_autogen_workflow
+    from agents.agents import run_research_workflow
 from telemetry import log_event, Timer
 
 # ---------------- Research callbacks ----------------
@@ -1336,26 +1623,8 @@ from telemetry import log_event, Timer
     prevent_initial_call=True,
 )
 def list_do_models_news(_primer):
-    try:
-        base = (os.getenv("DO_AI_BASE_URL", "https://inference.do-ai.run/v1")).rstrip("/")
-        key = os.getenv("DO_AI_API_KEY") or os.getenv("DIGITALOCEAN_AI_API_KEY")
-        if not key:
-            return []
-        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {key}"}
-        r = requests.get(f"{base}/models", headers=headers, timeout=20)
-        if r.status_code != 200:
-            return []
-        data = r.json()
-        # Filter to lower-end models (e.g., 7B–20B or mini/tiny) to keep costs modest
-        low_keywords = ["7b", "8b", "9b", "10b", "12b", "13b", "15b", "20b", "mini", "tiny", "small"]
-        opts = []
-        for m in (data.get("data") or [])[:200]:
-            mid = (m.get("id") or m.get("name") or "").lower()
-            if mid and any(k in mid for k in low_keywords):
-                opts.append({"label": m.get("id") or m.get("name"), "value": m.get("id") or m.get("name")})
-        return opts
-    except Exception:
-        return []
+    base = os.getenv("DO_AI_BASE_URL", "https://inference.do-ai.run/v1")
+    return _get_do_model_options(base)
 
 # Preload DO models for Research tab as well (top-level)
 @app.callback(
@@ -1366,26 +1635,13 @@ def list_do_models_news(_primer):
     prevent_initial_call=True,
 )
 def list_do_models_research(_primer, base_url):
-    try:
-        base = (base_url or os.getenv("DO_AI_BASE_URL", "https://inference.do-ai.run/v1")).rstrip("/")
-        key = os.getenv("DO_AI_API_KEY") or os.getenv("DIGITALOCEAN_AI_API_KEY")
-        if not key:
+    opts = _get_do_model_options(base_url or os.getenv("DO_AI_BASE_URL", "https://inference.do-ai.run/v1"))
+    if not opts:
+        # Distinguish between missing key and just no matches
+        if not (os.getenv("DO_AI_API_KEY") or os.getenv("DIGITALOCEAN_AI_API_KEY")):
             return [], "Set DO_AI_API_KEY in .env to list models."
-        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {key}"}
-        r = requests.get(f"{base}/models", headers=headers, timeout=20)
-        if r.status_code != 200:
-            return [], f"Error {r.status_code}: {r.text[:120]}"
-        data = r.json()
-        low_keywords = ["7b", "8b", "9b", "10b", "12b", "13b", "15b", "20b", "mini", "tiny", "small"]
-        opts = []
-        for m in (data.get("data") or [])[:200]:
-            mid = (m.get("id") or m.get("name") or "").lower()
-            if mid and any(k in mid for k in low_keywords):
-                opts.append({"label": m.get("id") or m.get("name"), "value": m.get("id") or m.get("name")})
-        status = f"Loaded {len(opts)} low-end models." if opts else "No low-end models matched."
-        return opts, status
-    except Exception as e:
-        return [], f"Failed: {e}"
+        return [], "No low-end models matched or request failed."
+    return opts, f"Loaded {len(opts)} low-end models."
 
 # Curated HF list for News tab (low-end only)
 @app.callback(
@@ -1394,10 +1650,7 @@ def list_do_models_research(_primer, base_url):
     prevent_initial_call=True,
 )
 def list_hf_models_news(_primer):
-    curated = [
-        {"label": "Qwen/Qwen3-4B-Base (default)", "value": "Qwen/Qwen3-4B-Base"},
-    ]
-    return curated
+    return CURATED_HF_MODELS
 
 # Curated HF list for Research tab
 @app.callback(
@@ -1407,10 +1660,59 @@ def list_hf_models_news(_primer):
     prevent_initial_call=True,
 )
 def list_hf_models_research(_primer):
-    curated = [
-        {"label": "Qwen/Qwen3-4B-Base (default)", "value": "Qwen/Qwen3-4B-Base"},
-    ]
-    return curated, "Loaded 1 curated model."
+    return CURATED_HF_MODELS, f"Loaded {len(CURATED_HF_MODELS)} curated model(s)."
+
+# Autocomplete for research ticker dropdown (symbol-only, no names)
+@app.callback(
+    Output("research-symbol-dd", "options"),
+    Input("research-symbol-dd", "search_value"),
+    Input("tabs-primer", "n_intervals"),
+    State("research-symbol-dd", "value"),
+    prevent_initial_call=False,
+)
+def update_symbol_options(search_value, _tabs_primer, current_value):
+    try:
+        q = (search_value or "").strip()
+        if not q:
+            # No search - return symbol-only defaults
+            return RESEARCH_SYMBOL_OPTIONS
+        
+        # Search through index but return symbol-only labels
+        q_upper = q.upper()
+        q_lower = q.lower()
+        idx = _load_symbol_index() or []
+        
+        out = []
+        for row in idx:
+            sym = (row.get("symbol") or "").upper()
+            name = (row.get("name") or "").strip()
+            # Match by symbol or name
+            if sym.startswith(q_upper) or (name and q_lower in name.lower()):
+                out.append({"label": sym, "value": sym})
+                if len(out) >= 20:
+                    break
+        
+        # Fallback to filtered defaults if no matches
+        if not out:
+            base = [opt for opt in RESEARCH_SYMBOL_OPTIONS if opt["value"].startswith(q_upper)]
+            return base[:20] if base else RESEARCH_SYMBOL_OPTIONS
+        
+        return out
+    except Exception:
+        return RESEARCH_SYMBOL_OPTIONS
+
+# Autocomplete for News asset dropdown; also primes on page load via research primer interval
+@app.callback(
+    Output("asset-dd", "options"),
+    Input("asset-dd", "search_value"),
+    Input("llm-models-primer", "n_intervals"),
+    prevent_initial_call=False,
+)
+def update_news_asset_options(search_value, _primer):
+    try:
+        return _search_symbols(search_value or "")
+    except Exception:
+        return DEFAULT_SYMBOL_OPTIONS
 @app.callback(
     Output("research-content", "children"),
     Output("research-status", "children"),
@@ -1430,7 +1732,6 @@ def list_hf_models_research(_primer):
     State("macd-slow", "value"),
     State("macd-signal", "value"),
     State("speed-mode", "value"),
-    State("autogen-max-turns", "value"),
     State("allow-web-search", "value"),
     State("web-max-results", "value"),
     State("ai-provider", "value"),
@@ -1451,7 +1752,7 @@ def list_hf_models_research(_primer):
 def run_research(
     n, analysis_type, engine, symbol_dd, symbol_input, timeframe, lookback_value,
     lookback_unit, indicators, length, rsi_length, macd_fast, macd_slow, macd_signal,
-    speed_mode, autogen_max_turns, allow_web_search, web_max_results, ai_provider,
+    speed_mode, allow_web_search, web_max_results, ai_provider,
     llm_base_url, llm_model, llm_max_tokens, llm_temp, agent_rounds, do_base_url,
     do_model_text, do_model_choice, hf_base_url, hf_model_text, hf_model_choice,
     existing_history
@@ -1515,11 +1816,7 @@ def run_research(
         return html.Div(f"Analysis failed unexpectedly: {e}"), "Failed", (existing_history or [])
 
     # --- UI Rendering Section ---
-    plan = out.get("plan", {})
-    plan_badge = html.Div([
-        html.H4("Plan of Agents"),
-        html.Ul([html.Li(s) for s in (plan.get("steps") or [])])
-    ], className="card", style={"padding":"12px", "marginBottom":"12px"})
+    # Deprecated: Previously showed a plan-of-agents card in the overview; removed per request
 
     profile = out.get("company_profile") or {}
     profile_card = None
@@ -1635,7 +1932,7 @@ def run_research(
 
     # --- Assemble Tabs ---
     tabs, overview_children = [], []
-    overview_children.extend([c for c in [plan_badge, profile_card, hol_section, rec_section] if c is not None])
+    overview_children.extend([c for c in [profile_card, hol_section, rec_section] if c is not None])
     tabs.append(dcc.Tab(label="Overview", value="overview", children=html.Div(overview_children, style={"display":"grid", "gap":"15px"})))
     if tech_section: tabs.append(dcc.Tab(label="Technical", value="tech", children=tech_section))
     if fundamentals_section: tabs.append(dcc.Tab(label="Fundamentals", value="fund", children=fundamentals_section))
@@ -1643,14 +1940,54 @@ def run_research(
 
     conversations = out.get("conversations") or []
     if conversations:
+        # Helper to extract an AI-generated text snippet for a given agent
+        def _extract_text_snippet(text: str, max_len: int = 240) -> str:
+            if not text:
+                return ""
+            try:
+                cleaned = strip_markdown_fences(str(text))
+            except Exception:
+                cleaned = str(text)
+            cleaned = cleaned.strip().replace("\n\n", " \u00b7 ").replace("\n", " ")
+            if len(cleaned) <= max_len:
+                return cleaned
+            cutoff = cleaned.rfind(" ", 0, max_len)
+            cutoff = cutoff if cutoff != -1 else max_len
+            return cleaned[:cutoff].rstrip() + "..."
+
+        def _get_agent_snippet(agent_name: str) -> str:
+            agent = (agent_name or "").strip()
+            try:
+                if agent == "FundamentalSynthesisAgent":
+                    return _extract_text_snippet(out.get("fundamental_summary") or "")
+                if agent == "TechnicalAgent":
+                    return _extract_text_snippet(((out.get("technical") or {}).get("justification")) or "")
+                if agent == "HolisticAgent":
+                    return _extract_text_snippet(out.get("holistic") or "")
+                if agent == "RecommendationAgent":
+                    return _extract_text_snippet(((out.get("recommendation") or {}).get("justification")) or "")
+                if agent == "NewsAgent":
+                    return _extract_text_snippet(((out.get("news_summary") or {}).get("summary")) or "")
+            except Exception:
+                pass
+            return ""
+
         conv_nodes = []
         for item in conversations:
             a = item.get("agent") or "Agent"
             m = item.get("message") or ""
-            conv_nodes.append(html.Div([
+            snippet = _get_agent_snippet(a)
+            children = [
                 html.Div(a, style={"fontWeight":600, "color":"var(--accent-primary)"}),
-                html.Pre(m, style={"whiteSpace":"pre-wrap", "margin":"4px 0 12px 0", "fontSize": "13px", "fontFamily": "var(--font-mono)"})
-            ], className="card", style={"padding":"10px"}))
+                html.Pre(m, style={"whiteSpace":"pre-wrap", "margin":"4px 0 8px 0", "fontSize": "13px", "fontFamily": "var(--font-mono)"})
+            ]
+            if snippet:
+                children.append(html.Div([
+                    html.Span("AI snippet", style={"fontWeight":500, "fontSize":"12px", "color":"var(--text-muted)"}),
+                    dcc.Markdown(snippet, className="markdown-content", style={"margin":"4px 0 0 0", "fontSize":"13px"})
+                ]))
+            conv_nodes.append(html.Div(children, className="card", style={"padding":"10px"}))
+
         tabs.append(dcc.Tab(label="Conversations", value="conv", children=html.Div(conv_nodes, style={"display":"grid", "gap":"10px"})))
     
     current_utc_time = datetime.now(timezone.utc)
@@ -1782,6 +2119,15 @@ def clear_all_history(n):
         print(f"[HISTORY] Clear-all persist failed: {e}")
     return []
 
-
+# --- Local dev entrypoint ---
 if __name__ == "__main__":
-    app.run_server(debug=True, host="127.0.0.1", port=8050)
+    host = os.getenv("HOST", "127.0.0.1")
+    try:
+        port = int(os.getenv("PORT", os.getenv("DASH_PORT", "8050") or 8050))
+    except Exception:
+        port = 8050
+    debug_env = str(os.getenv("DEBUG", "0")).strip().lower()
+    debug = debug_env in ("1", "true", "yes", "on")
+
+    print(f"Starting Dash app on http://{host}:{port} (debug={debug})")
+    app.run_server(host=host, port=port, debug=debug)

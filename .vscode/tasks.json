@@ -11,6 +11,14 @@
 				"$pytest"
 			],
 			"group": "build"
+		},
+		{
+			"label": "Run tests (pytest)",
+			"type": "shell",
+			"command": "pytest",
+			"args": [],
+			"isBackground": false,
+			"group": "build"
 		}
 	]
 }

@@ -1,0 +1,7 @@
+/* Placeholder for dropdown-specific styles.
+   This file exists to satisfy Dash asset loading when referenced.
+   Most dropdown styling now lives in styles.css. */
+
+/* Ensure dropdown menus overlay correctly and look polished */
+.dash-dropdown, .Select-control { z-index: 1000 !important; }
+.Select-menu-outer { z-index: 100000 !important; }
