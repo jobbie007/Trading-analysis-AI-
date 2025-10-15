@@ -8,7 +8,7 @@ This is a standalone Dash app with tabs:
 
 ## Quick start (Windows PowerShell)
 ```powershell
-cd "c:\Users\Jobbie\c++Workspace\Comp301 project\dash"
+cd "c:\Users\YourName\Documents\dash"
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
