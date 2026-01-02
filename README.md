@@ -3,8 +3,17 @@
 This is a standalone Dash app with tabs:
 - News & Analysis: Big TradingView chart with news below
   <img width="1908" height="932" alt="image" src="https://github.com/user-attachments/assets/e6b8fc9d-1c71-4992-8b8f-9222b5582734" />
+  <img width="1917" height="944" alt="Screenshot 2026-01-02 211447" src="https://github.com/user-attachments/assets/a67a29c3-b4ab-4fcc-b9f9-9708c9708fcf" />
+
 
 - Strategy (Wallet): Enter a BTC/ETH address; uses Blockchair API to suggest a simple posture
+- Indepth research any stock analysis
+- <img width="1896" height="938" alt="Screenshot 2026-01-02 211709" src="https://github.com/user-attachments/assets/3b93e481-df38-463a-9a11-68f10ce46c9f" />
+
+- History tab
+<img width="1889" height="928" alt="Screenshot 2026-01-02 211745" src="https://github.com/user-attachments/assets/bcd782fa-9e44-4b1c-8b81-a5339439e36f" />
+
+
 
 ## Quick start (Windows PowerShell)
 ```powershell
