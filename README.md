@@ -13,7 +13,8 @@ This is a standalone Dash app with tabs:
 - History tab
 <img width="1889" height="928" alt="Screenshot 2026-01-02 211745" src="https://github.com/user-attachments/assets/bcd782fa-9e44-4b1c-8b81-a5339439e36f" />
 
-
+## Easy access hosted on render
+```https://trading-analysis-ai.onrender.com/```
 
 ## Quick start (Windows PowerShell)
 ```powershell
